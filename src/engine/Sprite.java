@@ -1,0 +1,100 @@
+package engine;
+
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.util.Objects;
+
+import javax.imageio.ImageIO;
+
+import engine.rendering.SpriteManager;
+import math.Vector2;
+
+public class Sprite implements Comparable<Sprite> {
+	private BufferedImage image;
+	private float zDepth;
+	
+	private Vector2 location;
+	private Vector2 size;
+	
+	private Sprite(BufferedImage image, Vector2 location, float zDepth) {
+		super();
+		
+		this.image = image;
+		this.size = new Vector2(image.getWidth(), image.getHeight());
+		
+		this.zDepth = zDepth;
+		this.location = location;
+		
+		SpriteManager.add(this);
+	}
+	
+	public static Sprite instantiateSprite(File file, Vector2 location, float zDepth) {
+		try {
+			BufferedImage image = ImageIO.read(file);
+			if(zDepth < 0) throw new IllegalArgumentException("Z-Depth must be greater or equal to zero");
+			
+			return new Sprite(image, location, zDepth);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return null;
+	}
+
+	public float getzDepth() {
+		return zDepth;
+	}
+
+	public void setzDepth(float zDepth) {
+		this.zDepth = zDepth;
+	}
+
+	public BufferedImage getImage() {
+		return image;
+	}
+
+	public void setImage(BufferedImage image) {
+		this.image = image;
+	}
+
+	public Vector2 getLocation() {
+		return location;
+	}
+
+	public void setLocation(Vector2 location) {
+		this.location = location;
+	}
+
+	public Vector2 getSize() {
+		return size;
+	}
+
+	@Override
+	public int compareTo(Sprite o) {
+		if(this.zDepth == o.getzDepth()) return 0;
+		else if(this.zDepth > o.getzDepth()) return 1;
+		else return -1;
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(zDepth);
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Sprite other = (Sprite) obj;
+		return Float.floatToIntBits(zDepth) == Float.floatToIntBits(other.zDepth);
+	}
+
+	@Override
+	public String toString() {
+		return "Sprite [image=" + image + ", zDepth=" + zDepth + "]";
+	}
+}
