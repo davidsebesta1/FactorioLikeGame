@@ -3,7 +3,7 @@ package engine.rendering;
 import java.util.ArrayList;
 import java.util.Collections;
 
-import engine.Sprite;
+import engine.sprites.Sprite;
 
 public abstract class SpriteManager {
 	private static ArrayList<Sprite> spriteList = new ArrayList<>();

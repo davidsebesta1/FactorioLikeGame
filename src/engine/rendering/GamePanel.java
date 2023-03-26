@@ -6,7 +6,7 @@ import java.awt.RenderingHints;
 
 import javax.swing.JPanel;
 
-import engine.Sprite;
+import engine.sprites.Sprite;
 import math.Vector2;
 
 public class GamePanel extends JPanel {
@@ -26,7 +26,7 @@ public class GamePanel extends JPanel {
 		
 		
 		for(Sprite sprite : SpriteManager.getSprites()) {
-			g.drawImage(sprite.getImage(),(int) sprite.getLocation().getX(),(int) sprite.getLocation().getY(), null);
+			if(sprite.getImage() != null && sprite.isVisible()) g.drawImage(sprite.getImage(),(int) sprite.getLocation().getX(),(int) sprite.getLocation().getY(), null);
 		}
 	}
 }

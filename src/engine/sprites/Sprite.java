@@ -1,7 +1,8 @@
-package engine;
+package engine.sprites;
 
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.Serializable;
 import java.util.Objects;
 
 import javax.imageio.ImageIO;
@@ -9,14 +10,17 @@ import javax.imageio.ImageIO;
 import engine.rendering.SpriteManager;
 import math.Vector2;
 
-public class Sprite implements Comparable<Sprite> {
+public class Sprite implements Comparable<Sprite>, SpriteBehaviour, Serializable {
+	private static final long serialVersionUID = 2893665038957303083L;
 	private BufferedImage image;
 	private float zDepth;
 	
 	private Vector2 location;
 	private Vector2 size;
 	
-	private Sprite(BufferedImage image, Vector2 location, float zDepth) {
+	private boolean isVisible;
+	
+	protected Sprite(BufferedImage image, Vector2 location, float zDepth) {
 		super();
 		
 		this.image = image;
@@ -24,6 +28,7 @@ public class Sprite implements Comparable<Sprite> {
 		
 		this.zDepth = zDepth;
 		this.location = location;
+		this.isVisible = true;
 		
 		SpriteManager.add(this);
 	}
@@ -40,7 +45,7 @@ public class Sprite implements Comparable<Sprite> {
 		
 		return null;
 	}
-
+	
 	public float getzDepth() {
 		return zDepth;
 	}
@@ -67,6 +72,14 @@ public class Sprite implements Comparable<Sprite> {
 
 	public Vector2 getSize() {
 		return size;
+	}
+
+	public boolean isVisible() {
+		return isVisible;
+	}
+
+	public void setVisible(boolean isVisible) {
+		this.isVisible = isVisible;
 	}
 
 	@Override
@@ -96,5 +109,24 @@ public class Sprite implements Comparable<Sprite> {
 	@Override
 	public String toString() {
 		return "Sprite [image=" + image + ", zDepth=" + zDepth + "]";
+	}
+	
+
+	@Override
+	public void start() {
+		
+	}
+	
+
+	@Override
+	public void update() {
+	}
+	
+	public void destroy() {
+		try {
+			SpriteManager.getSprites().remove(this);
+		} catch(Exception e) {
+			e.printStackTrace();
+		}
 	}
 }

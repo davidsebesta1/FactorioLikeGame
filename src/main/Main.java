@@ -2,8 +2,8 @@ package main;
 
 import java.io.File;
 
-import engine.Sprite;
 import engine.rendering.GameWindow;
+import engine.sprites.Sprite;
 import math.Vector2;
 
 public class Main {
