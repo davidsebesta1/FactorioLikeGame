@@ -8,17 +8,18 @@ import java.util.Objects;
 import javax.imageio.ImageIO;
 
 import engine.rendering.SpriteManager;
+import engine.sprites.entities.Player;
 import math.Vector2;
 
 public class Sprite implements Comparable<Sprite>, SpriteBehaviour, Serializable {
 	private static final long serialVersionUID = 2893665038957303083L;
-	private BufferedImage image;
-	private float zDepth;
+	protected BufferedImage image;
+	protected float zDepth;
 	
-	private Vector2 location;
-	private Vector2 size;
+	protected Vector2 location;
+	protected Vector2 size;
 	
-	private boolean isVisible;
+	protected boolean isVisible;
 	
 	protected Sprite(BufferedImage image, Vector2 location, float zDepth) {
 		super();
@@ -44,6 +45,7 @@ public class Sprite implements Comparable<Sprite>, SpriteBehaviour, Serializable
 		}
 		
 		return null;
+		
 	}
 	
 	public float getzDepth() {
@@ -91,7 +93,7 @@ public class Sprite implements Comparable<Sprite>, SpriteBehaviour, Serializable
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(zDepth);
+		return Objects.hash(zDepth, isVisible, location, size);
 	}
 
 	@Override
@@ -125,6 +127,8 @@ public class Sprite implements Comparable<Sprite>, SpriteBehaviour, Serializable
 	public void destroy() {
 		try {
 			SpriteManager.getSprites().remove(this);
+			
+			
 		} catch(Exception e) {
 			e.printStackTrace();
 		}

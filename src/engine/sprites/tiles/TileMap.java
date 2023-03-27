@@ -27,4 +27,16 @@ public class TileMap implements Serializable {
 	public void forcePlaceAtLocation(int x, int y, Sprite sprite) {
 		map[x][y] = sprite;
 	}
+	
+	public boolean tryToRemove(int x, int y) {
+		if(map[x][y] != null) {
+			map[x][y] = null;
+			return true;
+		}
+		return false;
+	}
+	
+	public boolean tryToRemove(Sprite sprite) {
+		return tryToRemove((int) sprite.getLocation().getX(),(int) sprite.getLocation().getY());
+	}
 }

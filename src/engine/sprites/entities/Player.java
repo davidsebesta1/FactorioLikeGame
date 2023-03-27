@@ -1,8 +1,8 @@
-package engine.sprites;
+package engine.sprites.entities;
 
 import java.awt.image.BufferedImage;
-import java.io.File;
 
+import engine.sprites.Sprite;
 import math.Vector2;
 
 public class Player extends Sprite {
@@ -11,13 +11,14 @@ public class Player extends Sprite {
 
 	private Player(BufferedImage image, Vector2 location, Vector2 velocity, float zDepth) {
 		super(image, location, zDepth);
-		this.velocity = velocity;
+		this.setVelocity(velocity);
 	}
-	
-	public static Player instantiatePlayer(File file, Vector2 location, Vector2 velocity, float zDepth) {
-		Player temp = (Player) Sprite.instantiateSprite(file, location, zDepth);
-		temp.velocity = velocity;
-		
-		return temp;
+
+	public Vector2 getVelocity() {
+		return velocity;
+	}
+
+	public void setVelocity(Vector2 velocity) {
+		this.velocity = velocity;
 	}
 }
