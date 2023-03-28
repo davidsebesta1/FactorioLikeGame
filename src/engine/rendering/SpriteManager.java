@@ -7,13 +7,12 @@ import engine.sprites.Sprite;
 
 public abstract class SpriteManager {
 	private static ArrayList<Sprite> spriteList = new ArrayList<>();
-
 	private static ArrayList<Sprite> updateSprites = new ArrayList<>();
 
 	private SpriteManager() {
 	}
 
-	public static void add(Sprite sprite) {
+	public static synchronized void add(Sprite sprite) {
 		if (sprite != null) {
 			spriteList.add(sprite);
 
@@ -33,5 +32,11 @@ public abstract class SpriteManager {
 
 	public static ArrayList<Sprite> getUpdatableSprites() {
 		return updateSprites;
+	}
+	
+	public static void updateAllSprites() {
+		for (Sprite sprite : updateSprites) {
+			sprite.update();
+		}
 	}
 }

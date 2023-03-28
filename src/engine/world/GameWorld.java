@@ -18,10 +18,9 @@ public class GameWorld {
 
 	public GameWorld(Vector2 size) {
 		this.size = size;
-
 		tiles = new TileMap((int) size.getX(), (int) size.getY());
 
-		player = Player.instantiatePlayer(null, new Vector2(0, 0));
+		player = Player.instantiatePlayer(new File("rockground.png"), new Vector2(0, 0));
 
 		background = Sprite.instantiateSprite(new File("background.jpg"), new Vector2(0, 0), 0f);
 

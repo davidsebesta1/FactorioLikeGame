@@ -2,9 +2,13 @@ package engine;
 
 import java.awt.Dimension;
 import java.awt.Toolkit;
+import java.util.ArrayList;
+import java.util.Arrays;
 
+import engine.input.InputManager;
 import engine.rendering.GameWindow;
-import engine.sprites.entities.Player;
+import engine.rendering.SpriteManager;
+import engine.sprites.Sprite;
 import engine.time.DeltaTime;
 import engine.world.GameWorld;
 import math.Vector2;
@@ -16,17 +20,25 @@ public class Game implements Runnable {
 	private GameWindow window;
 	private Vector2 resolution;
 
+	private final int TARGET_FPS = 60;
+	private final long OPTIMAL_TIME = 1000000000 / TARGET_FPS; // One billion nanoseconds per second
+
+	private long lastLoopTime = System.nanoTime();
+	private double unprocessedTime = 0;
+
+	ArrayList<Sprite> arr = new ArrayList<>();
 
 	private boolean isRunning;
 
 	private Game() {
+		isRunning = true;
+		instance = this;
 		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 		resolution = new Vector2((int) screenSize.getWidth(), (int) screenSize.getHeight());
 
 		window = GameWindow.initiateInstance(resolution, true);
+		InputManager.initialize();
 		currentWorld = new GameWorld(resolution);
-
-		isRunning = true;
 
 		Thread thread = new Thread(this);
 		thread.start();
@@ -36,13 +48,33 @@ public class Game implements Runnable {
 	@Override
 	public void run() {
 		while (isRunning) {
-			DeltaTime.updateDeltaTime();
-			gameLoop();
-		}
-	}
+			long now = System.nanoTime();
+		    long elapsedTime = now - lastLoopTime;
+		    lastLoopTime = now;
+		    
+		    unprocessedTime += elapsedTime / 1000000000.0; // Convert to seconds
 
-	private void gameLoop() {
-		window.repaint();
+		    while (unprocessedTime >= (1.0 / TARGET_FPS)) {
+		        // Update game logic
+		        double deltaTime = 1.0 / TARGET_FPS;
+		        DeltaTime.updateDeltaTime(deltaTime);
+				SpriteManager.updateAllSprites();
+
+		        unprocessedTime -= (1.0 / TARGET_FPS);
+		    }
+
+		    // Render the scene
+		    window.repaint();
+
+		    long sleepTime = (OPTIMAL_TIME - (System.nanoTime() - lastLoopTime)) / 1000000; // Convert to milliseconds
+		    if (sleepTime > 0) {
+		        try {
+		            Thread.sleep(sleepTime);
+		        } catch (InterruptedException e) {
+		            // Handle any exceptions here
+		        }
+		    }
+		}
 	}
 
 	public static Game getInstance() {

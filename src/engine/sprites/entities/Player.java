@@ -6,8 +6,10 @@ import java.util.Objects;
 
 import javax.imageio.ImageIO;
 
+import engine.input.InputManager;
 import engine.rendering.SpriteManager;
 import engine.sprites.Sprite;
+import engine.time.DeltaTime;
 import math.Vector2;
 
 public class Player extends Sprite {
@@ -33,6 +35,14 @@ public class Player extends Sprite {
 		return null;
 
 	}
+	
+	@Override
+	public void update() {
+		System.out.println(DeltaTime.getDeltaTime());
+		velocity = InputManager.getDirectionalInput().mul(50f * (float) DeltaTime.getDeltaTime());
+		
+		location = location.add(velocity);
+ }
 
 	public Vector2 getVelocity() {
 		return velocity;
