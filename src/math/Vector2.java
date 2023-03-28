@@ -1,6 +1,7 @@
 package math;
 
 import java.io.Serializable;
+import java.util.Objects;
 
 public class Vector2 implements Serializable{
 	private static final transient long serialVersionUID = 1812445214L;
@@ -93,11 +94,6 @@ public class Vector2 implements Serializable{
 		return (float) Math.sqrt(x * x + y * y);
 	}
 
-	// Dot product
-	public float dot(Vector2 other) {
-		return x * other.x + y * other.y;
-	}
-
 	// Absolute value
 	public Vector2 abs() {
 		return new Vector2(Math.abs(x), Math.abs(y));
@@ -106,5 +102,23 @@ public class Vector2 implements Serializable{
 	@Override
 	public String toString() {
 		return "Vector2{" + "x=" + x + ", y=" + y + '}';
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(x, y);
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Vector2 other = (Vector2) obj;
+		return Float.floatToIntBits(x) == Float.floatToIntBits(other.x)
+				&& Float.floatToIntBits(y) == Float.floatToIntBits(other.y);
 	}
 }

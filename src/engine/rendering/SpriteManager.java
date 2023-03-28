@@ -7,17 +7,31 @@ import engine.sprites.Sprite;
 
 public abstract class SpriteManager {
 	private static ArrayList<Sprite> spriteList = new ArrayList<>();
-	
-	private SpriteManager() {}
-	
-	public static synchronized void add(Sprite sprite) {
-		spriteList.add(sprite);
-		
-		//sort by z-depth
-		Collections.sort(spriteList);
+
+	private static ArrayList<Sprite> updateSprites = new ArrayList<>();
+
+	private SpriteManager() {
 	}
-	
-	public static ArrayList<Sprite> getSprites(){
+
+	public static void add(Sprite sprite) {
+		if (sprite != null) {
+			spriteList.add(sprite);
+
+			// sort by z-depth
+			Collections.sort(spriteList);
+		}
+	}
+
+	public static void addUpdateSprite(Sprite sprite) {
+		if (sprite != null)
+			updateSprites.add(sprite);
+	}
+
+	public static ArrayList<Sprite> getSprites() {
 		return spriteList;
+	}
+
+	public static ArrayList<Sprite> getUpdatableSprites() {
+		return updateSprites;
 	}
 }
