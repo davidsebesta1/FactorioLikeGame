@@ -7,6 +7,8 @@ public class Vector2 implements Serializable{
 	private static final transient long serialVersionUID = 1812445214L;
 	private float x;
 	private float y;
+	
+	public static final transient Vector2 zero = new Vector2(0, 0);
 
 	// Constructor
 	public Vector2(float x, float y) {

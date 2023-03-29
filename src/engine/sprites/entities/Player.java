@@ -6,21 +6,33 @@ import java.util.Objects;
 
 import javax.imageio.ImageIO;
 
+import engine.Game;
+import engine.input.IMouseActionEventListener;
 import engine.input.InputManager;
+import engine.rendering.Camera;
 import engine.rendering.SpriteManager;
 import engine.sprites.Sprite;
 import engine.time.DeltaTime;
 import math.Vector2;
 
-public class Player extends Sprite {
+public class Player extends Sprite implements IMouseActionEventListener {
 	private static final long serialVersionUID = -6407007599351991639L;
+	private Camera camera;
+
 	private Vector2 velocity;
 
 	private boolean inputEnabled;
 
 	private Player(BufferedImage image, Vector2 location, Vector2 velocity, float zDepth) {
 		super(image, location, zDepth);
+
+		this.camera = new Camera(new Vector2(0, 0));
+
 		this.setVelocity(velocity);
+
+		this.inputEnabled = true;
+		
+		InputManager.addMouseActionListener(this);
 
 		SpriteManager.addUpdateSprite(this);
 	}
@@ -28,21 +40,24 @@ public class Player extends Sprite {
 	public static Player instantiatePlayer(File file, Vector2 location) {
 		try {
 			BufferedImage image = ImageIO.read(file);
-			return new Player(image, location, new Vector2(0, 0), 0.8f);
+			return new Player(image, Game.getInstance().getResolution().div(-2), Vector2.zero, 0.8f);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		return null;
 
 	}
-	
+
 	@Override
 	public void update() {
-		System.out.println(DeltaTime.getDeltaTime());
-		velocity = InputManager.getDirectionalInput().mul(50f * (float) DeltaTime.getDeltaTime());
-		
-		location = location.add(velocity);
- }
+		if (inputEnabled) {
+			velocity = InputManager.getDirectionalInput().mul(50f * (float) DeltaTime.getDeltaTime());
+
+			location = location.add(velocity);
+			
+			camera.setLocation(camera.getLocation().add(velocity));
+		}
+	}
 
 	public Vector2 getVelocity() {
 		return velocity;
@@ -58,6 +73,14 @@ public class Player extends Sprite {
 
 	public void setInputEnabled(boolean inputEnabled) {
 		this.inputEnabled = inputEnabled;
+	}
+
+	public Camera getCamera() {
+		return camera;
+	}
+
+	public boolean isInputEnabled() {
+		return inputEnabled;
 	}
 
 	@Override
@@ -78,6 +101,19 @@ public class Player extends Sprite {
 			return false;
 		Player other = (Player) obj;
 		return inputEnabled == other.inputEnabled && Objects.equals(velocity, other.velocity);
+	}
+
+	@Override
+	public void mousePressed(Vector2 screenCoordinate) {
+		System.out.println(screenCoordinate);
+		System.out.println(Camera.screenToWorldCoordinates(screenCoordinate));
+		
+	}
+
+	@Override
+	public void mouseReleased(Vector2 screenCoordinate) {
+		// TODO Auto-generated method stub
+		
 	}
 
 }

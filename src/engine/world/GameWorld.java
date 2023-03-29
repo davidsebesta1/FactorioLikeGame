@@ -18,13 +18,19 @@ public class GameWorld {
 
 	public GameWorld(Vector2 size) {
 		this.size = size;
-		tiles = new TileMap((int) size.getX(), (int) size.getY());
+		this.tiles = new TileMap(10, 10);
 
-		player = Player.instantiatePlayer(new File("rockground.png"), new Vector2(0, 0));
+		this.player = Player.instantiatePlayer(new File("rockground.png"), new Vector2(0, 0));
 
-		background = Sprite.instantiateSprite(new File("background.jpg"), new Vector2(0, 0), 0f);
+		this.background = Sprite.instantiateSprite(new File("background.jpg"), new Vector2(0, 0), 0f);
 
-		tiles.tryCreateAtLocation(5, 5, new File("rockground.png"));
+		
+		for(int i = 0; i < tiles.getSize().getX(); i++) {
+			for(int j = 0; j < tiles.getSize().getY(); j++) {
+				this.tiles.tryCreateAtLocation(i, j, new File("ground1.png"));
+			}
+		}
+		
 	}
 
 	public Sprite getBackground() {

@@ -11,7 +11,7 @@ import engine.rendering.SpriteManager;
 import engine.sprites.entities.Player;
 import math.Vector2;
 
-public class Sprite implements Comparable<Sprite>, SpriteBehaviour, Serializable {
+public class Sprite implements Comparable<Sprite>, ISpriteBehaviour, Serializable {
 	private static final long serialVersionUID = 2893665038957303083L;
 	protected BufferedImage image;
 	protected float zDepth;
@@ -31,6 +31,7 @@ public class Sprite implements Comparable<Sprite>, SpriteBehaviour, Serializable
 		this.location = location;
 		this.isVisible = true;
 		
+		this.image.setAccelerationPriority(1);
 		SpriteManager.add(this);
 	}
 	

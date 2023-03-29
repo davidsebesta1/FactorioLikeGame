@@ -33,13 +33,19 @@ public class Game implements Runnable {
 	private Game() {
 		isRunning = true;
 		instance = this;
+
+		// INITALIZE FIRST
+		InputManager.initialize();
+
+		// AND SECOND
 		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 		resolution = new Vector2((int) screenSize.getWidth(), (int) screenSize.getHeight());
-
-		window = GameWindow.initiateInstance(resolution, true);
-		InputManager.initialize();
 		currentWorld = new GameWorld(resolution);
 
+		// WINDOW AS LAST
+		window = GameWindow.initiateInstance(resolution, true);
+
+		// FINALLY GAME LOOP
 		Thread thread = new Thread(this);
 		thread.start();
 
@@ -49,31 +55,29 @@ public class Game implements Runnable {
 	public void run() {
 		while (isRunning) {
 			long now = System.nanoTime();
-		    long elapsedTime = now - lastLoopTime;
-		    lastLoopTime = now;
-		    
-		    unprocessedTime += elapsedTime / 1000000000.0; // Convert to seconds
+			long elapsedTime = now - lastLoopTime;
+			lastLoopTime = now;
 
-		    while (unprocessedTime >= (1.0 / TARGET_FPS)) {
-		        // Update game logic
-		        double deltaTime = 1.0 / TARGET_FPS;
-		        DeltaTime.updateDeltaTime(deltaTime);
+			unprocessedTime += elapsedTime / 1000000000.0; // Convert to seconds
+
+			while (unprocessedTime >= (1.0 / TARGET_FPS)) {
+				// Update game logic
+				double deltaTime = 1.0 / TARGET_FPS;
+				DeltaTime.updateDeltaTime(deltaTime);
 				SpriteManager.updateAllSprites();
 
-		        unprocessedTime -= (1.0 / TARGET_FPS);
-		    }
+				unprocessedTime -= (1.0 / TARGET_FPS);
+			}
 
-		    // Render the scene
-		    window.repaint();
+			// Render the scene
+			window.repaint();
 
-		    long sleepTime = (OPTIMAL_TIME - (System.nanoTime() - lastLoopTime)) / 1000000; // Convert to milliseconds
-		    if (sleepTime > 0) {
-		        try {
-		            Thread.sleep(sleepTime);
-		        } catch (InterruptedException e) {
-		            // Handle any exceptions here
-		        }
-		    }
+			long sleepTime = (OPTIMAL_TIME - (System.nanoTime() - lastLoopTime)) / 1000000; // Convert to milliseconds
+			if (sleepTime > 0) {
+				try {
+					Thread.sleep(sleepTime);
+				} catch (InterruptedException e) {}
+			}
 		}
 	}
 

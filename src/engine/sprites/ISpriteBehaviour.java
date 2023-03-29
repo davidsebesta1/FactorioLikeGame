@@ -1,6 +1,6 @@
 package engine.sprites;
 
-public interface SpriteBehaviour {
+public interface ISpriteBehaviour {
 	public abstract void start();
 	public abstract void update();
 }
