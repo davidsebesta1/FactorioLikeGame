@@ -1,54 +1,50 @@
 package engine.sprites;
 
-import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.Serializable;
 import java.util.Objects;
 
-import javax.imageio.ImageIO;
-
-import engine.rendering.SpriteManager;
-import engine.sprites.entities.Player;
+import engine.rendering.textures.Texture;
 import math.Vector2;
 
 public class Sprite implements Comparable<Sprite>, ISpriteBehaviour, Serializable {
 	private static final long serialVersionUID = 2893665038957303083L;
-	protected BufferedImage image;
+	protected Texture texture;
 	protected float zDepth;
-	
+
 	protected Vector2 location;
 	protected Vector2 size;
-	
+
 	protected boolean isVisible;
-	
-	protected Sprite(BufferedImage image, Vector2 location, float zDepth) {
+
+	protected Sprite(Texture texture, Vector2 location, float zDepth) {
 		super();
-		
-		this.image = image;
-		this.size = new Vector2(image.getWidth(), image.getHeight());
-		
+
+		this.texture = texture;
+		this.size = new Vector2(texture.getImage().getWidth(), texture.getImage().getHeight());
+
 		this.zDepth = zDepth;
 		this.location = location;
 		this.isVisible = true;
-		
-		this.image.setAccelerationPriority(1);
+
 		SpriteManager.add(this);
 	}
-	
+
 	public static Sprite instantiateSprite(File file, Vector2 location, float zDepth) {
 		try {
-			BufferedImage image = ImageIO.read(file);
-			if(zDepth < 0) throw new IllegalArgumentException("Z-Depth must be greater or equal to zero");
-			
-			return new Sprite(image, location, zDepth);
+			Texture texture = Texture.createTexture(file);
+			if (zDepth < 0)
+				throw new IllegalArgumentException("Z-Depth must be greater or equal to zero");
+
+			return new Sprite(texture, location, zDepth);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		
+
 		return null;
-		
+
 	}
-	
+
 	public float getzDepth() {
 		return zDepth;
 	}
@@ -57,12 +53,12 @@ public class Sprite implements Comparable<Sprite>, ISpriteBehaviour, Serializabl
 		this.zDepth = zDepth;
 	}
 
-	public BufferedImage getImage() {
-		return image;
+	public Texture getTexture() {
+		return texture;
 	}
 
-	public void setImage(BufferedImage image) {
-		this.image = image;
+	public void setTexture(Texture texture) {
+		this.texture = texture;
 	}
 
 	public Vector2 getLocation() {
@@ -87,14 +83,17 @@ public class Sprite implements Comparable<Sprite>, ISpriteBehaviour, Serializabl
 
 	@Override
 	public int compareTo(Sprite o) {
-		if(this.zDepth == o.getzDepth()) return 0;
-		else if(this.zDepth > o.getzDepth()) return 1;
-		else return -1;
+		if (this.zDepth == o.getzDepth())
+			return 0;
+		else if (this.zDepth > o.getzDepth())
+			return 1;
+		else
+			return -1;
 	}
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(zDepth, isVisible, location, size);
+		return Objects.hash(isVisible, location, size, texture, zDepth);
 	}
 
 	@Override
@@ -106,32 +105,37 @@ public class Sprite implements Comparable<Sprite>, ISpriteBehaviour, Serializabl
 		if (getClass() != obj.getClass())
 			return false;
 		Sprite other = (Sprite) obj;
-		return Float.floatToIntBits(zDepth) == Float.floatToIntBits(other.zDepth);
+		return isVisible == other.isVisible && Objects.equals(location, other.location)
+				&& Objects.equals(size, other.size) && Objects.equals(texture, other.texture)
+				&& Float.floatToIntBits(zDepth) == Float.floatToIntBits(other.zDepth);
 	}
 
 	@Override
 	public String toString() {
-		return "Sprite [image=" + image + ", zDepth=" + zDepth + "]";
+		return "Sprite [texture=" + texture + ", zDepth=" + zDepth + "]";
 	}
-	
 
 	@Override
 	public void start() {
-		
+		// Have to be overridden
 	}
-	
 
 	@Override
 	public void update() {
+		// Have to be overridden
 	}
-	
+
 	public void destroy() {
 		try {
 			SpriteManager.getSprites().remove(this);
-			
-			
-		} catch(Exception e) {
+
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
+	}
+
+	@Override
+	public void onMouseClicked() {
+		// Have to be overridden
 	}
 }

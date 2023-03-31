@@ -1,9 +1,7 @@
-package engine.rendering;
+package engine.sprites;
 
 import java.util.ArrayList;
 import java.util.Collections;
-
-import engine.sprites.Sprite;
 
 public abstract class SpriteManager {
 	private static ArrayList<Sprite> spriteList = new ArrayList<>();
@@ -15,6 +13,15 @@ public abstract class SpriteManager {
 	public static synchronized void add(Sprite sprite) {
 		if (sprite != null) {
 			spriteList.add(sprite);
+
+			// sort by z-depth
+			Collections.sort(spriteList);
+		}
+	}
+	
+	public static synchronized void remove(Sprite sprite) {
+		if (sprite != null) {
+			spriteList.remove(sprite);
 
 			// sort by z-depth
 			Collections.sort(spriteList);

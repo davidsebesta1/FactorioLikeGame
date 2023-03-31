@@ -10,8 +10,8 @@ public class TileMap implements Serializable {
 	private static final long serialVersionUID = 459971329294318553L;
 	private TileSprite[][] map;
 	private Vector2 size;
-	
-	private final float spriteSize = 32f;
+
+	private static final float SPRITE_SIZE = 32f;
 
 	public TileMap(int width, int height) {
 		this.map = new TileSprite[width][height];
@@ -24,7 +24,7 @@ public class TileMap implements Serializable {
 
 	public boolean tryCreateAtLocation(int x, int y, File file) {
 		if (map[x][y] == null) {
-			map[x][y] = TileSprite.instantiateSprite(file, new Vector2(x * spriteSize, y * spriteSize));
+			map[x][y] = TileSprite.instantiateSprite(file, new Vector2(x * SPRITE_SIZE, y * SPRITE_SIZE));
 			return true;
 		}
 
@@ -52,10 +52,15 @@ public class TileMap implements Serializable {
 	}
 
 	public boolean tryToRemove(TileSprite sprite) {
-		return tryToRemove((int) sprite.getLocation().getX(), (int) sprite.getLocation().getY());
+		return tryToRemove((int) (sprite.getLocation().getX() / SPRITE_SIZE),
+				(int) (sprite.getLocation().getY() / SPRITE_SIZE));
 	}
 
 	public Vector2 getSize() {
 		return size;
+	}
+
+	public TileSprite[][] getMap() {
+		return map;
 	}
 }

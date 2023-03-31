@@ -10,8 +10,9 @@ import engine.Game;
 import engine.input.IMouseActionEventListener;
 import engine.input.InputManager;
 import engine.rendering.Camera;
-import engine.rendering.SpriteManager;
+import engine.rendering.textures.Texture;
 import engine.sprites.Sprite;
+import engine.sprites.SpriteManager;
 import engine.time.DeltaTime;
 import math.Vector2;
 
@@ -23,24 +24,35 @@ public class Player extends Sprite implements IMouseActionEventListener {
 
 	private boolean inputEnabled;
 
-	private Player(BufferedImage image, Vector2 location, Vector2 velocity, float zDepth) {
-		super(image, location, zDepth);
+	private Player(Texture texture, Vector2 location, Vector2 velocity, float zDepth) {
+		super(texture, location, zDepth);
 
 		this.camera = new Camera(new Vector2(0, 0));
 
 		this.setVelocity(velocity);
 
 		this.inputEnabled = true;
-		
+
 		InputManager.addMouseActionListener(this);
 
 		SpriteManager.addUpdateSprite(this);
 	}
 
-	public static Player instantiatePlayer(File file, Vector2 location) {
+	public static Player instantiatePlayer(File file) {
 		try {
-			BufferedImage image = ImageIO.read(file);
-			return new Player(image, Game.getInstance().getResolution().div(-2), Vector2.zero, 0.8f);
+			Texture texture = Texture.createTexture(file);
+			return new Player(texture, Game.getInstance().getResolution().div(2), Vector2.zero, 0.8f);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return null;
+
+	}
+	
+	public static Player instantiatePlayer(File file, float alpha) {
+		try {
+			Texture texture = Texture.createTexture(file, alpha);
+			return new Player(texture, Game.getInstance().getResolution().div(2), Vector2.zero, 0.8f);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -51,10 +63,10 @@ public class Player extends Sprite implements IMouseActionEventListener {
 	@Override
 	public void update() {
 		if (inputEnabled) {
-			velocity = InputManager.getDirectionalInput().mul(50f * (float) DeltaTime.getDeltaTime());
+			velocity = InputManager.getDirectionalInput().mul(100f * (float) DeltaTime.getDeltaTime());
 
 			location = location.add(velocity);
-			
+
 			camera.setLocation(camera.getLocation().add(velocity));
 		}
 	}
@@ -107,13 +119,13 @@ public class Player extends Sprite implements IMouseActionEventListener {
 	public void mousePressed(Vector2 screenCoordinate) {
 		System.out.println(screenCoordinate);
 		System.out.println(Camera.screenToWorldCoordinates(screenCoordinate));
-		
+
 	}
 
 	@Override
 	public void mouseReleased(Vector2 screenCoordinate) {
-		// TODO Auto-generated method stub
-		
+		// Unused
+
 	}
 
 }

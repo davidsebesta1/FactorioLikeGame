@@ -1,7 +1,6 @@
 package engine.sprites.structures;
 
-import java.awt.image.BufferedImage;
-
+import engine.rendering.textures.Texture;
 import engine.sprites.Sprite;
 import math.Vector2;
 
@@ -10,9 +9,9 @@ public class StructureSprite extends Sprite {
 
 	private Vector2 tileSize;
 
-	private StructureSprite(BufferedImage image, Vector2 location, float zDepth) {
-		super(image, location, zDepth);
-		this.tileSize = new Vector2(image.getWidth() / 32f, image.getHeight() / 32f);
+	private StructureSprite(Texture texture, Vector2 location, float zDepth) {
+		super(texture, location, zDepth);
+		this.tileSize = new Vector2(texture.getImage().getWidth() / 32f, texture.getImage().getHeight() / 32f);
 	}
 
 	public Vector2 getTileSize() {

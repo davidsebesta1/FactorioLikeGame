@@ -1,5 +1,6 @@
 package engine.rendering;
 
+import java.awt.AlphaComposite;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
@@ -7,13 +8,13 @@ import java.awt.RenderingHints;
 import java.awt.Toolkit;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
-import java.awt.geom.AffineTransform;
 
 import javax.swing.JPanel;
 
 import engine.Game;
 import engine.input.InputManager;
 import engine.sprites.Sprite;
+import engine.sprites.SpriteManager;
 import math.Vector2;
 
 public class GamePanel extends JPanel implements MouseListener {
@@ -25,6 +26,7 @@ public class GamePanel extends JPanel implements MouseListener {
 		this.setDoubleBuffered(true);
 		this.setFocusable(true);
 		this.addMouseListener(this);
+
 	}
 
 	@Override
@@ -35,12 +37,16 @@ public class GamePanel extends JPanel implements MouseListener {
 		Graphics2D g2d = (Graphics2D) g;
 		g2d.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
 
+		// Draw FPS
+		g2d.drawString("FPS: " + Game.getInstance().getFramesPerSecond(), 10, 15);
+
 		// Zoom scale
 		double zoomScale = Game.getInstance().getCurrentWorld().getPlayer().getCamera().getCameraZoomScale();
 
 		// Get the width and height of the panel
-		int width = getWidth();
-		int height = getHeight();
+		int width = (int) Game.getInstance().getWindow().getSize().getX();
+
+		int height = (int) Game.getInstance().getWindow().getSize().getY();
 
 		// Translate the graphics context to the center of the screen
 		g2d.translate(width / 2, height / 2);
@@ -53,13 +59,31 @@ public class GamePanel extends JPanel implements MouseListener {
 
 		// Rendering
 		for (Sprite sprite : SpriteManager.getSprites()) {
-			if (sprite.getImage() != null && sprite.isVisible()) {
-				g2d.drawImage(sprite.getImage(),
-						(int) (sprite.getLocation().getX()
-								- Game.getInstance().getCurrentWorld().getPlayer().getCamera().getLocation().getX()),
-						(int) (sprite.getLocation().getY()
-								- Game.getInstance().getCurrentWorld().getPlayer().getCamera().getLocation().getY()),
-						null);
+			if (sprite.getTexture().getImage() != null && sprite.isVisible()) {
+				if (sprite.getTexture().isOpaque()) {
+					g2d.drawImage(sprite.getTexture().getImage(),
+							(int) (sprite.getLocation().getX() - Game.getInstance().getCurrentWorld().getPlayer()
+									.getCamera().getLocation().getX()),
+							(int) (sprite.getLocation().getY() - Game.getInstance().getCurrentWorld().getPlayer()
+									.getCamera().getLocation().getY()),
+							null);
+				} else {
+
+					// Set the transparency level
+					float alpha = sprite.getTexture().getAlpha();
+					AlphaComposite alphaComposite = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, alpha);
+					g2d.setComposite(alphaComposite);
+
+					// Render your image
+					g2d.drawImage(sprite.getTexture().getImage(),
+							(int) (sprite.getLocation().getX() - Game.getInstance().getCurrentWorld().getPlayer()
+									.getCamera().getLocation().getX()),
+							(int) (sprite.getLocation().getY() - Game.getInstance().getCurrentWorld().getPlayer()
+									.getCamera().getLocation().getY()),
+							null);
+
+					g2d.setComposite(AlphaComposite.SrcOver);
+				}
 			}
 		}
 
@@ -75,16 +99,13 @@ public class GamePanel extends JPanel implements MouseListener {
 
 	@Override
 	public void mousePressed(MouseEvent e) {
-		System.out.println("pressed");
 		Vector2 location = new Vector2(e.getLocationOnScreen().getX(), e.getLocationOnScreen().getY());
 		InputManager.fireMousePressed(location);
 	}
 
 	@Override
 	public void mouseReleased(MouseEvent e) {
-		Vector2 location = new Vector2(
-				e.getLocationOnScreen().getX() + Game.getInstance().getCurrentWorld().getPlayer().getLocation().getX(),
-				e.getLocationOnScreen().getY() + Game.getInstance().getCurrentWorld().getPlayer().getLocation().getY());
+		Vector2 location = new Vector2(e.getLocationOnScreen().getX(), e.getLocationOnScreen().getY());
 		InputManager.fireMouseReleased(location);
 	}
 

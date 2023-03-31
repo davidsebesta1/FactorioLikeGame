@@ -7,10 +7,11 @@ import java.util.Arrays;
 
 import engine.input.InputManager;
 import engine.rendering.GameWindow;
-import engine.rendering.SpriteManager;
 import engine.sprites.Sprite;
+import engine.sprites.SpriteManager;
 import engine.time.DeltaTime;
 import engine.world.GameWorld;
+import main.Log;
 import math.Vector2;
 
 public class Game implements Runnable {
@@ -26,7 +27,7 @@ public class Game implements Runnable {
 	private long lastLoopTime = System.nanoTime();
 	private double unprocessedTime = 0;
 
-	ArrayList<Sprite> arr = new ArrayList<>();
+	private int framesPerSecond = 0;
 
 	private boolean isRunning;
 
@@ -36,6 +37,7 @@ public class Game implements Runnable {
 
 		// INITALIZE FIRST
 		InputManager.initialize();
+		Log.initilize();
 
 		// AND SECOND
 		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
@@ -53,6 +55,9 @@ public class Game implements Runnable {
 
 	@Override
 	public void run() {
+		long lastFpsTime = System.nanoTime();
+		int fps = 0;
+
 		while (isRunning) {
 			long now = System.nanoTime();
 			long elapsedTime = now - lastLoopTime;
@@ -72,11 +77,21 @@ public class Game implements Runnable {
 			// Render the scene
 			window.repaint();
 
+			fps++;
+
+			// Update and print FPS once per second
+			if (System.nanoTime() - lastFpsTime >= 1000000000) { // One second has elapsed
+				framesPerSecond = fps;
+				fps = 0;
+				lastFpsTime = System.nanoTime();
+			}
+
 			long sleepTime = (OPTIMAL_TIME - (System.nanoTime() - lastLoopTime)) / 1000000; // Convert to milliseconds
 			if (sleepTime > 0) {
 				try {
 					Thread.sleep(sleepTime);
-				} catch (InterruptedException e) {}
+				} catch (InterruptedException e) {
+				}
 			}
 		}
 	}
@@ -111,5 +126,9 @@ public class Game implements Runnable {
 
 	public boolean isRunning() {
 		return isRunning;
+	}
+
+	public int getFramesPerSecond() {
+		return framesPerSecond;
 	}
 }

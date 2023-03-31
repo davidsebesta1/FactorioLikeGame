@@ -20,7 +20,7 @@ public class GameWorld {
 		this.size = size;
 		this.tiles = new TileMap(10, 10);
 
-		this.player = Player.instantiatePlayer(new File("rockground.png"), new Vector2(0, 0));
+		this.player = Player.instantiatePlayer(new File("rockground.png"));
 
 		this.background = Sprite.instantiateSprite(new File("background.jpg"), new Vector2(0, 0), 0f);
 
