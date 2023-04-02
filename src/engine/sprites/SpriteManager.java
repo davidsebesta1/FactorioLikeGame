@@ -3,12 +3,11 @@ package engine.sprites;
 import java.util.ArrayList;
 import java.util.Collections;
 
-public abstract class SpriteManager {
+public class SpriteManager {
 	private static ArrayList<Sprite> spriteList = new ArrayList<>();
 	private static ArrayList<Sprite> updateSprites = new ArrayList<>();
 
-	private SpriteManager() {
-	}
+	private SpriteManager() {}
 
 	public static synchronized void add(Sprite sprite) {
 		if (sprite != null) {

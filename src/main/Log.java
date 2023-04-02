@@ -17,9 +17,22 @@ public class Log {
 	private static Log instance;
 
 	private Log() {
+		File logsDirectory = new File("logs");
+		if (!logsDirectory.exists()) {
+		    logsDirectory.mkdirs();
+		}
+
 		LocalDateTime now = LocalDateTime.now();
 		String fileName = "Log-" + dtf.format(now);
-		logFile = new File(fileName);
+		logFile = new File(logsDirectory, fileName);
+		if (!logFile.exists()) {
+		    try {
+		        logFile.createNewFile();
+		    } catch (IOException e) {
+		        e.printStackTrace();
+		    }
+		}
+
 		try {
 			writer = new FileWriter(logFile);
 		} catch (IOException e) {

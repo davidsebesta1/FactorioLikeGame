@@ -13,6 +13,9 @@ import javax.swing.JPanel;
 
 import engine.Game;
 import engine.input.InputManager;
+import engine.physics.BoundingBox;
+import engine.physics.PhysicsManager;
+import engine.sprites.PhysicsSprite;
 import engine.sprites.Sprite;
 import engine.sprites.SpriteManager;
 import math.Vector2;
@@ -83,6 +86,16 @@ public class GamePanel extends JPanel implements MouseListener {
 							null);
 
 					g2d.setComposite(AlphaComposite.SrcOver);
+				}
+			}
+			
+			//Debug render collision box
+			for(PhysicsSprite sprite2 : PhysicsManager.getPhysicsSprites()) {
+				if(sprite2.getCollisionBox() != null) {
+					BoundingBox box = sprite2.getCollisionBox();
+					g2d.setColor(Color.red);
+					Vector2 location = Camera.worldToScreenCoordinates(new Vector2((int) box.getX(),(int) box.getY()));
+					g2d.drawRect((int) location.getX(),(int) location.getY(),(int) box.getSize().getWidth(),(int) box.getSize().getHeight());
 				}
 			}
 		}

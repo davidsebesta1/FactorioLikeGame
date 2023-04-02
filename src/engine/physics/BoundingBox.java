@@ -1,4 +1,4 @@
-package engine.collisions;
+package engine.physics;
 
 import java.awt.Rectangle;
 import java.util.Objects;
@@ -16,6 +16,20 @@ public class BoundingBox extends Rectangle {
 		super((int) location.getX(), (int) location.getY(), (int) size.getX(), (int) size.getY());
 		this.owningSprite = owningSprite;
 		this.isStatic = isStatic;
+	}
+	
+	public boolean doCollideWith(BoundingBox box) {
+		if(this.intersects(box)) return true;
+		return false;
+	}
+	
+	public void setLocation(Vector2 location) {
+		this.x = (int) location.getX();
+		this.y = (int) location.getY();
+	}
+	
+	public Vector2 getLocationAsVector() {
+		return new Vector2(this.x, this.y);
 	}
 
 	public Sprite getOwningSprite() {

@@ -2,6 +2,8 @@ package engine.sprites.structures;
 
 import java.io.Serializable;
 
+import engine.sprites.structures.conveyors.ConveyorBelt;
+import engine.sprites.structures.conveyors.ConveyorBeltDirection;
 import math.Vector2;
 
 public class StructureMap implements Serializable {
@@ -18,20 +20,34 @@ public class StructureMap implements Serializable {
 		this.occupiedMap = new boolean[(int) size.getX()][(int) size.getY()];
 	}
 
-	public boolean tryAddStructureAtLocation(StructureSprite structure, Vector2 location) {
-		if (map[(int) location.getX()][(int) location.getY()] != null && checkForOccupiedSpaces(structure, location)) {
-			map[(int) location.getX()][(int) location.getY()] = structure;
+	public boolean tryAddStructureAtLocation(StructureSprite structure, Vector2 locationOnStructMap) {
+		if (map[(int) locationOnStructMap.getX()][(int) locationOnStructMap.getY()] == null && checkForOccupiedSpaces(structure, locationOnStructMap)) {
+			map[(int) locationOnStructMap.getX()][(int) locationOnStructMap.getY()] = structure;
+			
+			structure.setLocation(new Vector2(locationOnStructMap.getX() * 32f, locationOnStructMap.getY() * 32f));
+			
+			for (int i = (int) locationOnStructMap.getX(); i < locationOnStructMap.getX() + structure.getTileSizeUnits().getX(); i++) {
+				for (int j = (int) locationOnStructMap.getY(); j < locationOnStructMap.getY() + structure.getTileSizeUnits().getY(); j++) {
+					try {
+						occupiedMap[i][j] = true;
+					} catch(ArrayIndexOutOfBoundsException e) {}
+				}
+			}
+
 			return true;
 		}
 
 		return false;
 	}
 
-	private boolean checkForOccupiedSpaces(StructureSprite structure, Vector2 location) {
-		for (int i = (int) location.getX(); i < location.getX() + structure.getSize().getX(); i++) {
-			for (int j = (int) location.getY(); i < structure.getSize().getY(); i++) {
-				if (occupiedMap[i][j])
-					return false;
+	private boolean checkForOccupiedSpaces(StructureSprite structure, Vector2 locationOnStructMap) {
+		System.out.println(structure + "\n" + locationOnStructMap);
+		for (int i = (int) locationOnStructMap.getX(); i < locationOnStructMap.getX() + structure.getTileSizeUnits().getX(); i++) {
+			for (int j = (int) locationOnStructMap.getY(); j < locationOnStructMap.getY() + structure.getTileSizeUnits().getY(); j++) {
+				try {
+					if (occupiedMap[i][j])
+						return false;
+				} catch(ArrayIndexOutOfBoundsException e) {}
 			}
 		}
 

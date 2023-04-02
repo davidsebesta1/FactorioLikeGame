@@ -9,6 +9,10 @@ public class Vector2 implements Serializable{
 	private float y;
 	
 	public static final transient Vector2 zero = new Vector2(0, 0);
+	public static final transient Vector2 left = new Vector2(1, 0);
+	public static final transient Vector2 right = new Vector2(-1, 0);
+	public static final transient Vector2 up = new Vector2(0, 1);
+	public static final transient Vector2 down = new Vector2(0, -1);
 
 	// Constructor
 	public Vector2(float x, float y) {
@@ -44,7 +48,7 @@ public class Vector2 implements Serializable{
 		return (float) Math.sqrt(x * x + y * y);
 	}
 
-	// Returns normalized vector
+	// Returns normalised vector
 	public void normalize() {
 		float magnitude = this.magnitude();
 		this.x /= magnitude;

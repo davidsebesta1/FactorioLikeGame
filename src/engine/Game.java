@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 import engine.input.InputManager;
+import engine.physics.PhysicsManager;
 import engine.rendering.GameWindow;
 import engine.sprites.Sprite;
 import engine.sprites.SpriteManager;
@@ -73,6 +74,9 @@ public class Game implements Runnable {
 
 				unprocessedTime -= (1.0 / TARGET_FPS);
 			}
+
+			// Resolve collisions for physics sprites
+			PhysicsManager.resolveCollisions();
 
 			// Render the scene
 			window.repaint();

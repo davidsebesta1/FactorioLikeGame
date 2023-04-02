@@ -64,6 +64,10 @@ public class Sprite implements Comparable<Sprite>, ISpriteBehaviour, Serializabl
 	public Vector2 getLocation() {
 		return location;
 	}
+	
+	public Vector2 getCenterLocation() {
+		return location.add(size.div(2));
+	}
 
 	public void setLocation(Vector2 location) {
 		this.location = location;

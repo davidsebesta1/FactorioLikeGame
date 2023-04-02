@@ -1,40 +1,39 @@
 package engine.sprites.entities;
 
-import java.awt.image.BufferedImage;
 import java.io.File;
 import java.util.Objects;
 
-import javax.imageio.ImageIO;
+import javax.swing.GroupLayout.Group;
 
 import engine.Game;
 import engine.input.IMouseActionEventListener;
 import engine.input.InputManager;
+import engine.physics.BoundingBox;
 import engine.rendering.Camera;
 import engine.rendering.textures.Texture;
-import engine.sprites.Sprite;
+import engine.sprites.PhysicsSprite;
 import engine.sprites.SpriteManager;
 import engine.time.DeltaTime;
 import math.Vector2;
 
-public class Player extends Sprite implements IMouseActionEventListener {
+public class Player extends PhysicsSprite implements IMouseActionEventListener {
 	private static final long serialVersionUID = -6407007599351991639L;
 	private Camera camera;
 
-	private Vector2 velocity;
-
 	private boolean inputEnabled;
-
+	
+	private boolean buildingModeEnabled;
+	
 	private Player(Texture texture, Vector2 location, Vector2 velocity, float zDepth) {
 		super(texture, location, zDepth);
 
 		this.camera = new Camera(new Vector2(0, 0));
-
 		this.setVelocity(velocity);
-
 		this.inputEnabled = true;
+		this.buildingModeEnabled = false;
+		this.setCollisionBox(new BoundingBox(this, false, location, this.getSize()));
 
 		InputManager.addMouseActionListener(this);
-
 		SpriteManager.addUpdateSprite(this);
 	}
 
@@ -65,18 +64,10 @@ public class Player extends Sprite implements IMouseActionEventListener {
 		if (inputEnabled) {
 			velocity = InputManager.getDirectionalInput().mul(100f * (float) DeltaTime.getDeltaTime());
 
-			location = location.add(velocity);
+			setLocation(location.add(velocity));
 
 			camera.setLocation(camera.getLocation().add(velocity));
 		}
-	}
-
-	public Vector2 getVelocity() {
-		return velocity;
-	}
-
-	public void setVelocity(Vector2 velocity) {
-		this.velocity = velocity;
 	}
 
 	public boolean inputEnabled() {
@@ -126,6 +117,19 @@ public class Player extends Sprite implements IMouseActionEventListener {
 	public void mouseReleased(Vector2 screenCoordinate) {
 		// Unused
 
+	}
+	
+	@Override
+	public void enteredCollision(PhysicsSprite sprite) {
+		
+		while(collisionBox.doCollideWith(sprite.getCollisionBox())) {
+			Vector2 out = sprite.getCenterLocation().sub(getCenterLocation());
+			out.normalize();
+			out.setX(Math.round(out.getX()));
+			out.setY(Math.round(out.getY()));
+			this.setLocation(location.sub(out));
+			this.camera.setLocation(camera.getLocation().sub(out));
+		}
 	}
 
 }
