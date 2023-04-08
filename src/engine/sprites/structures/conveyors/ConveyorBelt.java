@@ -20,7 +20,7 @@ public class ConveyorBelt extends StructureSprite {
 
 	private ConveyorBelt next;
 
-	private static final float TRANSPORT_SPEED = 5f;
+	private static final float TRANSPORT_SPEED = 20f;
 
 	public ConveyorBelt(Texture texture, Vector2 location, float zDepth, ConveyorBeltDirection dir) {
 		super(texture, location, zDepth);
@@ -33,6 +33,16 @@ public class ConveyorBelt extends StructureSprite {
 	public static ConveyorBelt instantiateConveyorBelt(File file, Vector2 location, ConveyorBeltDirection dir) {
 		try {
 			Texture texture = Texture.createTexture(file);
+			return new ConveyorBelt(texture, location, 0.7f, dir);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return null;
+
+	}
+	
+	public static ConveyorBelt instantiateConveyorBelt(Texture texture, Vector2 location, ConveyorBeltDirection dir) {
+		try {
 			return new ConveyorBelt(texture, location, 0.7f, dir);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -71,7 +81,7 @@ public class ConveyorBelt extends StructureSprite {
 	public int hashCode() {
 		final int prime = 31;
 		int result = super.hashCode();
-		result = prime * result + Objects.hash(direction, item, TRANSPORT_SPEED);
+		result = prime * result + Objects.hash(direction, item, next);
 		return result;
 	}
 
@@ -84,32 +94,39 @@ public class ConveyorBelt extends StructureSprite {
 		if (getClass() != obj.getClass())
 			return false;
 		ConveyorBelt other = (ConveyorBelt) obj;
-		return direction == other.direction && Objects.equals(item, other.item);
+		return direction == other.direction && Objects.equals(item, other.item) && Objects.equals(next, other.next);
 	}
 
 	@Override
 	public void update() {
-		if (item != null && next != null) {
+		if (item != null && next != null) { 
+//			System.out.println(item.getLocation().add(new Vector2(direction.getDeltaX(), direction.getDeltaY()).mul((float) (TRANSPORT_SPEED * DeltaTime.getDeltaTime()))));
 			item.setLocation(item.getLocation().add(new Vector2(direction.getDeltaX(), direction.getDeltaY()).mul((float) (TRANSPORT_SPEED * DeltaTime.getDeltaTime()))));
-
+			
 			switch (direction) {
 			case UP:
 				if (item.getLocation().getY() < next.getLocation().getY()) {
 					next.setItem(this.item);
 					this.item = null;
-					System.out.println("woo");
 				}
 				break;
-			case DOWN: //finish this and auto detect next
-
+			case DOWN:
+				if (item.getLocation().getY() > next.getLocation().getY()) {
+					next.setItem(this.item);
+					this.item = null;
+				}
 				break;
 			case LEFT:
-
+				if (item.getLocation().getX() < next.getLocation().getX()) {
+					next.setItem(this.item);
+					this.item = null;
+				}
 				break;
 			case RIGHT:
-
-				break;
-			default:
+				if (item.getLocation().getX() > next.getLocation().getX()) {
+					next.setItem(this.item);
+					this.item = null;
+				}
 				break;
 			}
 
@@ -120,4 +137,11 @@ public class ConveyorBelt extends StructureSprite {
 		return TRANSPORT_SPEED;
 	}
 
+	@Override
+	public String toString() {
+		return "ConveyorBelt [direction=" + direction + ", item=" + item + ", next=" + next + ", tileSizeUnits="
+				+ tileSizeUnits + ", location=" + location + "]";
+	}
+	
+	
 }

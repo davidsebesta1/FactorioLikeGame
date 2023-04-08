@@ -3,6 +3,7 @@ package engine.sprites;
 import java.util.Objects;
 
 import engine.physics.BoundingBox;
+import engine.physics.CollisionLayers;
 import engine.physics.PhysicsManager;
 import engine.rendering.textures.Texture;
 import math.Vector2;
@@ -13,6 +14,8 @@ public class PhysicsSprite extends Sprite implements IPhysicsBehaviour {
 	protected Vector2 velocity;
 
 	protected BoundingBox collisionBox;
+	
+	protected CollisionLayers layer;
 
 	protected PhysicsSprite(Texture texture, Vector2 location, float zDepth) {
 		super(texture, location, zDepth);
@@ -20,6 +23,16 @@ public class PhysicsSprite extends Sprite implements IPhysicsBehaviour {
 
 		SpriteManager.addUpdateSprite(this);
 		PhysicsManager.addPhysicsSprite(this);
+	}
+	
+	public boolean checkCollisionLayer(PhysicsSprite other) {
+		if(this.layer == other.layer) return false;
+		
+		for(CollisionLayers layr : other.layer.getCollide()) {
+			if(layr == this.layer) return true;
+		}
+		
+		return false;
 	}
 
 	@Override
@@ -68,5 +81,13 @@ public class PhysicsSprite extends Sprite implements IPhysicsBehaviour {
 	@Override
 	public void enteredCollision(PhysicsSprite sprite) {
 		// Left for override
+	}
+
+	public CollisionLayers getLayer() {
+		return layer;
+	}
+
+	public void setLayer(CollisionLayers layer) {
+		this.layer = layer;
 	}
 }

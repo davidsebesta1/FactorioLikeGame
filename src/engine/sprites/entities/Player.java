@@ -48,6 +48,16 @@ public class Player extends PhysicsSprite implements IMouseActionEventListener {
 
 	}
 	
+	public static Player instantiatePlayer(Texture texture) {
+		try {
+			return new Player(texture, Game.getInstance().getResolution().div(2), Vector2.zero, 0.8f);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return null;
+
+	}
+	
 	public static Player instantiatePlayer(File file, float alpha) {
 		try {
 			Texture texture = Texture.createTexture(file, alpha);
@@ -67,10 +77,12 @@ public class Player extends PhysicsSprite implements IMouseActionEventListener {
 			setLocation(location.add(velocity));
 
 			camera.setLocation(camera.getLocation().add(velocity));
+			
+			Game.getInstance().getCurrentWorld().getBackground().setLocation(camera.getLocation());
 		}
 	}
 
-	public boolean inputEnabled() {
+	public boolean inputEnabled() { 
 		return inputEnabled;
 	}
 
@@ -108,8 +120,8 @@ public class Player extends PhysicsSprite implements IMouseActionEventListener {
 
 	@Override
 	public void mousePressed(Vector2 screenCoordinate) {
-		System.out.println(screenCoordinate);
-		System.out.println(Camera.screenToWorldCoordinates(screenCoordinate));
+//		System.out.println(screenCoordinate);
+//		System.out.println(Camera.screenToWorldCoordinates(screenCoordinate));
 
 	}
 

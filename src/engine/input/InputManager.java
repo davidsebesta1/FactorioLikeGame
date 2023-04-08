@@ -16,6 +16,7 @@ import java.util.Iterator;
 import engine.Game;
 import engine.rendering.Camera;
 import engine.sprites.tiles.TileSprite;
+import math.MathUtilities;
 import math.Vector2;
 
 public class InputManager {
@@ -159,7 +160,7 @@ public class InputManager {
 			iMouseListener.mousePressed(location);
 		}
 
-		checkForTileClick(Camera.screenToWorldCoordinates(location));
+		checkForTileClick(MathUtilities.screenToWorldCoordinates(location));
 	}
 
 	public static void fireMouseReleased(Vector2 location) {

@@ -8,20 +8,22 @@ import java.awt.RenderingHints;
 import java.awt.Toolkit;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.awt.image.BufferedImage;
 
 import javax.swing.JPanel;
 
 import engine.Game;
 import engine.input.InputManager;
-import engine.physics.BoundingBox;
-import engine.physics.PhysicsManager;
-import engine.sprites.PhysicsSprite;
+import engine.rendering.optimalization.Chunk;
+import engine.sprites.Background;
 import engine.sprites.Sprite;
-import engine.sprites.SpriteManager;
+import engine.sprites.entities.Player;
 import math.Vector2;
 
 public class GamePanel extends JPanel implements MouseListener {
 	private static final long serialVersionUID = -5792040577297371507L;
+
+	private BufferedImage buffer;
 
 	public GamePanel(Vector2 size) {
 		this.setSize((int) size.getX(), (int) size.getY());
@@ -29,20 +31,17 @@ public class GamePanel extends JPanel implements MouseListener {
 		this.setDoubleBuffered(true);
 		this.setFocusable(true);
 		this.addMouseListener(this);
-
+		
+		buffer = new BufferedImage((int) size.getX(), (int) size.getY(), BufferedImage.TYPE_INT_RGB);
 	}
 
-	@Override
-	public void paintComponent(Graphics g) {
-		super.paintComponent(g);
-
-		// G2D and rendering hits
+	private void render() {
+		// Render to off-screen buffer
+		Graphics g = buffer.getGraphics();
 		Graphics2D g2d = (Graphics2D) g;
-		g2d.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
-
-		// Draw FPS
-		g2d.drawString("FPS: " + Game.getInstance().getFramesPerSecond(), 10, 15);
-
+		
+		g2d.clearRect(0, 0, getWidth(), getHeight());
+		
 		// Zoom scale
 		double zoomScale = Game.getInstance().getCurrentWorld().getPlayer().getCamera().getCameraZoomScale();
 
@@ -59,51 +58,121 @@ public class GamePanel extends JPanel implements MouseListener {
 
 		// Translate the graphics context back
 		g2d.translate(-width / 2, -height / 2);
+		
+		// Render graphics here
 
-		// Rendering
-		for (Sprite sprite : SpriteManager.getSprites()) {
-			if (sprite.getTexture().getImage() != null && sprite.isVisible()) {
-				if (sprite.getTexture().isOpaque()) {
-					g2d.drawImage(sprite.getTexture().getImage(),
-							(int) (sprite.getLocation().getX() - Game.getInstance().getCurrentWorld().getPlayer()
-									.getCamera().getLocation().getX()),
-							(int) (sprite.getLocation().getY() - Game.getInstance().getCurrentWorld().getPlayer()
-									.getCamera().getLocation().getY()),
-							null);
-				} else {
+		Background background = Game.getInstance().getCurrentWorld().getBackground();
+		Player player = Game.getInstance().getCurrentWorld().getPlayer();
 
-					// Set the transparency level
-					float alpha = sprite.getTexture().getAlpha();
-					AlphaComposite alphaComposite = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, alpha);
-					g2d.setComposite(alphaComposite);
+		g2d.drawImage(background.getTexture().getImage(),
+				(int) (background.getLocation().getX()
+						- Game.getInstance().getCurrentWorld().getPlayer().getCamera().getLocation().getX()),
+				(int) (background.getLocation().getY()
+						- Game.getInstance().getCurrentWorld().getPlayer().getCamera().getLocation().getY()),
+				null);
 
-					// Render your image
-					g2d.drawImage(sprite.getTexture().getImage(),
-							(int) (sprite.getLocation().getX() - Game.getInstance().getCurrentWorld().getPlayer()
-									.getCamera().getLocation().getX()),
-							(int) (sprite.getLocation().getY() - Game.getInstance().getCurrentWorld().getPlayer()
-									.getCamera().getLocation().getY()),
-							null);
+		for (Chunk chunk : Game.getInstance().getCurrentWorld().getChunkManager().getActiveChunks()) {
+			for (Sprite sprite : chunk.getSprites()) {
+				if (sprite.getTexture().getImage() != null && sprite.isVisible()) {
+					if (sprite.getTexture().isOpaque()) {
+						g2d.drawImage(sprite.getTexture().getImage(),
+								(int) Math.floor(sprite.getLocation().getX() - Game.getInstance().getCurrentWorld()
+										.getPlayer().getCamera().getLocation().getX()),
+								(int) Math.floor(sprite.getLocation().getY() - Game.getInstance().getCurrentWorld()
+										.getPlayer().getCamera().getLocation().getY()),
+								null);
+					} else {
 
-					g2d.setComposite(AlphaComposite.SrcOver);
+						// Set the transparency level
+						float alpha = sprite.getTexture().getAlpha();
+						AlphaComposite alphaComposite = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, alpha);
+						g2d.setComposite(alphaComposite);
+
+						// Render your image
+						g2d.drawImage(sprite.getTexture().getImage(),
+								(int) (sprite.getLocation().getX() - Game.getInstance().getCurrentWorld().getPlayer()
+										.getCamera().getLocation().getX()),
+								(int) (sprite.getLocation().getY() - Game.getInstance().getCurrentWorld().getPlayer()
+										.getCamera().getLocation().getY()),
+								null);
+
+						g2d.setComposite(AlphaComposite.SrcOver);
+					}
 				}
 			}
-			
-			//Debug render collision box
-			for(PhysicsSprite sprite2 : PhysicsManager.getPhysicsSprites()) {
-				if(sprite2.getCollisionBox() != null) {
-					BoundingBox box = sprite2.getCollisionBox();
-					g2d.setColor(Color.red);
-					Vector2 location = Camera.worldToScreenCoordinates(new Vector2((int) box.getX(),(int) box.getY()));
-					g2d.drawRect((int) location.getX(),(int) location.getY(),(int) box.getSize().getWidth(),(int) box.getSize().getHeight());
-				}
-			}
+
+			g2d.drawImage(player.getTexture().getImage(),
+					(int) (player.getLocation().getX()
+							- Game.getInstance().getCurrentWorld().getPlayer().getCamera().getLocation().getX()),
+					(int) (player.getLocation().getY()
+							- Game.getInstance().getCurrentWorld().getPlayer().getCamera().getLocation().getY()),
+					null);
+
 		}
-
-		// Cleaning up stuff
+		
 		g2d.dispose();
 		g.dispose();
-		Toolkit.getDefaultToolkit().sync();
+	}
+
+	@Override
+	public void paintComponent(Graphics g) {
+		super.paintComponent(g);
+		// G2D and rendering hits
+		Graphics2D g2d = (Graphics2D) g;
+		
+		g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_OFF);
+		
+		render();
+
+		
+		g2d.drawImage(buffer, 0,0, null);
+
+//		for (Chunk chunk : Game.getInstance().getCurrentWorld().getChunkManager().getActiveChunks()) {
+//			for (Sprite sprite : chunk.getSprites()) {
+//				if (sprite.getTexture().getImage() != null && sprite.isVisible()) {
+//					if (sprite.getTexture().isOpaque()) {
+//						g2d.drawImage(sprite.getTexture().getImage(),
+//								(int) Math.floor(sprite.getLocation().getX() - Game.getInstance().getCurrentWorld()
+//										.getPlayer().getCamera().getLocation().getX()),
+//								(int) Math.floor(sprite.getLocation().getY() - Game.getInstance().getCurrentWorld()
+//										.getPlayer().getCamera().getLocation().getY()),
+//								null);
+//					} else {
+//
+//						// Set the transparency level
+//						float alpha = sprite.getTexture().getAlpha();
+//						AlphaComposite alphaComposite = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, alpha);
+//						g2d.setComposite(alphaComposite);
+//
+//						// Render your image
+//						g2d.drawImage(sprite.getTexture().getImage(),
+//								(int) (sprite.getLocation().getX() - Game.getInstance().getCurrentWorld().getPlayer()
+//										.getCamera().getLocation().getX()),
+//								(int) (sprite.getLocation().getY() - Game.getInstance().getCurrentWorld().getPlayer()
+//										.getCamera().getLocation().getY()),
+//								null);
+//
+//						g2d.setComposite(AlphaComposite.SrcOver);
+//					}
+//				}
+//			}
+
+		g2d.setColor(Color.red);
+
+		// Debug render collision box
+//			for(PhysicsSprite sprite2 : PhysicsManager.getPhysicsSprites()) {
+//				if(sprite2.getCollisionBox() != null) {
+//					BoundingBox box = sprite2.getCollisionBox();
+//					g2d.setColor(Color.red);
+//					Vector2 location = Camera.worldToScreenCoordinates(new Vector2((int) box.getX(),(int) box.getY()));
+//					g2d.drawRect((int) location.getX(),(int) location.getY(),(int) box.getSize().getWidth(),(int) box.getSize().getHeight());
+//				}
+//			}
+
+	// Cleaning up stuff
+	g2d.dispose();g.dispose();Toolkit.getDefaultToolkit().sync();
+	g2d.drawString("FPS: " + Game.getInstance().getFramesPerSecond(), 10, 15);
+
 	}
 
 	@Override

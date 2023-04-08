@@ -1,8 +1,12 @@
 package engine.world;
 
-import java.io.File;
+import java.util.Random;
 
+import engine.rendering.optimalization.ChunkManager;
+import engine.rendering.textures.TextureLibrary;
+import engine.sprites.Background;
 import engine.sprites.Sprite;
+import engine.sprites.SpriteManager;
 import engine.sprites.entities.Player;
 import engine.sprites.objects.minable.Coal;
 import engine.sprites.structures.CoreModule;
@@ -17,47 +21,56 @@ public class GameWorld {
 	private TileMap tiles;
 	private StructureMap structureMap;
 
-	private Sprite background;
+	private Background background;
 
 	private Player player;
+	
+	private ChunkManager chunkManager;
 
 	public GameWorld(Vector2 size) {
 		this.size = size;
-		this.tiles = new TileMap(10, 10);
-		this.structureMap = new StructureMap(new Vector2(10,10));
+		this.tiles = new TileMap((int) (size.getX() / 32f), (int) (size.getY() / 32f));
+		this.structureMap = new StructureMap(size.div(32f));
 
-		this.player = Player.instantiatePlayer(new File("rockground.png"));
+		this.player = Player.instantiatePlayer(TextureLibrary.getInstance().retrieveTexture("rockground"));
 
-		this.background = Sprite.instantiateSprite(new File("background.jpg"), new Vector2(0, 0), 0f);
+		this.background = Background.instantiateBackground(TextureLibrary.getInstance().retrieveTexture("background"), new Vector2(0, 0), 0f);
+		
+		this.chunkManager = new ChunkManager(256f, size, player);
 
 		
+		Random random = new Random();
 		for(int i = 0; i < tiles.getSize().getX(); i++) {
 			for(int j = 0; j < tiles.getSize().getY(); j++) {
-				this.tiles.tryCreateAtLocation(i, j, new File("ground1.png"));
+				int rnd = random.nextInt(4);
+				
+				this.tiles.tryCreateAtLocation(i, j, TextureLibrary.getInstance().retrieveTexture("groundrock" + rnd));
+				
 			}
 		}
 		
 		
-		structureMap.tryAddStructureAtLocation(CoreModule.instantiateCoreModule(new File("coreModule.png"), new Vector2(0, 0)), new Vector2(2, 2));
-		ConveyorBelt belt = ConveyorBelt.instantiateConveyorBelt(new File("beltUP.png"), new Vector2(0, 0), ConveyorBeltDirection.UP);
-		ConveyorBelt belt2 = ConveyorBelt.instantiateConveyorBelt(new File("beltUP.png"), new Vector2(0, 0), ConveyorBeltDirection.UP);
-		ConveyorBelt belt3 = ConveyorBelt.instantiateConveyorBelt(new File("beltUP.png"), new Vector2(0, 0), ConveyorBeltDirection.UP);
-		structureMap.tryAddStructureAtLocation(belt,new Vector2(5, 6));
-		structureMap.tryAddStructureAtLocation(belt2,new Vector2(5, 7));
-		structureMap.tryAddStructureAtLocation(belt3,new Vector2(5, 8));
+		structureMap.tryAddStructureAtLocation(CoreModule.instantiateCoreModule(TextureLibrary.getInstance().retrieveTexture("coreModule"), new Vector2(0, 0)), new Vector2(2, 2));
+		ConveyorBelt belt = ConveyorBelt.instantiateConveyorBelt(TextureLibrary.getInstance().retrieveTexture("beltRIGHT"), new Vector2(0, 0), ConveyorBeltDirection.RIGHT);
+		ConveyorBelt belt1 = ConveyorBelt.instantiateConveyorBelt(TextureLibrary.getInstance().retrieveTexture("beltRIGHT"), new Vector2(0, 0), ConveyorBeltDirection.RIGHT);
+		ConveyorBelt belt2 = ConveyorBelt.instantiateConveyorBelt(TextureLibrary.getInstance().retrieveTexture("beltUP"), new Vector2(0, 0), ConveyorBeltDirection.UP);
+		ConveyorBelt belt3 = ConveyorBelt.instantiateConveyorBelt(TextureLibrary.getInstance().retrieveTexture("beltUP"), new Vector2(0, 0), ConveyorBeltDirection.UP);
+		structureMap.tryAddStructureAtLocation(belt,new Vector2(4, 7));
+		structureMap.tryAddStructureAtLocation(belt1,new Vector2(5, 7));
+		structureMap.tryAddStructureAtLocation(belt2,new Vector2(6, 7));
+		structureMap.tryAddStructureAtLocation(belt3,new Vector2(6, 6));
 		
-		belt2.setNext(belt);
-		belt3.setNext(belt2);
+		belt.setItem(Coal.instantiateCoal(TextureLibrary.getInstance().retrieveTexture("coal"), Vector2.zero));
 		
-		belt3.setItem(Coal.instantiateCoal(new File("coal.png"), Vector2.zero));
+		chunkManager.initialAssigning(SpriteManager.getSprites());
 		
 	}
 
-	public Sprite getBackground() {
+	public Background getBackground() {
 		return background;
 	}
 
-	public void setBackground(Sprite background) {
+	public void setBackground(Background background) {
 		this.background = background;
 	}
 
@@ -79,5 +92,9 @@ public class GameWorld {
 
 	public StructureMap getStructureMap() {
 		return structureMap;
+	}
+
+	public ChunkManager getChunkManager() {
+		return chunkManager;
 	}
 }

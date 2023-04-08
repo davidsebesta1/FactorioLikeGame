@@ -2,14 +2,17 @@ package engine.sprites;
 
 import java.io.File;
 import java.io.Serializable;
+import java.util.Map;
 import java.util.Objects;
 
 import engine.rendering.textures.Texture;
+import engine.rendering.textures.TextureLibrary;
 import math.Vector2;
 
 public class Sprite implements Comparable<Sprite>, ISpriteBehaviour, Serializable {
 	private static final long serialVersionUID = 2893665038957303083L;
-	protected Texture texture;
+	protected transient Texture texture;
+	protected String textureName;
 	protected float zDepth;
 
 	protected Vector2 location;
@@ -21,6 +24,7 @@ public class Sprite implements Comparable<Sprite>, ISpriteBehaviour, Serializabl
 		super();
 
 		this.texture = texture;
+		this.textureName = Sprite.getTextureNameByObject(texture);
 		this.size = new Vector2(texture.getImage().getWidth(), texture.getImage().getHeight());
 
 		this.zDepth = zDepth;
@@ -33,6 +37,20 @@ public class Sprite implements Comparable<Sprite>, ISpriteBehaviour, Serializabl
 	public static Sprite instantiateSprite(File file, Vector2 location, float zDepth) {
 		try {
 			Texture texture = Texture.createTexture(file);
+			if (zDepth < 0)
+				throw new IllegalArgumentException("Z-Depth must be greater or equal to zero");
+
+			return new Sprite(texture, location, zDepth);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		return null;
+
+	}
+
+	public static Sprite instantiateSprite(Texture texture, Vector2 location, float zDepth) {
+		try {
 			if (zDepth < 0)
 				throw new IllegalArgumentException("Z-Depth must be greater or equal to zero");
 
@@ -64,7 +82,7 @@ public class Sprite implements Comparable<Sprite>, ISpriteBehaviour, Serializabl
 	public Vector2 getLocation() {
 		return location;
 	}
-	
+
 	public Vector2 getCenterLocation() {
 		return location.add(size.div(2));
 	}
@@ -112,6 +130,15 @@ public class Sprite implements Comparable<Sprite>, ISpriteBehaviour, Serializabl
 		return isVisible == other.isVisible && Objects.equals(location, other.location)
 				&& Objects.equals(size, other.size) && Objects.equals(texture, other.texture)
 				&& Float.floatToIntBits(zDepth) == Float.floatToIntBits(other.zDepth);
+	}
+	
+	public static String getTextureNameByObject(Texture value) {
+		 for (Map.Entry<String, Texture> entry : TextureLibrary.getInstance().getLibrary().entrySet()) {
+		        if (entry.getValue().equals(value)) {
+		            return entry.getKey();
+		        }
+		    }
+		    return null;
 	}
 
 	@Override

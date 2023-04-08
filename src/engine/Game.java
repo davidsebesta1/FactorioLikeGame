@@ -2,13 +2,11 @@ package engine;
 
 import java.awt.Dimension;
 import java.awt.Toolkit;
-import java.util.ArrayList;
-import java.util.Arrays;
 
 import engine.input.InputManager;
 import engine.physics.PhysicsManager;
 import engine.rendering.GameWindow;
-import engine.sprites.Sprite;
+import engine.rendering.textures.TextureLibrary;
 import engine.sprites.SpriteManager;
 import engine.time.DeltaTime;
 import engine.world.GameWorld;
@@ -21,6 +19,8 @@ public class Game implements Runnable {
 	private GameWorld currentWorld;
 	private GameWindow window;
 	private Vector2 resolution;
+
+	private TextureLibrary tl;
 
 	private final int TARGET_FPS = 60;
 	private final long OPTIMAL_TIME = 1000000000 / TARGET_FPS; // One billion nanoseconds per second
@@ -35,15 +35,20 @@ public class Game implements Runnable {
 	private Game() {
 		isRunning = true;
 		instance = this;
+		
+//		System.setProperty("sun.java2d.opengl", "true");
 
 		// INITALIZE FIRST
 		InputManager.initialize();
 		Log.initilize();
+		tl = new TextureLibrary(); // textures
+		tl.loadAllTextures("textures"); // folder name as param
 
 		// AND SECOND
 		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 		resolution = new Vector2((int) screenSize.getWidth(), (int) screenSize.getHeight());
-		currentWorld = new GameWorld(resolution);
+		float size = 1024f;
+		currentWorld = new GameWorld(new Vector2(size, size));
 
 		// WINDOW AS LAST
 		window = GameWindow.initiateInstance(resolution, true);
@@ -51,7 +56,6 @@ public class Game implements Runnable {
 		// FINALLY GAME LOOP
 		Thread thread = new Thread(this);
 		thread.start();
-
 	}
 
 	@Override
@@ -66,10 +70,11 @@ public class Game implements Runnable {
 
 			unprocessedTime += elapsedTime / 1000000000.0; // Convert to seconds
 
+			double deltaTime = 1.0 / TARGET_FPS;
+			DeltaTime.updateDeltaTime(deltaTime);
+			
 			while (unprocessedTime >= (1.0 / TARGET_FPS)) {
 				// Update game logic
-				double deltaTime = 1.0 / TARGET_FPS;
-				DeltaTime.updateDeltaTime(deltaTime);
 				SpriteManager.updateAllSprites();
 
 				unprocessedTime -= (1.0 / TARGET_FPS);
@@ -77,6 +82,10 @@ public class Game implements Runnable {
 
 			// Resolve collisions for physics sprites
 			PhysicsManager.resolveCollisions();
+			
+			
+			//Update chunks
+			Game.getInstance().getCurrentWorld().getChunkManager().updateActiveChunks();
 
 			// Render the scene
 			window.repaint();

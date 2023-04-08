@@ -22,4 +22,14 @@ public class CoreModule extends StructureSprite {
 		return null;
 		
 	}
+	
+	public static CoreModule instantiateCoreModule(Texture texture, Vector2 location) {
+		try {
+			return new CoreModule(texture, location, 0.7f);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return null;
+		
+	}
 }

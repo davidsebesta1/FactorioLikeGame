@@ -15,9 +15,19 @@ public class TileSprite extends Sprite {
 		super(texture, location, 0.1f);
 	}
 
-	public static TileSprite instantiateSprite(File file, Vector2 location) {
+	public static TileSprite instantiateTileSprite(File file, Vector2 location) {
 		try {
 			Texture texture = Texture.createTexture(file);
+			return new TileSprite(texture, location);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return null;
+
+	}
+	
+	public static TileSprite instantiateTileSprite(Texture texture, Vector2 location) {
+		try {
 			return new TileSprite(texture, location);
 		} catch (Exception e) {
 			e.printStackTrace();

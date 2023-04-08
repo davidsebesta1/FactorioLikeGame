@@ -3,6 +3,7 @@ package engine.sprites.tiles;
 import java.io.File;
 import java.io.Serializable;
 
+import engine.rendering.textures.Texture;
 import engine.sprites.Sprite;
 import math.Vector2;
 
@@ -24,7 +25,16 @@ public class TileMap implements Serializable {
 
 	public boolean tryCreateAtLocation(int x, int y, File file) {
 		if (map[x][y] == null) {
-			map[x][y] = TileSprite.instantiateSprite(file, new Vector2(x * SPRITE_SIZE, y * SPRITE_SIZE));
+			map[x][y] = TileSprite.instantiateTileSprite(file, new Vector2(x * SPRITE_SIZE, y * SPRITE_SIZE));
+			return true;
+		}
+
+		return false;
+	}
+	
+	public boolean tryCreateAtLocation(int x, int y, Texture texture) {
+		if (map[x][y] == null) {
+			map[x][y] = TileSprite.instantiateTileSprite(texture, new Vector2(x * SPRITE_SIZE, y * SPRITE_SIZE));
 			return true;
 		}
 

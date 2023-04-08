@@ -25,5 +25,15 @@ public class Coal extends Item {
 		return null;
 
 	}
+	
+	public static Coal instantiateCoal(Texture texture, Vector2 location) {
+		try {
+			return new Coal(texture, location, 0.72f);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return null;
+
+	}
 
 }

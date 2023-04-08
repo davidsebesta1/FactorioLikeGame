@@ -57,6 +57,19 @@ public class Texture {
 			e.printStackTrace();
 		}
 	}
+	
+	private Texture(BufferedImage imageTemp, float alpha) {
+		// Create a new image with the desired type
+		this.image = new BufferedImage(imageTemp.getWidth(), imageTemp.getHeight(), BufferedImage.TYPE_INT_ARGB);
+		this.image.setAccelerationPriority(1);
+		this.isOpaque = false;
+		this.alpha = alpha;
+
+		// Draw the original image onto the new image
+		Graphics2D g2d = image.createGraphics();
+		g2d.drawImage(imageTemp, 0, 0, null);
+		g2d.dispose();
+	}
 
 	public static Texture createTexture(File file) {
 		if (file.exists()) {
@@ -86,6 +99,21 @@ public class Texture {
 		g.dispose();
 
 		return volatileImage;
+	}
+	
+	public static Texture rotateImage(Texture source, double piRadians) {
+		BufferedImage src = source.getImage();
+	    int width = src.getWidth();
+	    int height = src.getHeight();
+
+	    BufferedImage rotatedImage = new BufferedImage(height, width, src.getType());
+
+	    Graphics2D g2d = rotatedImage.createGraphics();
+	    g2d.translate((height - width) / 2d, (height - width) / 2d);
+	    g2d.rotate(piRadians, height / 2d, width / 2d);
+	    g2d.drawRenderedImage(src, null);
+
+	    return new Texture(rotatedImage, source.getAlpha());
 	}
 
 	public boolean isOpaque() {
