@@ -1,6 +1,7 @@
 package engine.rendering.optimalization;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 import engine.sprites.Background;
@@ -11,6 +12,8 @@ import math.Vector2;
 public class ChunkManager {
 	private float chunkSize;
 	private Chunk[][] chunkMap;
+	
+	private HashSet<Chunk> updateQueue;
 
 	private CopyOnWriteArrayList<Chunk> activeChunks;
 
@@ -21,6 +24,7 @@ public class ChunkManager {
 		this.chunkMap = new Chunk[(int) (mapSize.getX() / chunkSize)][(int) (mapSize.getY() / chunkSize)];
 		this.player = player;
 		this.activeChunks = new CopyOnWriteArrayList<>();
+		this.updateQueue = new HashSet<>();
 
 		for (int i = 0; i < chunkMap.length; i++) {
 			for (int j = 0; j < chunkMap[i].length; j++) {
@@ -32,23 +36,44 @@ public class ChunkManager {
 
 	public void initialAssigning(ArrayList<Sprite> list) {
 		for (Sprite sprite : list) {
-			if (sprite instanceof Background || sprite instanceof Player)
-				continue;
+			if (sprite instanceof Background || sprite instanceof Player) continue;
 			assignChunk(sprite);
 		}
+		
+		for (int i = 0; i < chunkMap.length; i++) {
+			for (int j = 0; j < chunkMap[i].length; j++) {
+				chunkMap[i][j].cacheImage();
+			}
+		}
 	}
+	
+	public boolean addChunkToUpdateQueue(Chunk chunk) {
+		return updateQueue.add(chunk);
+	}
+	
+	public void runUpdateQueue() {
+		for(Chunk chunk : updateQueue) {
+			chunk.cacheImage();
+		}
+		
+		updateQueue.clear();
+	}
+	
 
 	public void updateSpriteChunk(Sprite sprite) {
 		if (sprite instanceof Background || sprite instanceof Player)
 			return;
 		for (int i = 0; i < chunkMap.length; i++) {
 			for (int j = 0; j < chunkMap[i].length; j++) {
-				if (chunkMap[i][j].tryRemoveSprite(sprite))
+				if (chunkMap[i][j].tryRemoveSprite(sprite)) {
+					assignChunk(sprite);
+					addChunkToUpdateQueue(chunkMap[i][j]);
 					return;
+				}
 			}
 		}
 
-		assignChunk(sprite);
+		
 	}
 
 	public void addSpriteToChunks(Sprite sprite) {

@@ -9,6 +9,8 @@ import engine.sprites.Sprite;
 import engine.sprites.SpriteManager;
 import engine.sprites.entities.Player;
 import engine.sprites.objects.minable.Coal;
+import engine.sprites.ores.CoalOre;
+import engine.sprites.ores.OreMap;
 import engine.sprites.structures.CoreModule;
 import engine.sprites.structures.StructureMap;
 import engine.sprites.structures.conveyors.ConveyorBelt;
@@ -19,7 +21,9 @@ import math.Vector2;
 public class GameWorld {
 	private Vector2 size;
 	private TileMap tiles;
+	
 	private StructureMap structureMap;
+	private OreMap oreMap;
 
 	private Background background;
 
@@ -29,8 +33,9 @@ public class GameWorld {
 
 	public GameWorld(Vector2 size) {
 		this.size = size;
-		this.tiles = new TileMap((int) (size.getX() / 32f), (int) (size.getY() / 32f));
-		this.structureMap = new StructureMap(size.div(32f));
+		this.tiles = new TileMap((int) (size.getX() / 32), (int) (size.getY() / 32));
+		this.structureMap = new StructureMap(size.div(32));
+		this.oreMap = new OreMap(size.div(32));
 
 		this.player = Player.instantiatePlayer(TextureLibrary.getInstance().retrieveTexture("rockground"));
 
@@ -39,12 +44,17 @@ public class GameWorld {
 		this.chunkManager = new ChunkManager(256f, size, player);
 
 		
-		Random random = new Random();
+		Random random = new Random(7584);
+		Random random2 = new Random(5144);
+		
 		for(int i = 0; i < tiles.getSize().getX(); i++) {
 			for(int j = 0; j < tiles.getSize().getY(); j++) {
-				int rnd = random.nextInt(4);
+				int rndIndex = random.nextInt(3) + 1;
 				
-				this.tiles.tryCreateAtLocation(i, j, TextureLibrary.getInstance().retrieveTexture("groundrock" + rnd));
+				int rndVariation = 0;
+				if(random.nextInt() >= 9) rndVariation = random2.nextInt(4);
+				
+				this.tiles.tryCreateAtLocation(i, j, TextureLibrary.getInstance().retrieveTexture("asteroidGround" + rndIndex + "" + rndVariation));
 				
 			}
 		}
@@ -60,9 +70,13 @@ public class GameWorld {
 		structureMap.tryAddStructureAtLocation(belt2,new Vector2(6, 7));
 		structureMap.tryAddStructureAtLocation(belt3,new Vector2(6, 6));
 		
-		belt.setItem(Coal.instantiateCoal(TextureLibrary.getInstance().retrieveTexture("coal"), Vector2.zero));
+		oreMap.tryAddOreAtLocation(CoalOre.instantiateSprite(TextureLibrary.getInstance().retrieveTexture("coalOre"), new Vector2(0, 0), 50), new Vector2(10,10));
 		
-		chunkManager.initialAssigning(SpriteManager.getSprites());
+		
+		
+		belt.setItem(Coal.instantiateCoal(TextureLibrary.getInstance().retrieveTexture("coal"), Vector2.zero));
+		belt1.setItem(Coal.instantiateCoal(TextureLibrary.getInstance().retrieveTexture("coal"), Vector2.zero));
+	
 		
 	}
 

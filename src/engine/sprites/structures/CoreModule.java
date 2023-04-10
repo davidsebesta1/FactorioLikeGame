@@ -2,14 +2,16 @@ package engine.sprites.structures;
 
 import java.io.File;
 
+import engine.physics.CollisionLayers;
 import engine.rendering.textures.Texture;
 import math.Vector2;
 
 public class CoreModule extends StructureSprite {
 	private static final long serialVersionUID = 5792682450616901356L;
 
-	private CoreModule(Texture texture, Vector2 location, float zDepth) {
+	private CoreModule(Texture texture, Vector2 location, double zDepth) {
 		super(texture, location, zDepth);
+		this.collisionLayer = CollisionLayers.STRUCTURE;
 	}
 
 	public static CoreModule instantiateCoreModule(File file, Vector2 location) {
@@ -32,4 +34,23 @@ public class CoreModule extends StructureSprite {
 		return null;
 		
 	}
+
+	@Override
+	public int hashCode() {
+		return super.hashCode();
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (!super.equals(obj))
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		return true;
+	}
+
+	
+	
 }

@@ -3,6 +3,7 @@ package engine.rendering.textures;
 import java.awt.Graphics2D;
 import java.awt.GraphicsConfiguration;
 import java.awt.GraphicsEnvironment;
+import java.awt.Transparency;
 import java.awt.image.BufferedImage;
 import java.awt.image.VolatileImage;
 import java.io.File;
@@ -13,40 +14,18 @@ import javax.imageio.ImageIO;
 
 public class Texture {
 	private BufferedImage image;
-	private boolean isOpaque;
-	private float alpha;
+	private TextureType type;
 
-	private Texture(File file) {
+	private Texture(File file, TextureType type) {
 		try {
 			// Load the image
 			BufferedImage imageTemp = ImageIO.read(file);
 
 			// Create a new image with the desired type
-			this.image = new BufferedImage(imageTemp.getWidth(), imageTemp.getHeight(), BufferedImage.TYPE_INT_RGB);
+			GraphicsConfiguration gfxConfig = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice().getDefaultConfiguration();
+			this.image = gfxConfig.createCompatibleImage(imageTemp.getWidth(), imageTemp.getHeight(), type.getId());
 			this.image.setAccelerationPriority(1);
-			this.isOpaque = true;
-			this.alpha = 1f;
-
-			// Draw the original image onto the new image
-			Graphics2D g2d = image.createGraphics();
-			g2d.drawImage(imageTemp, 0, 0, null);
-			g2d.dispose();
-
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-	}
-
-	private Texture(File file, float alpha) {
-		try {
-			// Load the image
-			BufferedImage imageTemp = ImageIO.read(file);
-
-			// Create a new image with the desired type
-			this.image = new BufferedImage(imageTemp.getWidth(), imageTemp.getHeight(), BufferedImage.TYPE_INT_ARGB);
-			this.image.setAccelerationPriority(1);
-			this.isOpaque = false;
-			this.alpha = alpha;
+			this.type = type;
 
 			// Draw the original image onto the new image
 			Graphics2D g2d = image.createGraphics();
@@ -58,12 +37,11 @@ public class Texture {
 		}
 	}
 	
-	private Texture(BufferedImage imageTemp, float alpha) {
+	private Texture(BufferedImage imageTemp) {
 		// Create a new image with the desired type
-		this.image = new BufferedImage(imageTemp.getWidth(), imageTemp.getHeight(), BufferedImage.TYPE_INT_ARGB);
+		GraphicsConfiguration gfxConfig = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice().getDefaultConfiguration();
+		this.image = gfxConfig.createCompatibleImage(imageTemp.getWidth(), imageTemp.getHeight(), Transparency.OPAQUE);
 		this.image.setAccelerationPriority(1);
-		this.isOpaque = false;
-		this.alpha = alpha;
 
 		// Draw the original image onto the new image
 		Graphics2D g2d = image.createGraphics();
@@ -73,14 +51,15 @@ public class Texture {
 
 	public static Texture createTexture(File file) {
 		if (file.exists()) {
-			return new Texture(file);
+			return new Texture(file, TextureType.OPAQUE);
 		}
 		throw new IllegalArgumentException("Specified texture file not found");
 	}
 	
-	public static Texture createTexture(File file, float alpha) {
+
+	public static Texture createTexture(File file, TextureType type) {
 		if (file.exists()) {
-			return new Texture(file, alpha);
+			return new Texture(file, type);
 		}
 		throw new IllegalArgumentException("Specified texture file not found");
 	}
@@ -113,23 +92,7 @@ public class Texture {
 	    g2d.rotate(piRadians, height / 2d, width / 2d);
 	    g2d.drawRenderedImage(src, null);
 
-	    return new Texture(rotatedImage, source.getAlpha());
-	}
-
-	public boolean isOpaque() {
-		return isOpaque;
-	}
-
-	public void setOpaque(boolean isOpaque) {
-		this.isOpaque = isOpaque;
-	}
-
-	public float getAlpha() {
-		return alpha;
-	}
-
-	public void setAlpha(float alpha) {
-		this.alpha = alpha;
+	    return new Texture(rotatedImage);
 	}
 
 	@Override

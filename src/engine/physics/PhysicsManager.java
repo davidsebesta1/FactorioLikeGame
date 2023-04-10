@@ -27,6 +27,7 @@ public class PhysicsManager {
 			for (PhysicsSprite sprite2 : physicsSprites) {
 				if (!sprite2.equals(sprite) && sprite.getCollisionBox() != null && sprite2.getCollisionBox() != null && (sprite.getCollisionBox().doCollideWith(sprite2.getCollisionBox()))) {
 					sprite.enteredCollision(sprite2);
+					sprite2.enteredCollision(sprite);
 				}
 			}
 		}

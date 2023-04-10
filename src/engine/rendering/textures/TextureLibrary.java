@@ -47,16 +47,16 @@ public class TextureLibrary {
 		return library;
 	}
 
-	public void loadAllTextures(String folderPath) {
+	public void loadAllTextures(String folderPath, TextureType type) {
 		File folder = new File(folderPath);
         File[] files = folder.listFiles();
 
         for (File file : files) {
             if (file.isFile() && (file.getName().endsWith(".jpg") || file.getName().endsWith(".png"))) {
             	if(file.getName().substring(0, file.getName().length() - 4).charAt(file.getName().length() - 5) == '!') {
-            		addTextureWithVariation(file.getName().substring(0, file.getName().length() - 5), Texture.createTexture(file));
+            		addTextureWithVariation(file.getName().substring(0, file.getName().length() - 5), Texture.createTexture(file, type));
             	} else {
-            		addTexture(file.getName().substring(0, file.getName().length() - 4), Texture.createTexture(file));
+            		addTexture(file.getName().substring(0, file.getName().length() - 4), Texture.createTexture(file, type));
             	}
             }
         }

@@ -1,21 +1,26 @@
 package engine;
 
 import java.awt.Dimension;
+import java.awt.DisplayMode;
 import java.awt.Toolkit;
 
 import engine.input.InputManager;
 import engine.physics.PhysicsManager;
 import engine.rendering.GameWindow;
 import engine.rendering.textures.TextureLibrary;
+import engine.rendering.textures.TextureType;
 import engine.sprites.SpriteManager;
 import engine.time.DeltaTime;
 import engine.world.GameWorld;
 import main.Log;
 import math.Vector2;
+import notmycode.ScreenManager;
 
 public class Game implements Runnable {
 
 	private static Game instance;
+
+	private ScreenManager screen;
 	private GameWorld currentWorld;
 	private GameWindow window;
 	private Vector2 resolution;
@@ -32,26 +37,36 @@ public class Game implements Runnable {
 
 	private boolean isRunning;
 
+	private static final DisplayMode POSSIBLE_MODES[] = { new DisplayMode(1920, 1080, 16, 0)};
+
 	private Game() {
 		isRunning = true;
 		instance = this;
-		
+
 //		System.setProperty("sun.java2d.opengl", "true");
 
 		// INITALIZE FIRST
 		InputManager.initialize();
 		Log.initilize();
 		tl = new TextureLibrary(); // textures
-		tl.loadAllTextures("textures"); // folder name as param
+		tl.loadAllTextures("textures/tile", TextureType.OPAQUE); // folder name as param + texture type
+		tl.loadAllTextures("textures/structures", TextureType.OPAQUE);
+		tl.loadAllTextures("textures/ores", TextureType.BITMASK);
+		tl.loadAllTextures("textures/items", TextureType.BITMASK);
+		tl.loadAllTextures("textures", TextureType.OPAQUE);
 
 		// AND SECOND
 		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 		resolution = new Vector2((int) screenSize.getWidth(), (int) screenSize.getHeight());
-		float size = 1024f;
+		double size = 1024f;
 		currentWorld = new GameWorld(new Vector2(size, size));
+		currentWorld.getChunkManager().initialAssigning(SpriteManager.getSprites());
 
 		// WINDOW AS LAST
-		window = GameWindow.initiateInstance(resolution, true);
+		screen = new ScreenManager();
+		DisplayMode displayMode = screen.findFirstCompatibleMode(POSSIBLE_MODES);
+		screen.setFullScreen(displayMode);
+		window = GameWindow.initiateInstance(resolution);
 
 		// FINALLY GAME LOOP
 		Thread thread = new Thread(this);
@@ -61,7 +76,6 @@ public class Game implements Runnable {
 	@Override
 	public void run() {
 		long lastFpsTime = System.nanoTime();
-		int fps = 0;
 
 		while (isRunning) {
 			long now = System.nanoTime();
@@ -72,7 +86,7 @@ public class Game implements Runnable {
 
 			double deltaTime = 1.0 / TARGET_FPS;
 			DeltaTime.updateDeltaTime(deltaTime);
-			
+
 			while (unprocessedTime >= (1.0 / TARGET_FPS)) {
 				// Update game logic
 				SpriteManager.updateAllSprites();
@@ -82,28 +96,21 @@ public class Game implements Runnable {
 
 			// Resolve collisions for physics sprites
 			PhysicsManager.resolveCollisions();
-			
-			
-			//Update chunks
+
+			// Update chunks
 			Game.getInstance().getCurrentWorld().getChunkManager().updateActiveChunks();
+			Game.getInstance().getCurrentWorld().getChunkManager().runUpdateQueue();
 
 			// Render the scene
-			window.repaint();
+			window.getPanel().repaint();
 
-			fps++;
-
-			// Update and print FPS once per second
-			if (System.nanoTime() - lastFpsTime >= 1000000000) { // One second has elapsed
-				framesPerSecond = fps;
-				fps = 0;
-				lastFpsTime = System.nanoTime();
-			}
-
-			long sleepTime = (OPTIMAL_TIME - (System.nanoTime() - lastLoopTime)) / 1000000; // Convert to milliseconds
-			if (sleepTime > 0) {
+			// Frame rate lock
+			long timeToSleep = (long) ((1000.0 / TARGET_FPS) - (System.nanoTime() - lastLoopTime) / 1000000.0);
+			if (timeToSleep > 0) {
 				try {
-					Thread.sleep(sleepTime);
+					Thread.sleep(timeToSleep);
 				} catch (InterruptedException e) {
+					e.printStackTrace();
 				}
 			}
 		}
@@ -144,4 +151,14 @@ public class Game implements Runnable {
 	public int getFramesPerSecond() {
 		return framesPerSecond;
 	}
+
+	public void setFramesPerSecond(int framesPerSecond) {
+		this.framesPerSecond = framesPerSecond;
+	}
+
+	public ScreenManager getScreenManager() {
+		return screen;
+	}
+	
+	
 }

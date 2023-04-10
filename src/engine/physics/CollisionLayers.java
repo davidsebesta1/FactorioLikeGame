@@ -4,7 +4,7 @@ public enum CollisionLayers {
 	MAPEDGE(),
 	STRUCTURE(MAPEDGE),
 	ITEM(MAPEDGE, STRUCTURE), 
-	PLAYER(MAPEDGE);
+	PLAYER(MAPEDGE, STRUCTURE);
 
 	private final CollisionLayers[] collide;
 

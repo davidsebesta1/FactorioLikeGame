@@ -17,6 +17,10 @@ public class MathUtilities {
 		}
 	}
 	
+	public static double lerp(double a, double b, double alpha) {
+		return a + alpha * (b - a);
+	}
+	
 	public static Vector2 screenToWorldCoordinates(Vector2 screenCoordinates) {
 		Vector2 delta = screenDeltaByScale();
 

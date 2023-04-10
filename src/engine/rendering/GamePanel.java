@@ -1,22 +1,26 @@
 package engine.rendering;
 
-import java.awt.AlphaComposite;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.GraphicsConfiguration;
+import java.awt.GraphicsEnvironment;
 import java.awt.RenderingHints;
 import java.awt.Toolkit;
+import java.awt.Transparency;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.image.BufferedImage;
 
 import javax.swing.JPanel;
+import javax.swing.Timer;
 
 import engine.Game;
 import engine.input.InputManager;
-import engine.rendering.optimalization.Chunk;
+import engine.rendering.optimalization.ChunkManager;
 import engine.sprites.Background;
-import engine.sprites.Sprite;
 import engine.sprites.entities.Player;
 import math.Vector2;
 
@@ -24,6 +28,8 @@ public class GamePanel extends JPanel implements MouseListener {
 	private static final long serialVersionUID = -5792040577297371507L;
 
 	private BufferedImage buffer;
+	
+	private int fps = 0;
 
 	public GamePanel(Vector2 size) {
 		this.setSize((int) size.getX(), (int) size.getY());
@@ -31,8 +37,19 @@ public class GamePanel extends JPanel implements MouseListener {
 		this.setDoubleBuffered(true);
 		this.setFocusable(true);
 		this.addMouseListener(this);
+
+		GraphicsConfiguration gfxConfig = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice().getDefaultConfiguration();
+		buffer = gfxConfig.createCompatibleImage((int) size.getX(), (int) size.getY(), Transparency.OPAQUE);
 		
-		buffer = new BufferedImage((int) size.getX(), (int) size.getY(), BufferedImage.TYPE_INT_RGB);
+		 Timer fpsTimer = new Timer(1000, new ActionListener() {
+	            @Override
+	            public void actionPerformed(ActionEvent e) {
+	                System.out.println("FPS: " + fps);
+	                Game.getInstance().setFramesPerSecond(fps);
+	                fps = 0;
+	            }
+	        });
+	        fpsTimer.start();
 	}
 
 	private void render() {
@@ -40,8 +57,10 @@ public class GamePanel extends JPanel implements MouseListener {
 		Graphics g = buffer.getGraphics();
 		Graphics2D g2d = (Graphics2D) g;
 		
+		g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_OFF);
+
 		g2d.clearRect(0, 0, getWidth(), getHeight());
-		
+
 		// Zoom scale
 		double zoomScale = Game.getInstance().getCurrentWorld().getPlayer().getCamera().getCameraZoomScale();
 
@@ -58,7 +77,7 @@ public class GamePanel extends JPanel implements MouseListener {
 
 		// Translate the graphics context back
 		g2d.translate(-width / 2, -height / 2);
-		
+
 		// Render graphics here
 
 		Background background = Game.getInstance().getCurrentWorld().getBackground();
@@ -71,47 +90,31 @@ public class GamePanel extends JPanel implements MouseListener {
 						- Game.getInstance().getCurrentWorld().getPlayer().getCamera().getLocation().getY()),
 				null);
 
-		for (Chunk chunk : Game.getInstance().getCurrentWorld().getChunkManager().getActiveChunks()) {
-			for (Sprite sprite : chunk.getSprites()) {
-				if (sprite.getTexture().getImage() != null && sprite.isVisible()) {
-					if (sprite.getTexture().isOpaque()) {
-						g2d.drawImage(sprite.getTexture().getImage(),
-								(int) Math.floor(sprite.getLocation().getX() - Game.getInstance().getCurrentWorld()
-										.getPlayer().getCamera().getLocation().getX()),
-								(int) Math.floor(sprite.getLocation().getY() - Game.getInstance().getCurrentWorld()
-										.getPlayer().getCamera().getLocation().getY()),
-								null);
-					} else {
+		ChunkManager manager = Game.getInstance().getCurrentWorld().getChunkManager();
 
-						// Set the transparency level
-						float alpha = sprite.getTexture().getAlpha();
-						AlphaComposite alphaComposite = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, alpha);
-						g2d.setComposite(alphaComposite);
-
-						// Render your image
-						g2d.drawImage(sprite.getTexture().getImage(),
-								(int) (sprite.getLocation().getX() - Game.getInstance().getCurrentWorld().getPlayer()
-										.getCamera().getLocation().getX()),
-								(int) (sprite.getLocation().getY() - Game.getInstance().getCurrentWorld().getPlayer()
-										.getCamera().getLocation().getY()),
-								null);
-
-						g2d.setComposite(AlphaComposite.SrcOver);
-					}
+		for (int i = 0; i < manager.getChunkMap().length; i++) {
+			for (int j = 0; j < manager.getChunkMap()[i].length; j++) {
+				if (manager.getActiveChunks().contains(manager.getChunkMap()[i][j])) {
+					g2d.drawImage(manager.getChunkMap()[i][j].getBuffer(),
+							(i * 256 - (int) Game.getInstance().getCurrentWorld().getPlayer().getCamera()
+									.getLocation().getX()),
+							(j * 256 - (int) Game.getInstance().getCurrentWorld().getPlayer().getCamera()
+									.getLocation().getY()),
+							null);
 				}
 			}
-
-			g2d.drawImage(player.getTexture().getImage(),
-					(int) (player.getLocation().getX()
-							- Game.getInstance().getCurrentWorld().getPlayer().getCamera().getLocation().getX()),
-					(int) (player.getLocation().getY()
-							- Game.getInstance().getCurrentWorld().getPlayer().getCamera().getLocation().getY()),
-					null);
-
 		}
-		
+
+		g2d.drawImage(player.getTexture().getImage(),
+				(int) (player.getLocation().getX()
+						- Game.getInstance().getCurrentWorld().getPlayer().getCamera().getLocation().getX()),
+				(int) (player.getLocation().getY()
+						- Game.getInstance().getCurrentWorld().getPlayer().getCamera().getLocation().getY()),
+				null);
+
 		g2d.dispose();
 		g.dispose();
+	
 	}
 
 	@Override
@@ -119,13 +122,14 @@ public class GamePanel extends JPanel implements MouseListener {
 		super.paintComponent(g);
 		// G2D and rendering hits
 		Graphics2D g2d = (Graphics2D) g;
-		
+
 		g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_OFF);
-		
+
 		render();
 
-		
-		g2d.drawImage(buffer, 0,0, null);
+		g2d.drawImage(buffer, 0, 0, null);
+		g2d.setColor(Color.red);
+		g2d.drawString("FPS: " + Game.getInstance().getFramesPerSecond(), 10, 15);
 
 //		for (Chunk chunk : Game.getInstance().getCurrentWorld().getChunkManager().getActiveChunks()) {
 //			for (Sprite sprite : chunk.getSprites()) {
@@ -157,21 +161,22 @@ public class GamePanel extends JPanel implements MouseListener {
 //				}
 //			}
 
-		g2d.setColor(Color.red);
-
-		// Debug render collision box
+//		 Debug render collision box
 //			for(PhysicsSprite sprite2 : PhysicsManager.getPhysicsSprites()) {
 //				if(sprite2.getCollisionBox() != null) {
 //					BoundingBox box = sprite2.getCollisionBox();
 //					g2d.setColor(Color.red);
-//					Vector2 location = Camera.worldToScreenCoordinates(new Vector2((int) box.getX(),(int) box.getY()));
+//					Vector2 location = MathUtilities.worldToScreenCoordinates(new Vector2((int) box.getX(),(int) box.getY()));
 //					g2d.drawRect((int) location.getX(),(int) location.getY(),(int) box.getSize().getWidth(),(int) box.getSize().getHeight());
 //				}
 //			}
 
-	// Cleaning up stuff
-	g2d.dispose();g.dispose();Toolkit.getDefaultToolkit().sync();
-	g2d.drawString("FPS: " + Game.getInstance().getFramesPerSecond(), 10, 15);
+		// Cleaning up stuff
+		g2d.dispose();
+		g.dispose();
+		Toolkit.getDefaultToolkit().sync();
+		
+		fps++;
 
 	}
 

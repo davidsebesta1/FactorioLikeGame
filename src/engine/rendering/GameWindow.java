@@ -2,6 +2,7 @@ package engine.rendering;
 
 import javax.swing.JFrame;
 
+import engine.Game;
 import math.Vector2;
 
 public class GameWindow {
@@ -12,18 +13,10 @@ public class GameWindow {
 
 	private Vector2 size;
 
-	private boolean isFullscreen;
-
-	private GameWindow(Vector2 size, boolean isFullscreen) {
+	private GameWindow(Vector2 size) {
 		this.size = size;
-		this.isFullscreen = isFullscreen;
 
-		this.frame = new JFrame();
-		this.frame.setSize((int) size.getX(), (int) size.getY());
-		if (isFullscreen) {
-			this.frame.setUndecorated(true);
-			this.frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
-		}
+		this.frame = Game.getInstance().getScreenManager().getFullScreenWindow();
 		this.frame.setResizable(false);
 		this.panel = new GamePanel(size);
 
@@ -42,9 +35,9 @@ public class GameWindow {
 		return null;
 	}
 
-	public static GameWindow initiateInstance(Vector2 size, boolean isFullscreen) {
+	public static GameWindow initiateInstance(Vector2 size) {
 		if (instance == null)
-			instance = new GameWindow(size, isFullscreen);
+			instance = new GameWindow(size);
 		return instance;
 	}
 
@@ -58,9 +51,5 @@ public class GameWindow {
 
 	public Vector2 getSize() {
 		return size;
-	}
-
-	public boolean isFullscreen() {
-		return isFullscreen;
 	}
 }

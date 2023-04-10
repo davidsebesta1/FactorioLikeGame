@@ -13,14 +13,14 @@ public class Sprite implements Comparable<Sprite>, ISpriteBehaviour, Serializabl
 	private static final long serialVersionUID = 2893665038957303083L;
 	protected transient Texture texture;
 	protected String textureName;
-	protected float zDepth;
+	protected double zDepth;
 
 	protected Vector2 location;
 	protected Vector2 size;
 
 	protected boolean isVisible;
 
-	protected Sprite(Texture texture, Vector2 location, float zDepth) {
+	protected Sprite(Texture texture, Vector2 location, double zDepth) {
 		super();
 
 		this.texture = texture;
@@ -34,7 +34,7 @@ public class Sprite implements Comparable<Sprite>, ISpriteBehaviour, Serializabl
 		SpriteManager.add(this);
 	}
 
-	public static Sprite instantiateSprite(File file, Vector2 location, float zDepth) {
+	public static Sprite instantiateSprite(File file, Vector2 location, double zDepth) {
 		try {
 			Texture texture = Texture.createTexture(file);
 			if (zDepth < 0)
@@ -49,7 +49,7 @@ public class Sprite implements Comparable<Sprite>, ISpriteBehaviour, Serializabl
 
 	}
 
-	public static Sprite instantiateSprite(Texture texture, Vector2 location, float zDepth) {
+	public static Sprite instantiateSprite(Texture texture, Vector2 location, double zDepth) {
 		try {
 			if (zDepth < 0)
 				throw new IllegalArgumentException("Z-Depth must be greater or equal to zero");
@@ -63,11 +63,11 @@ public class Sprite implements Comparable<Sprite>, ISpriteBehaviour, Serializabl
 
 	}
 
-	public float getzDepth() {
+	public double getzDepth() {
 		return zDepth;
 	}
 
-	public void setzDepth(float zDepth) {
+	public void setzDepth(double zDepth) {
 		this.zDepth = zDepth;
 	}
 
@@ -112,10 +112,10 @@ public class Sprite implements Comparable<Sprite>, ISpriteBehaviour, Serializabl
 		else
 			return -1;
 	}
-
+	
 	@Override
 	public int hashCode() {
-		return Objects.hash(isVisible, location, size, texture, zDepth);
+		return Objects.hash(isVisible, location, size, textureName, zDepth);
 	}
 
 	@Override
@@ -128,10 +128,10 @@ public class Sprite implements Comparable<Sprite>, ISpriteBehaviour, Serializabl
 			return false;
 		Sprite other = (Sprite) obj;
 		return isVisible == other.isVisible && Objects.equals(location, other.location)
-				&& Objects.equals(size, other.size) && Objects.equals(texture, other.texture)
-				&& Float.floatToIntBits(zDepth) == Float.floatToIntBits(other.zDepth);
+				&& Objects.equals(size, other.size) && Objects.equals(textureName, other.textureName)
+				&& Double.doubleToLongBits(zDepth) == Double.doubleToLongBits(other.zDepth);
 	}
-	
+
 	public static String getTextureNameByObject(Texture value) {
 		 for (Map.Entry<String, Texture> entry : TextureLibrary.getInstance().getLibrary().entrySet()) {
 		        if (entry.getValue().equals(value)) {

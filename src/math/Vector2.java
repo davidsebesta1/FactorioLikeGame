@@ -5,8 +5,8 @@ import java.util.Objects;
 
 public class Vector2 implements Serializable{
 	private static final transient long serialVersionUID = 1812445214L;
-	private float x;
-	private float y;
+	private double x;
+	private double y;
 	
 	public static final transient Vector2 zero = new Vector2(0, 0);
 	public static final transient Vector2 left = new Vector2(1, 0);
@@ -27,11 +27,11 @@ public class Vector2 implements Serializable{
 	}
 
 	// Setters, getters and methods
-	public float getX() {
+	public double getX() {
 		return x;
 	}
 
-	public float getY() {
+	public double getY() {
 		return y;
 	}
 
@@ -86,12 +86,12 @@ public class Vector2 implements Serializable{
 	}
 
 	// Multiplies vector by a scalar parameter
-	public Vector2 mul(float scalar) {
-		return new Vector2(x * scalar, y * scalar);
+	public Vector2 mul(double d) {
+		return new Vector2(x * d, y * d);
 	}
 
 	// Divides vector by a scalar parameter
-	public Vector2 div(float scalar) {
+	public Vector2 div(double scalar) {
 		return new Vector2(x / scalar, y / scalar);
 	}
 
@@ -104,6 +104,13 @@ public class Vector2 implements Serializable{
 	public Vector2 abs() {
 		return new Vector2(Math.abs(x), Math.abs(y));
 	}
+	
+	//Linear interpolation
+	public Vector2 lerp(Vector2 other, double t) {
+        double newX = this.x + (other.x - this.x) * t;
+        double newY = this.y + (other.y - this.y) * t;
+        return new Vector2(newX, newY);
+    }
 
 	@Override
 	public String toString() {
@@ -124,7 +131,9 @@ public class Vector2 implements Serializable{
 		if (getClass() != obj.getClass())
 			return false;
 		Vector2 other = (Vector2) obj;
-		return Float.floatToIntBits(x) == Float.floatToIntBits(other.x)
-				&& Float.floatToIntBits(y) == Float.floatToIntBits(other.y);
+		return Double.doubleToLongBits(x) == Double.doubleToLongBits(other.x)
+				&& Double.doubleToLongBits(y) == Double.doubleToLongBits(other.y);
 	}
+
+	
 }

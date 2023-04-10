@@ -15,9 +15,9 @@ public class PhysicsSprite extends Sprite implements IPhysicsBehaviour {
 
 	protected BoundingBox collisionBox;
 	
-	protected CollisionLayers layer;
+	protected CollisionLayers collisionLayer;
 
-	protected PhysicsSprite(Texture texture, Vector2 location, float zDepth) {
+	protected PhysicsSprite(Texture texture, Vector2 location, double zDepth) {
 		super(texture, location, zDepth);
 		this.collisionBox = null;
 
@@ -26,10 +26,14 @@ public class PhysicsSprite extends Sprite implements IPhysicsBehaviour {
 	}
 	
 	public boolean checkCollisionLayer(PhysicsSprite other) {
-		if(this.layer == other.layer) return false;
-		
-		for(CollisionLayers layr : other.layer.getCollide()) {
-			if(layr == this.layer) return true;
+		if(this.collisionLayer == other.collisionLayer) return false;
+
+		for(CollisionLayers layr : other.collisionLayer.getCollide()) {
+			if(layr == this.collisionLayer) {
+				return true;
+				
+			}
+			
 		}
 		
 		return false;
@@ -61,8 +65,8 @@ public class PhysicsSprite extends Sprite implements IPhysicsBehaviour {
 	@Override
 	public int hashCode() {
 		final int prime = 31;
-		int result = super.hashCode();
-		result = prime * result + Objects.hash(collisionBox, velocity);
+		int result;
+		result = prime + Objects.hash(collisionBox, collisionLayer, velocity);
 		return result;
 	}
 
@@ -75,7 +79,8 @@ public class PhysicsSprite extends Sprite implements IPhysicsBehaviour {
 		if (getClass() != obj.getClass())
 			return false;
 		PhysicsSprite other = (PhysicsSprite) obj;
-		return Objects.equals(collisionBox, other.collisionBox) && Objects.equals(velocity, other.velocity);
+		return Objects.equals(collisionBox, other.collisionBox) && collisionLayer == other.collisionLayer
+				&& Objects.equals(velocity, other.velocity);
 	}
 
 	@Override
@@ -84,10 +89,10 @@ public class PhysicsSprite extends Sprite implements IPhysicsBehaviour {
 	}
 
 	public CollisionLayers getLayer() {
-		return layer;
+		return collisionLayer;
 	}
 
 	public void setLayer(CollisionLayers layer) {
-		this.layer = layer;
+		this.collisionLayer = layer;
 	}
 }

@@ -27,6 +27,7 @@ public class StructureMap implements Serializable {
 	}
 
 	public boolean tryAddStructureAtLocation(StructureSprite structure, Vector2 locationOnStructMap) {
+		if(!isInBounds((int) locationOnStructMap.getX(), (int) locationOnStructMap.getY())) return false;
 		
 		//Valid checks
 		if (map[(int) locationOnStructMap.getX()][(int) locationOnStructMap.getY()] == null && checkForOccupiedSpaces(structure, locationOnStructMap)) {
@@ -55,6 +56,7 @@ public class StructureMap implements Serializable {
 	}
 	
 	public StructureSprite getStructureAtLocation(Vector2 locationOnStructMap) {
+		if(!isInBounds((int) locationOnStructMap.getX(), (int) locationOnStructMap.getY())) return null;
 		return map[(int)locationOnStructMap.getX()][(int)locationOnStructMap.getY()];
 	}
 	
@@ -71,10 +73,14 @@ public class StructureMap implements Serializable {
 	}
 	
 	public StructureSprite getStructureAtWorldLocation(Vector2 worldCoordinates) {
+		if(!isInBounds((int) worldCoordinates.getX() / 32, (int) worldCoordinates.getY() / 32)) return null;
+		
 		return map[(int)(worldCoordinates.getX() / 32f)][(int)(worldCoordinates.getY() / 32f)];
 	}
 
 	private boolean checkForOccupiedSpaces(StructureSprite structure, Vector2 locationOnStructMap) {
+		if(!isInBounds((int) locationOnStructMap.getX(), (int) locationOnStructMap.getY())) return false;
+		
 		for (int i = (int) locationOnStructMap.getX(); i < locationOnStructMap.getX() + structure.getTileSizeUnits().getX(); i++) {
 			for (int j = (int) locationOnStructMap.getY(); j < locationOnStructMap.getY() + structure.getTileSizeUnits().getY(); j++) {
 				try {
@@ -87,7 +93,7 @@ public class StructureMap implements Serializable {
 	}
 	
 	public boolean isInBounds(int x, int y) {
-	    return x >= 0 && y >= 0 && x < map.length && y < map[0].length;
+	    return x >= 0 && y >= 0 && x < map.length && y < map[x].length;
 	}
 
 	public Vector2 getSize() {

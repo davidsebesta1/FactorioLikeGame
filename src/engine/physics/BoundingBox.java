@@ -20,7 +20,9 @@ public class BoundingBox extends Rectangle {
 	}
 
 	public boolean doCollideWith(BoundingBox box) {
-		if (owningSprite.checkCollisionLayer(box.owningSprite) && this.intersects(box)) return true;
+		if (owningSprite.checkCollisionLayer(box.owningSprite) && this.intersects(box)) {
+			return true;
+		}
 		return false;
 	}
 

@@ -13,7 +13,7 @@ public class StructureSprite extends PhysicsSprite {
 
 	protected Vector2 tileSizeUnits;
 
-	protected StructureSprite(Texture texture, Vector2 location, float zDepth) {
+	protected StructureSprite(Texture texture, Vector2 location, double zDepth) {
 		super(texture, location, zDepth);
 		this.tileSizeUnits = new Vector2(texture.getImage().getWidth() / 32f, texture.getImage().getHeight() / 32f);
 		
