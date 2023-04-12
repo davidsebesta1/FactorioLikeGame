@@ -2,45 +2,82 @@ package engine.sprites;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
+
+import engine.Game;
+import engine.rendering.optimalization.ChunkManager;
 
 public class SpriteManager {
+	
+	//Main lists
 	private static ArrayList<Sprite> spriteList = new ArrayList<>();
 	private static ArrayList<Sprite> updateSprites = new ArrayList<>();
 
-	private SpriteManager() {}
+	
+	//Helper lists for sync and concurrent mod exception avoid
+	private static ArrayList<Sprite> spriteAddQueue = new ArrayList<>();
+	private static ArrayList<Sprite> spriteUpdateAddQueue = new ArrayList<>();
+
+	private static ArrayList<Sprite> spriteRemoveQueue = new ArrayList<>();
+	private static ArrayList<Sprite> spriteUpdateRemoveQueue = new ArrayList<>();
+
+	private SpriteManager() {
+	}
 
 	public static synchronized void add(Sprite sprite) {
 		if (sprite != null) {
-			spriteList.add(sprite);
-
-			// sort by z-depth
-			Collections.sort(spriteList);
+			spriteAddQueue.add(sprite);
 		}
 	}
-	
+
+	public static synchronized void frameSpriteSynchronization() {
+
+		// Remove to remove sprites
+		spriteList.removeAll(spriteRemoveQueue);
+		spriteRemoveQueue.clear();
+
+		// Remove to remove update sprites
+		updateSprites.removeAll(spriteUpdateRemoveQueue);
+		spriteUpdateRemoveQueue.clear();
+
+		// Add sprites
+		spriteList.addAll(spriteAddQueue);
+		Game.getInstance().getCurrentWorld().getChunkManager().assignChunk(spriteAddQueue);
+		spriteAddQueue.clear();
+
+		// Add updatable sprites
+		updateSprites.addAll(spriteUpdateAddQueue);
+		spriteUpdateAddQueue.clear();
+
+		// sort by z-depth
+		Collections.sort(spriteList);
+	}
+
 	public static synchronized void remove(Sprite sprite) {
 		if (sprite != null) {
-			spriteList.remove(sprite);
-
-			// sort by z-depth
-			Collections.sort(spriteList);
+			spriteRemoveQueue.add(sprite);
 		}
 	}
 
-	public static void addUpdateSprite(Sprite sprite) {
+	public static synchronized void addUpdateSprite(Sprite sprite) {
 		if (sprite != null)
-			updateSprites.add(sprite);
+			spriteUpdateAddQueue.add(sprite);
 	}
 
-	public static ArrayList<Sprite> getSprites() {
+	public static synchronized void removeUpdateSprite(Sprite sprite) {
+		if (sprite != null)
+			spriteUpdateRemoveQueue.add(sprite);
+	}
+
+	public static synchronized List<Sprite> getSprites() {
 		return spriteList;
 	}
 
-	public static ArrayList<Sprite> getUpdatableSprites() {
+	public static synchronized List<Sprite> getUpdatableSprites() {
 		return updateSprites;
 	}
-	
-	public static void updateAllSprites() {
+
+	public static synchronized void updateAllSprites() {
 		for (Sprite sprite : updateSprites) {
 			sprite.update();
 		}

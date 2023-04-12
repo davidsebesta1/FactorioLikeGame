@@ -4,10 +4,12 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.GraphicsConfiguration;
 import java.awt.GraphicsEnvironment;
+import java.awt.Rectangle;
 import java.awt.RenderingHints;
 import java.awt.Transparency;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Objects;
 
 import engine.sprites.Sprite;
@@ -20,14 +22,22 @@ public class Chunk {
 	private Vector2 size;
 
 	private BufferedImage buffer;
+	
+	private Rectangle rectangle;
 
 	public Chunk(Vector2 location, Vector2 size) {
 		sprites = new ArrayList<>();
 		this.location = location;
 		this.size = size;
+		
+		this.rectangle = new Rectangle((int) location.getX(),(int) location.getY(),(int) size.getX(),(int) size.getY());
 
 		GraphicsConfiguration gfxConfig = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice().getDefaultConfiguration();
 		buffer = gfxConfig.createCompatibleImage((int) size.getX(), (int) size.getY(), Transparency.BITMASK);
+	}
+	
+	public void sort() {
+		Collections.sort(sprites);
 	}
 
 	public boolean tryAddSprite(Sprite sprite) {
@@ -47,8 +57,13 @@ public class Chunk {
 
 		for (Sprite sprite : sprites) {
 				if (sprite.getTexture().getImage() != null && sprite.isVisible()) {
-					g2d.drawImage(sprite.getTexture().getImage(), (int) (sprite.getLocation().getX() - location.getX()),
+					boolean isFullyDrawn = g2d.drawImage(sprite.getTexture().getImage(), (int) (sprite.getLocation().getX() - location.getX()),
 							(int) (sprite.getLocation().getY() - location.getY()), null);
+					
+					
+					if(!isFullyDrawn) {
+						
+					}
 				}
 		}
 		
@@ -93,6 +108,10 @@ public class Chunk {
 
 	public Vector2 getSize() {
 		return size;
+	}
+
+	public Rectangle getRectangle() {
+		return rectangle;
 	}
 
 	@Override

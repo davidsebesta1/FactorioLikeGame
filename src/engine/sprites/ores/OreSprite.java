@@ -46,4 +46,19 @@ public class OreSprite extends Sprite {
 		OreSprite other = (OreSprite) obj;
 		return oreAmount == other.oreAmount;
 	}
+
+	public int getOreAmount() {
+		return oreAmount;
+	}
+	
+	public boolean tryRemoveResource() {
+		oreAmount--;
+		
+		if(oreAmount < 0) {
+			oreAmount = 0;
+			return false;
+		}
+		
+		return true;
+	}
 }

@@ -1,5 +1,6 @@
 package engine.sprites;
 
+import java.awt.Rectangle;
 import java.io.File;
 import java.io.Serializable;
 import java.util.Map;
@@ -133,12 +134,16 @@ public class Sprite implements Comparable<Sprite>, ISpriteBehaviour, Serializabl
 	}
 
 	public static String getTextureNameByObject(Texture value) {
-		 for (Map.Entry<String, Texture> entry : TextureLibrary.getInstance().getLibrary().entrySet()) {
+		 for (Map.Entry<String, Texture> entry : TextureLibrary.getLibrary().entrySet()) {
 		        if (entry.getValue().equals(value)) {
 		            return entry.getKey();
 		        }
 		    }
 		    return null;
+	}
+	
+	public Rectangle getBoundsAsRectangle() {
+		return new Rectangle((int) this.location.getX(),(int) this.location.getY(),(int) this.size.getX(),(int) this.size.getY());
 	}
 
 	@Override

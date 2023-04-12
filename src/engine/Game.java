@@ -60,7 +60,6 @@ public class Game implements Runnable {
 		resolution = new Vector2((int) screenSize.getWidth(), (int) screenSize.getHeight());
 		double size = 1024f;
 		currentWorld = new GameWorld(new Vector2(size, size));
-		currentWorld.getChunkManager().initialAssigning(SpriteManager.getSprites());
 
 		// WINDOW AS LAST
 		screen = new ScreenManager();
@@ -71,12 +70,11 @@ public class Game implements Runnable {
 		// FINALLY GAME LOOP
 		Thread thread = new Thread(this);
 		thread.start();
+		thread.setName("Main game loop thread");
 	}
 
 	@Override
 	public void run() {
-		long lastFpsTime = System.nanoTime();
-
 		while (isRunning) {
 			long now = System.nanoTime();
 			long elapsedTime = now - lastLoopTime;
@@ -84,9 +82,15 @@ public class Game implements Runnable {
 
 			unprocessedTime += elapsedTime / 1000000000.0; // Convert to seconds
 
+			//Add sprites from queue to actual list
+			SpriteManager.frameSpriteSynchronization();
+			
+			//Update delta time
 			double deltaTime = 1.0 / TARGET_FPS;
 			DeltaTime.updateDeltaTime(deltaTime);
+			
 
+			//Update updatable sprites
 			while (unprocessedTime >= (1.0 / TARGET_FPS)) {
 				// Update game logic
 				SpriteManager.updateAllSprites();

@@ -38,9 +38,9 @@ public class GameWorld {
 		this.structureMap = new StructureMap(size.div(32));
 		this.oreMap = new OreMap(size.div(32));
 
-		this.player = Player.instantiatePlayer(TextureLibrary.getInstance().retrieveTexture("rockground"));
+		this.player = Player.instantiatePlayer(TextureLibrary.retrieveTexture("rockground"));
 
-		this.background = Background.instantiateBackground(TextureLibrary.getInstance().retrieveTexture("background"), new Vector2(0, 0), 0f);
+		this.background = Background.instantiateBackground(TextureLibrary.retrieveTexture("background"), new Vector2(0, 0), 0f);
 		
 		this.chunkManager = new ChunkManager(256f, size, player);
 
@@ -55,31 +55,28 @@ public class GameWorld {
 				int rndVariation = 0;
 				if(random.nextInt() >= 9) rndVariation = random2.nextInt(4);
 				
-				this.tiles.tryCreateAtLocation(i, j, TextureLibrary.getInstance().retrieveTexture("asteroidGround" + rndIndex + "" + rndVariation));
+				this.tiles.tryCreateAtLocation(i, j, TextureLibrary.retrieveTexture("asteroidGround" + rndIndex + "" + rndVariation));
 				
 			}
 		}
 		
 		
-		structureMap.tryAddStructureAtLocation(CoreModule.instantiateCoreModule(TextureLibrary.getInstance().retrieveTexture("coreModule"), new Vector2(0, 0)), new Vector2(2, 2));
-		ConveyorBelt belt = ConveyorBelt.instantiateConveyorBelt(TextureLibrary.getInstance().retrieveTexture("beltRIGHT"), new Vector2(0, 0), ConveyorBeltDirection.RIGHT);
-		ConveyorBelt belt1 = ConveyorBelt.instantiateConveyorBelt(TextureLibrary.getInstance().retrieveTexture("beltRIGHT"), new Vector2(0, 0), ConveyorBeltDirection.RIGHT);
-		ConveyorBelt belt2 = ConveyorBelt.instantiateConveyorBelt(TextureLibrary.getInstance().retrieveTexture("beltUP"), new Vector2(0, 0), ConveyorBeltDirection.UP);
-		ConveyorBelt belt3 = ConveyorBelt.instantiateConveyorBelt(TextureLibrary.getInstance().retrieveTexture("beltUP"), new Vector2(0, 0), ConveyorBeltDirection.UP);
+		structureMap.tryAddStructureAtLocation(CoreModule.instantiateCoreModule(TextureLibrary.retrieveTexture("coreModule"), new Vector2(0, 0)), new Vector2(2, 2));
+		
+		ConveyorBelt belt = ConveyorBelt.instantiateConveyorBelt(TextureLibrary.retrieveTexture("beltRIGHT"), new Vector2(0, 0), ConveyorBeltDirection.RIGHT);
+		ConveyorBelt belt1 = ConveyorBelt.instantiateConveyorBelt(TextureLibrary.retrieveTexture("beltRIGHT"), new Vector2(0, 0), ConveyorBeltDirection.RIGHT);
+		ConveyorBelt belt2 = ConveyorBelt.instantiateConveyorBelt(TextureLibrary.retrieveTexture("beltUP"), new Vector2(0, 0), ConveyorBeltDirection.UP);
+		ConveyorBelt belt3 = ConveyorBelt.instantiateConveyorBelt(TextureLibrary.retrieveTexture("beltUP"), new Vector2(0, 0), ConveyorBeltDirection.UP);
+		
 		structureMap.tryAddStructureAtLocation(belt,new Vector2(4, 7));
 		structureMap.tryAddStructureAtLocation(belt1,new Vector2(5, 7));
 		structureMap.tryAddStructureAtLocation(belt2,new Vector2(6, 7));
 		structureMap.tryAddStructureAtLocation(belt3,new Vector2(6, 6));
 		
-		BasicDrill drill1 = BasicDrill.instantiateBasicDrill(TextureLibrary.getInstance().retrieveTexture("basicDrill"), new Vector2(0,0));
-		structureMap.tryAddStructureAtLocation(drill1, new Vector2(9, 9));
+		BasicDrill drill1 = BasicDrill.instantiateBasicDrill(TextureLibrary.retrieveTexture("basicDrill"), new Vector2(0,0));
+		structureMap.tryAddStructureAtLocation(drill1, new Vector2(7, 9));
 		
-		oreMap.tryAddOreAtLocation(CoalOre.instantiateSprite(TextureLibrary.getInstance().retrieveTexture("coalOre"), new Vector2(0, 0), 50), new Vector2(10,10));
-		
-		
-		
-		belt.setItem(Coal.instantiateCoal(TextureLibrary.getInstance().retrieveTexture("coal"), Vector2.zero));
-		belt1.setItem(Coal.instantiateCoal(TextureLibrary.getInstance().retrieveTexture("coal"), Vector2.zero));
+		oreMap.tryAddOreAtLocation(CoalOre.instantiateSprite(TextureLibrary.retrieveTexture("coalOre"), new Vector2(0, 0), 5), new Vector2(4,8));
 	
 		
 	}

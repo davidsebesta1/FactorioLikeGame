@@ -3,6 +3,7 @@ package engine.sprites.structures;
 import java.io.File;
 import java.util.Objects;
 
+import engine.Game;
 import engine.physics.BoundingBox;
 import engine.rendering.textures.Texture;
 import engine.sprites.PhysicsSprite;
@@ -15,7 +16,7 @@ public class StructureSprite extends PhysicsSprite {
 
 	protected StructureSprite(Texture texture, Vector2 location, double zDepth) {
 		super(texture, location, zDepth);
-		this.tileSizeUnits = new Vector2(texture.getImage().getWidth() / 32f, texture.getImage().getHeight() / 32f);
+		this.tileSizeUnits = new Vector2(texture.getImage().getWidth() / 32d, texture.getImage().getHeight() / 32d);
 		
 		this.setCollisionBox(new BoundingBox(this, true, location, this.getSize()));
 	}
@@ -59,4 +60,8 @@ public class StructureSprite extends PhysicsSprite {
 	public void enteredCollision(PhysicsSprite sprite) {
 		//TODO stuff
 	}
+
+
+
+	
 }

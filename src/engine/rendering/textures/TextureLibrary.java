@@ -6,7 +6,7 @@ import java.util.HashMap;
 
 public class TextureLibrary {
 	
-	private HashMap<String, Texture> library;
+	private static HashMap<String, Texture> library;
 	
 	private static TextureLibrary instance;
 
@@ -15,14 +15,14 @@ public class TextureLibrary {
 		instance = this;
 	}
 	
-	public boolean addTexture(String textureName, Texture texture) {
+	public static boolean addTexture(String textureName, Texture texture) {
 		if(library.containsKey(textureName)) return false;
 		
 		library.put(textureName, texture);
 		return true;
 	}
 	
-	public boolean addTextureWithVariation(String textureName , Texture texture) {
+	public static boolean addTextureWithVariation(String textureName , Texture texture) {
 		if(library.containsKey(textureName)) library.remove(textureName);
 		
 		library.put(textureName + "0", texture);
@@ -38,12 +38,12 @@ public class TextureLibrary {
 		return instance;
 	}
 	
-	public Texture retrieveTexture(String textureName) {
+	public static Texture retrieveTexture(String textureName) {
 		if(library.containsKey(textureName)) return library.get(textureName);
 		return null;
 	}
 	
-	public HashMap<String, Texture> getLibrary() {
+	public static HashMap<String, Texture> getLibrary() {
 		return library;
 	}
 
