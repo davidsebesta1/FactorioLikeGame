@@ -12,7 +12,7 @@ public class TileMap implements Serializable {
 	private TileSprite[][] map;
 	private Vector2 size;
 
-	private static final float SPRITE_SIZE = 32f;
+	private static final double SPRITE_SIZE = 32d;
 
 	public TileMap(int width, int height) {
 		this.map = new TileSprite[width][height];

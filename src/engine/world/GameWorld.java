@@ -15,6 +15,7 @@ import engine.sprites.structures.CoreModule;
 import engine.sprites.structures.StructureMap;
 import engine.sprites.structures.conveyors.ConveyorBelt;
 import engine.sprites.structures.conveyors.ConveyorBeltDirection;
+import engine.sprites.structures.drills.BasicDrill;
 import engine.sprites.tiles.TileMap;
 import math.Vector2;
 
@@ -70,6 +71,9 @@ public class GameWorld {
 		structureMap.tryAddStructureAtLocation(belt2,new Vector2(6, 7));
 		structureMap.tryAddStructureAtLocation(belt3,new Vector2(6, 6));
 		
+		BasicDrill drill1 = BasicDrill.instantiateBasicDrill(TextureLibrary.getInstance().retrieveTexture("basicDrill"), new Vector2(0,0));
+		structureMap.tryAddStructureAtLocation(drill1, new Vector2(9, 9));
+		
 		oreMap.tryAddOreAtLocation(CoalOre.instantiateSprite(TextureLibrary.getInstance().retrieveTexture("coalOre"), new Vector2(0, 0), 50), new Vector2(10,10));
 		
 		
@@ -110,5 +114,9 @@ public class GameWorld {
 
 	public ChunkManager getChunkManager() {
 		return chunkManager;
+	}
+
+	public OreMap getOreMap() {
+		return oreMap;
 	}
 }

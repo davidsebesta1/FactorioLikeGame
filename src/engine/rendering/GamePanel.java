@@ -19,9 +19,13 @@ import javax.swing.Timer;
 
 import engine.Game;
 import engine.input.InputManager;
+import engine.physics.BoundingBox;
+import engine.physics.PhysicsManager;
 import engine.rendering.optimalization.ChunkManager;
 import engine.sprites.Background;
+import engine.sprites.PhysicsSprite;
 import engine.sprites.entities.Player;
+import math.MathUtilities;
 import math.Vector2;
 
 public class GamePanel extends JPanel implements MouseListener {
@@ -44,7 +48,7 @@ public class GamePanel extends JPanel implements MouseListener {
 		 Timer fpsTimer = new Timer(1000, new ActionListener() {
 	            @Override
 	            public void actionPerformed(ActionEvent e) {
-	                System.out.println("FPS: " + fps);
+//	                System.out.println("FPS: " + fps);
 	                Game.getInstance().setFramesPerSecond(fps);
 	                fps = 0;
 	            }
@@ -130,36 +134,6 @@ public class GamePanel extends JPanel implements MouseListener {
 		g2d.drawImage(buffer, 0, 0, null);
 		g2d.setColor(Color.red);
 		g2d.drawString("FPS: " + Game.getInstance().getFramesPerSecond(), 10, 15);
-
-//		for (Chunk chunk : Game.getInstance().getCurrentWorld().getChunkManager().getActiveChunks()) {
-//			for (Sprite sprite : chunk.getSprites()) {
-//				if (sprite.getTexture().getImage() != null && sprite.isVisible()) {
-//					if (sprite.getTexture().isOpaque()) {
-//						g2d.drawImage(sprite.getTexture().getImage(),
-//								(int) Math.floor(sprite.getLocation().getX() - Game.getInstance().getCurrentWorld()
-//										.getPlayer().getCamera().getLocation().getX()),
-//								(int) Math.floor(sprite.getLocation().getY() - Game.getInstance().getCurrentWorld()
-//										.getPlayer().getCamera().getLocation().getY()),
-//								null);
-//					} else {
-//
-//						// Set the transparency level
-//						float alpha = sprite.getTexture().getAlpha();
-//						AlphaComposite alphaComposite = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, alpha);
-//						g2d.setComposite(alphaComposite);
-//
-//						// Render your image
-//						g2d.drawImage(sprite.getTexture().getImage(),
-//								(int) (sprite.getLocation().getX() - Game.getInstance().getCurrentWorld().getPlayer()
-//										.getCamera().getLocation().getX()),
-//								(int) (sprite.getLocation().getY() - Game.getInstance().getCurrentWorld().getPlayer()
-//										.getCamera().getLocation().getY()),
-//								null);
-//
-//						g2d.setComposite(AlphaComposite.SrcOver);
-//					}
-//				}
-//			}
 
 //		 Debug render collision box
 //			for(PhysicsSprite sprite2 : PhysicsManager.getPhysicsSprites()) {

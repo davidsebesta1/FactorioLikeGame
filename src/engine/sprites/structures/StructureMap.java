@@ -9,15 +9,17 @@ import math.Vector2;
 
 public class StructureMap implements Serializable {
 	private static final long serialVersionUID = -5228704977309459469L;
-	
-	//Accesible instance, only one per map
+
+	// Accesible instance, only one per map
 	private static StructureMap instance;
-	
-	//Variables
+
+	// Variables
 	private Vector2 size;
 
 	private StructureSprite[][] map;
 	private boolean[][] occupiedMap;
+
+	private static final double SPRITE_SIZE = 32d;
 
 	public StructureMap(Vector2 size) {
 		instance = this;
@@ -27,25 +29,28 @@ public class StructureMap implements Serializable {
 	}
 
 	public boolean tryAddStructureAtLocation(StructureSprite structure, Vector2 locationOnStructMap) {
-		if(!isInBounds((int) locationOnStructMap.getX(), (int) locationOnStructMap.getY())) return false;
-		
-		//Valid checks
-		if (map[(int) locationOnStructMap.getX()][(int) locationOnStructMap.getY()] == null && checkForOccupiedSpaces(structure, locationOnStructMap)) {
+		if (!isInBounds((int) locationOnStructMap.getX(), (int) locationOnStructMap.getY()))
+			return false;
+
+		// Valid checks
+		if (map[(int) locationOnStructMap.getX()][(int) locationOnStructMap.getY()] == null
+				&& checkForOccupiedSpaces(structure, locationOnStructMap)) {
 			map[(int) locationOnStructMap.getX()][(int) locationOnStructMap.getY()] = structure;
-			
-			//Set location based on tile size * location
-			structure.setLocation(new Vector2(locationOnStructMap.getX() * 32f, locationOnStructMap.getY() * 32f));
-			
-			for (int i = (int) locationOnStructMap.getX(); i < locationOnStructMap.getX() + structure.getTileSizeUnits().getX(); i++) {
-				for (int j = (int) locationOnStructMap.getY(); j < locationOnStructMap.getY() + structure.getTileSizeUnits().getY(); j++) {
-					try {
-						occupiedMap[i][j] = true; // Update occupied map
-					} catch(ArrayIndexOutOfBoundsException e) {} // lazy to make out of bounds check
+
+			// Set location based on tile size * location
+			structure.setLocation(
+					new Vector2(locationOnStructMap.getX() * SPRITE_SIZE, locationOnStructMap.getY() * SPRITE_SIZE));
+
+			for (int i = (int) locationOnStructMap.getX(); i < locationOnStructMap.getX()
+					+ structure.getTileSizeUnits().getX(); i++) {
+				for (int j = (int) locationOnStructMap.getY(); j < locationOnStructMap.getY()
+						+ structure.getTileSizeUnits().getY(); j++) {
+					occupiedMap[i][j] = true; // Update occupied map
 				}
 			}
-			
-			//If it is instance of conveyor belt, add it to the manager
-			if(structure instanceof ConveyorBelt) {
+
+			// If it is instance of conveyor belt, add it to the manager
+			if (structure instanceof ConveyorBelt) {
 				ConveyorBeltManager.addBelt((ConveyorBelt) structure);
 			}
 
@@ -54,46 +59,48 @@ public class StructureMap implements Serializable {
 
 		return false;
 	}
-	
+
 	public StructureSprite getStructureAtLocation(Vector2 locationOnStructMap) {
-		if(!isInBounds((int) locationOnStructMap.getX(), (int) locationOnStructMap.getY())) return null;
-		return map[(int)locationOnStructMap.getX()][(int)locationOnStructMap.getY()];
+		if (!isInBounds((int) locationOnStructMap.getX(), (int) locationOnStructMap.getY()))
+			return null;
+		return map[(int) locationOnStructMap.getX()][(int) locationOnStructMap.getY()];
 	}
-	
+
 	public Vector2 getLocationByStructure(StructureSprite sprite) {
-		for(int i = 0; i < map.length; i++) {
-			for(int j = 0; j < map[i].length; j++) {
-				if(map[i][j] == sprite) {
+		for (int i = 0; i < map.length; i++) {
+			for (int j = 0; j < map[i].length; j++) {
+				if (map[i][j] == sprite) {
 					return new Vector2(i, j);
 				}
 			}
 		}
-		
+
 		return null;
 	}
-	
+
 	public StructureSprite getStructureAtWorldLocation(Vector2 worldCoordinates) {
-		if(!isInBounds((int) worldCoordinates.getX() / 32, (int) worldCoordinates.getY() / 32)) return null;
-		
-		return map[(int)(worldCoordinates.getX() / 32f)][(int)(worldCoordinates.getY() / 32f)];
+		if (!isInBounds((int) (worldCoordinates.getX() / SPRITE_SIZE), (int) (worldCoordinates.getY() / SPRITE_SIZE)))
+			return null;
+
+		return map[(int) (worldCoordinates.getX() / SPRITE_SIZE)][(int) (worldCoordinates.getY() / SPRITE_SIZE)];
 	}
 
 	private boolean checkForOccupiedSpaces(StructureSprite structure, Vector2 locationOnStructMap) {
-		if(!isInBounds((int) locationOnStructMap.getX(), (int) locationOnStructMap.getY())) return false;
-		
+		if (!isInBounds((int) locationOnStructMap.getX(), (int) locationOnStructMap.getY()))
+			return false;
+
 		for (int i = (int) locationOnStructMap.getX(); i < locationOnStructMap.getX() + structure.getTileSizeUnits().getX(); i++) {
 			for (int j = (int) locationOnStructMap.getY(); j < locationOnStructMap.getY() + structure.getTileSizeUnits().getY(); j++) {
-				try {
-					if (occupiedMap[i][j]) return false; // any occupied field found within coordinates and destination, return false
-				} catch(ArrayIndexOutOfBoundsException e) {} // lazy for out of bounds check
+				if (occupiedMap[i][j])
+					return false; // any occupied field found within coordinates and destination, return false
 			}
 		}
 
 		return true;
 	}
-	
+
 	public boolean isInBounds(int x, int y) {
-	    return x >= 0 && y >= 0 && x < map.length && y < map[x].length;
+		return x >= 0 && y >= 0 && x < map.length && y < map[x].length;
 	}
 
 	public Vector2 getSize() {

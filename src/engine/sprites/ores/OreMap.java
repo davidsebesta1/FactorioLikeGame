@@ -14,6 +14,8 @@ public class OreMap implements Serializable {
 	private Vector2 size;
 
 	private OreSprite[][] map;
+	
+	private static final double SPRITE_SIZE = 32d;
 
 	public OreMap(Vector2 size) {
 		instance = this;
@@ -29,7 +31,7 @@ public class OreMap implements Serializable {
 			map[(int) locationOnStructMap.getX()][(int) locationOnStructMap.getY()] = structure;
 
 			// Set location based on tile size * location
-			structure.setLocation(new Vector2(locationOnStructMap.getX() * 32f, locationOnStructMap.getY() * 32f));
+			structure.setLocation(new Vector2(locationOnStructMap.getX() * SPRITE_SIZE, locationOnStructMap.getY() * SPRITE_SIZE));
 
 			return true;
 		}
@@ -50,10 +52,10 @@ public class OreMap implements Serializable {
 	}
 
 	public OreSprite getOreAtWorldLocation(Vector2 worldCoordinates) {
-		if (!isInBounds((int) worldCoordinates.getX() / 32, (int) worldCoordinates.getY() / 32))
+		if (!isInBounds((int) (worldCoordinates.getX() / SPRITE_SIZE), (int) (worldCoordinates.getY() / SPRITE_SIZE)))
 			return null;
 
-		return map[(int) (worldCoordinates.getX() / 32f)][(int) (worldCoordinates.getY() / 32f)];
+		return map[(int) (worldCoordinates.getX() / SPRITE_SIZE)][(int) (worldCoordinates.getY() / SPRITE_SIZE)];
 	}
 	
 	public OreSprite getOreAtMapLocation(Vector2 locationOnStructMap) {
