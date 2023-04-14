@@ -20,6 +20,11 @@ public class CoalOre extends OreSprite{
 		return null;
 
 	}
+
+	@Override
+	public String ID() {
+		return "coalOre";
+	}
 	
 
 }

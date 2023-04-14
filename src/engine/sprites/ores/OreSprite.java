@@ -6,7 +6,7 @@ import engine.rendering.textures.Texture;
 import engine.sprites.Sprite;
 import math.Vector2;
 
-public class OreSprite extends Sprite {
+public abstract class OreSprite extends Sprite {
 	private static final long serialVersionUID = -805356985399189622L;
 
 	protected int oreAmount;
@@ -15,18 +15,7 @@ public class OreSprite extends Sprite {
 		super(texture, location, zDepth);
 		this.oreAmount = oreAmount;
 	}
-
-	public static OreSprite instantiateSprite(Texture texture, Vector2 worldLocation, int oreAmount) {
-		try {
-			return new OreSprite(texture, worldLocation, 0.5d, oreAmount);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-
-		return null;
-
-	}
-
+	
 	@Override
 	public int hashCode() {
 		final int prime = 31;

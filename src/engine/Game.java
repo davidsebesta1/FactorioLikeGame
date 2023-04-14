@@ -3,13 +3,16 @@ package engine;
 import java.awt.Dimension;
 import java.awt.DisplayMode;
 import java.awt.Toolkit;
+import java.io.Serializable;
 
 import engine.input.InputManager;
 import engine.physics.PhysicsManager;
 import engine.rendering.GameWindow;
 import engine.rendering.textures.TextureLibrary;
 import engine.rendering.textures.TextureType;
+import engine.sprites.Background;
 import engine.sprites.SpriteManager;
+import engine.sprites.structures.command.CoreModule;
 import engine.time.DeltaTime;
 import engine.world.GameWorld;
 import main.Log;
@@ -27,8 +30,7 @@ public class Game implements Runnable {
 
 	private TextureLibrary tl;
 
-	private final int TARGET_FPS = 60;
-	private final long OPTIMAL_TIME = 1000000000 / TARGET_FPS; // One billion nanoseconds per second
+	private static final int TARGET_FPS = 60;
 
 	private long lastLoopTime = System.nanoTime();
 	private double unprocessedTime = 0;

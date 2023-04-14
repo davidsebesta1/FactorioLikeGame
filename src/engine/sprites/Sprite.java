@@ -6,12 +6,14 @@ import java.io.Serializable;
 import java.util.Map;
 import java.util.Objects;
 
+import engine.Game;
 import engine.rendering.textures.Texture;
 import engine.rendering.textures.TextureLibrary;
 import math.Vector2;
 
-public class Sprite implements Comparable<Sprite>, ISpriteBehaviour, Serializable {
+public abstract class Sprite implements Comparable<Sprite>, ISpriteBehaviour, Serializable {
 	private static final long serialVersionUID = 2893665038957303083L;
+	
 	protected transient Texture texture;
 	protected String textureName;
 	protected double zDepth;
@@ -33,35 +35,6 @@ public class Sprite implements Comparable<Sprite>, ISpriteBehaviour, Serializabl
 		this.isVisible = true;
 
 		SpriteManager.add(this);
-	}
-
-	public static Sprite instantiateSprite(File file, Vector2 location, double zDepth) {
-		try {
-			Texture texture = Texture.createTexture(file);
-			if (zDepth < 0)
-				throw new IllegalArgumentException("Z-Depth must be greater or equal to zero");
-
-			return new Sprite(texture, location, zDepth);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-
-		return null;
-
-	}
-
-	public static Sprite instantiateSprite(Texture texture, Vector2 location, double zDepth) {
-		try {
-			if (zDepth < 0)
-				throw new IllegalArgumentException("Z-Depth must be greater or equal to zero");
-
-			return new Sprite(texture, location, zDepth);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-
-		return null;
-
 	}
 
 	public double getzDepth() {
@@ -164,7 +137,7 @@ public class Sprite implements Comparable<Sprite>, ISpriteBehaviour, Serializabl
 	public void destroy() {
 		try {
 			SpriteManager.getSprites().remove(this);
-
+			Game.getInstance().getCurrentWorld().getChunkManager().forceRemoveSprite(this);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -174,4 +147,7 @@ public class Sprite implements Comparable<Sprite>, ISpriteBehaviour, Serializabl
 	public void onMouseClicked() {
 		// Have to be overridden
 	}
+
+	@Override
+	public abstract String ID();
 }

@@ -1,4 +1,4 @@
-package engine.sprites.entities;
+package engine.sprites.entities.player;
 
 import java.io.File;
 import java.util.Objects;
@@ -19,6 +19,8 @@ import math.Vector2;
 public class Player extends PhysicsSprite implements IMouseActionEventListener {
 	private static final long serialVersionUID = -6407007599351991639L;
 	private Camera camera;
+	
+	private PlayerInventory inventory;
 
 	private boolean inputEnabled;
 
@@ -29,11 +31,14 @@ public class Player extends PhysicsSprite implements IMouseActionEventListener {
 
 		this.collisionLayer = CollisionLayers.PLAYER;
 		this.camera = new Camera(new Vector2(0, 0));
+		this.inventory = new PlayerInventory();
+		
 		this.setVelocity(velocity);
-		this.inputEnabled = true;
-		this.buildingModeEnabled = false;
 		this.setCollisionBox(new BoundingBox(this, false, location, this.getSize()));
 
+		this.buildingModeEnabled = false;
+		this.inputEnabled = true;
+		
 		InputManager.addMouseActionListener(this);
 		SpriteManager.addUpdateSprite(this);
 	}
@@ -62,8 +67,6 @@ public class Player extends PhysicsSprite implements IMouseActionEventListener {
 	@Override
 	public void update() {
 		if (inputEnabled) {
-		
-			
 			velocity = InputManager.getDirectionalInput().mul(100 * DeltaTime.getDeltaTime());
 
 			setLocation(location.add(velocity));
@@ -134,5 +137,28 @@ public class Player extends PhysicsSprite implements IMouseActionEventListener {
 			this.camera.setLocation(camera.getLocation().sub(out));
 		}
 	}
+
+	@Override
+	public String ID() {
+		return "playerEntity";
+	}
+
+	public boolean tryAddItemToInventory(String ID, int amount) {
+		return inventory.tryAddItemToInventory(ID, amount);
+	}
+
+	public boolean tryRemoveItemFromInventory(String ID, int amount) {
+		return inventory.tryRemoveItemFromInventory(ID, amount);
+	}
+
+	public int getItemAmount(String ID) {
+		return inventory.getItemAmount(ID);
+	}
+
+	public String toString() {
+		return inventory.toString();
+	}
+	
+	
 
 }

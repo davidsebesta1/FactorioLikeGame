@@ -152,6 +152,11 @@ public class ConveyorBelt extends StructureSprite {
 		return "ConveyorBelt [direction=" + direction + ", item=" + item + ", next=" + next + ", tileSizeUnits="
 				+ tileSizeUnits + ", location=" + location + "]";
 	}
+
+	@Override
+	public String ID() {
+		return "conveyorBelt";
+	}
 	
 	
 }

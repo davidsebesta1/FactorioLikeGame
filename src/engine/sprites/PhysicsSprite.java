@@ -8,7 +8,7 @@ import engine.physics.PhysicsManager;
 import engine.rendering.textures.Texture;
 import math.Vector2;
 
-public class PhysicsSprite extends Sprite implements IPhysicsBehaviour {
+public abstract class PhysicsSprite extends Sprite implements IPhysicsBehaviour {
 	private static final long serialVersionUID = -3155369270101122877L;
 
 	protected Vector2 velocity;
@@ -95,4 +95,7 @@ public class PhysicsSprite extends Sprite implements IPhysicsBehaviour {
 	public void setLayer(CollisionLayers layer) {
 		this.collisionLayer = layer;
 	}
+
+	@Override
+	public abstract String ID();
 }

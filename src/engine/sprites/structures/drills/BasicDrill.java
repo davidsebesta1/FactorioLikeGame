@@ -47,9 +47,7 @@ public class BasicDrill extends StructureSprite {
 		elapsedTime += DeltaTime.getDeltaTime();
 
 		if (elapsedTime >= DEFAULT_MINING_TIME) {
-			System.out.println("Checked for mining");
 			tryMineResource();
-			System.out.println(minedItem);
 			elapsedTime = 0;
 		}
 	}
@@ -112,6 +110,11 @@ public class BasicDrill extends StructureSprite {
 		}
 
 		return null;
+	}
+
+	@Override
+	public String ID() {
+		return "basicDrill";
 	}
 
 }

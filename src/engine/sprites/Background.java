@@ -5,9 +5,11 @@ import math.Vector2;
 
 public class Background extends Sprite {
 	private static final long serialVersionUID = 4930066769715408810L;
+	
 
 	public Background(Texture texture, Vector2 location, float zDepth) {
 		super(texture, location, zDepth);
+		
 	}
 
 	public static Background instantiateBackground(Texture texture, Vector2 location, float zDepth) {
@@ -22,6 +24,12 @@ public class Background extends Sprite {
 
 		return null;
 
+	}
+
+	@Override
+	public String ID() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

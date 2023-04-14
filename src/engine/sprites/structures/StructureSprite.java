@@ -9,7 +9,7 @@ import engine.rendering.textures.Texture;
 import engine.sprites.PhysicsSprite;
 import math.Vector2;
 
-public class StructureSprite extends PhysicsSprite {
+public abstract class StructureSprite extends PhysicsSprite {
 	private static final long serialVersionUID = 5574047065458702506L;
 
 	protected Vector2 tileSizeUnits;
@@ -19,17 +19,6 @@ public class StructureSprite extends PhysicsSprite {
 		this.tileSizeUnits = new Vector2(texture.getImage().getWidth() / 32d, texture.getImage().getHeight() / 32d);
 		
 		this.setCollisionBox(new BoundingBox(this, true, location, this.getSize()));
-	}
-	
-	public static StructureSprite instantiateStructure(File file, Vector2 location) {
-		try {
-			Texture texture = Texture.createTexture(file);
-			return new StructureSprite(texture, location, 0.7f);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return null;
-
 	}
 
 	public Vector2 getTileSizeUnits() {
@@ -58,7 +47,7 @@ public class StructureSprite extends PhysicsSprite {
 	
 	@Override
 	public void enteredCollision(PhysicsSprite sprite) {
-		//TODO stuff
+		//Left for override
 	}
 
 

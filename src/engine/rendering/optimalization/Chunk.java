@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Objects;
 
+import engine.Game;
 import engine.sprites.Sprite;
 import math.Vector2;
 
@@ -57,18 +58,30 @@ public class Chunk {
 
 		for (Sprite sprite : sprites) {
 				if (sprite.getTexture().getImage() != null && sprite.isVisible()) {
-					boolean isFullyDrawn = g2d.drawImage(sprite.getTexture().getImage(), (int) (sprite.getLocation().getX() - location.getX()),
+					g2d.drawImage(sprite.getTexture().getImage(), (int) (sprite.getLocation().getX() - location.getX()),
 							(int) (sprite.getLocation().getY() - location.getY()), null);
 					
-					
-					if(!isFullyDrawn) {
-						
+					if(!isFullyDrawnSprite(sprite)) {
+						System.out.println(sprite + " aaaaaaa");
+						Game.getInstance().getCurrentWorld().getChunkManager().fixBetweenChunkSprite(sprite);
 					}
 				}
 		}
 		
 		g2d.dispose();
 		g.dispose();
+	}
+	
+	public boolean isFullyDrawnSprite(Sprite sprite) {
+		// Compare the dimensions of the source image with the dimensions of the drawn image
+	    BufferedImage sourceImage = sprite.getTexture().getImage();
+	    int sourceWidth = sourceImage.getWidth();
+	    int sourceHeight = sourceImage.getHeight();
+
+	    int drawnWidth = (int) (sprite.getLocation().getX() - location.getX() + sourceWidth);
+	    int drawnHeight = (int) (sprite.getLocation().getY() - location.getY() + sourceHeight);
+
+	    return !(drawnWidth <= 0 || drawnWidth > buffer.getWidth() || drawnHeight <= 0 || drawnHeight > buffer.getHeight());
 	}
 
 	public BufferedImage getBuffer() {

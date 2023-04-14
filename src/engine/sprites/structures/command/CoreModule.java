@@ -1,9 +1,10 @@
-package engine.sprites.structures;
+package engine.sprites.structures.command;
 
 import java.io.File;
 
 import engine.physics.CollisionLayers;
 import engine.rendering.textures.Texture;
+import engine.sprites.structures.StructureSprite;
 import math.Vector2;
 
 public class CoreModule extends StructureSprite {
@@ -49,6 +50,11 @@ public class CoreModule extends StructureSprite {
 		if (getClass() != obj.getClass())
 			return false;
 		return true;
+	}
+
+	@Override
+	public String ID() {
+		return "coreModule";
 	}
 
 	

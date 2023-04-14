@@ -75,6 +75,11 @@ public class TileSprite extends Sprite {
 			return false;
 		return true;
 	}
+
+	@Override
+	public String ID() {
+		return "tileSprite";
+	}
 	
 	
 	

@@ -56,6 +56,11 @@ public class Coal extends Item {
 			return false;
 		return true;
 	}
+
+	@Override
+	public String ID() {
+		return "coalItem";
+	}
 	
 	
 

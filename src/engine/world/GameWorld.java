@@ -7,12 +7,12 @@ import engine.rendering.textures.TextureLibrary;
 import engine.sprites.Background;
 import engine.sprites.Sprite;
 import engine.sprites.SpriteManager;
-import engine.sprites.entities.Player;
+import engine.sprites.entities.player.Player;
 import engine.sprites.objects.minable.Coal;
 import engine.sprites.ores.CoalOre;
 import engine.sprites.ores.OreMap;
-import engine.sprites.structures.CoreModule;
 import engine.sprites.structures.StructureMap;
+import engine.sprites.structures.command.CoreModule;
 import engine.sprites.structures.conveyors.ConveyorBelt;
 import engine.sprites.structures.conveyors.ConveyorBeltDirection;
 import engine.sprites.structures.drills.BasicDrill;
@@ -42,7 +42,7 @@ public class GameWorld {
 
 		this.background = Background.instantiateBackground(TextureLibrary.retrieveTexture("background"), new Vector2(0, 0), 0f);
 		
-		this.chunkManager = new ChunkManager(256f, size, player);
+		this.chunkManager = new ChunkManager(256, size, player);
 
 		
 		Random random = new Random(7584);
