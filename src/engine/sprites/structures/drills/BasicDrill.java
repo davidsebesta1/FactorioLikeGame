@@ -59,7 +59,6 @@ public class BasicDrill extends StructureSprite {
 		OreSprite ore = tryGetMinableResource();
 
 		if (ore != null && ore.getOreAmount() > 0) {
-			System.out.println(ore.getOreAmount());
 			minedItem = resolveMinedItemType(ore);
 			minedItem.setVisible(false);
 		}

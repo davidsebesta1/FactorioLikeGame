@@ -123,7 +123,7 @@ public class ChunkManager {
 			chunksAndRect.put(c, c.getRectangle());
 		}
 		
-		System.out.println(chunksAndRect);
+
 		
 		//chunk if sprite bounds rect and chunk bounds rect collide, if they do, add him forcefully to the chunk rendering
 		for (Map.Entry<Chunk, Rectangle> entry : chunksAndRect.entrySet()) {
@@ -132,7 +132,6 @@ public class ChunkManager {
 		   
 		    if(re.intersects(rect)) {
 		    	ch.tryAddSprite(sprite);
-		    	System.out.println("a");
 		    }
 		}
 		

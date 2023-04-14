@@ -6,19 +6,30 @@ import engine.sprites.PhysicsSprite;
 
 public class PhysicsManager {
 	private static ArrayList<PhysicsSprite> physicsSprites = new ArrayList<>();
+	
+	private static ArrayList<PhysicsSprite> toAdd = new ArrayList<>();
+	private static ArrayList<PhysicsSprite> toRemove = new ArrayList<>();
 
 	private PhysicsManager() {
+	}
+	
+	public static synchronized void framePhysicsSpriteSync() {
+		physicsSprites.removeAll(toRemove);
+		toRemove.clear();
+		
+		physicsSprites.addAll(toAdd);
+		toAdd.clear();
 	}
 
 	public static void addPhysicsSprite(PhysicsSprite sprite) {
 		if (sprite != null) {
-			physicsSprites.add(sprite);
+			toAdd.add(sprite);
 		}
 	}
 
 	public static void removePhysicsSprite(PhysicsSprite sprite) {
 		if (sprite != null) {
-			physicsSprites.remove(sprite);
+			toRemove.add(sprite);
 		}
 	}
 

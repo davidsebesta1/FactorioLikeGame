@@ -67,14 +67,16 @@ public class GameWorld {
 		ConveyorBelt belt1 = ConveyorBelt.instantiateConveyorBelt(TextureLibrary.retrieveTexture("beltRIGHT"), new Vector2(0, 0), ConveyorBeltDirection.RIGHT);
 		ConveyorBelt belt2 = ConveyorBelt.instantiateConveyorBelt(TextureLibrary.retrieveTexture("beltUP"), new Vector2(0, 0), ConveyorBeltDirection.UP);
 		ConveyorBelt belt3 = ConveyorBelt.instantiateConveyorBelt(TextureLibrary.retrieveTexture("beltUP"), new Vector2(0, 0), ConveyorBeltDirection.UP);
+		ConveyorBelt belt4 = ConveyorBelt.instantiateConveyorBelt(TextureLibrary.retrieveTexture("beltLEFT"), new Vector2(0, 0), ConveyorBeltDirection.LEFT);
 		
 		structureMap.tryAddStructureAtLocation(belt,new Vector2(4, 7));
 		structureMap.tryAddStructureAtLocation(belt1,new Vector2(5, 7));
 		structureMap.tryAddStructureAtLocation(belt2,new Vector2(6, 7));
 		structureMap.tryAddStructureAtLocation(belt3,new Vector2(6, 6));
+		structureMap.tryAddStructureAtLocation(belt4,new Vector2(6, 5));
 		
 		BasicDrill drill1 = BasicDrill.instantiateBasicDrill(TextureLibrary.retrieveTexture("basicDrill"), new Vector2(0,0));
-		structureMap.tryAddStructureAtLocation(drill1, new Vector2(7, 9));
+		structureMap.tryAddStructureAtLocation(drill1, new Vector2(4, 8));
 		
 		oreMap.tryAddOreAtLocation(CoalOre.instantiateSprite(TextureLibrary.retrieveTexture("coalOre"), new Vector2(0, 0), 5), new Vector2(4,8));
 	

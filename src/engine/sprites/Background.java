@@ -28,8 +28,7 @@ public class Background extends Sprite {
 
 	@Override
 	public String ID() {
-		// TODO Auto-generated method stub
-		return null;
+		return "backgroundSprite";
 	}
 
 }

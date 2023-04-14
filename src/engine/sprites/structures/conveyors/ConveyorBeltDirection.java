@@ -1,5 +1,7 @@
 package engine.sprites.structures.conveyors;
 
+import math.Vector2;
+
 public enum ConveyorBeltDirection {
 	DOWN(0, 1), 
 	RIGHT(1, 0), 
@@ -20,5 +22,9 @@ public enum ConveyorBeltDirection {
 
 	public int getDeltaY() {
 		return deltaY;
+	}
+	
+	public Vector2 getDelta() {
+		return new Vector2(deltaX, deltaY);
 	}
 }

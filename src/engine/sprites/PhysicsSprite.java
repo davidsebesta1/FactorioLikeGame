@@ -2,6 +2,7 @@ package engine.sprites;
 
 import java.util.Objects;
 
+import engine.Game;
 import engine.physics.BoundingBox;
 import engine.physics.CollisionLayers;
 import engine.physics.PhysicsManager;
@@ -94,6 +95,13 @@ public abstract class PhysicsSprite extends Sprite implements IPhysicsBehaviour 
 
 	public void setLayer(CollisionLayers layer) {
 		this.collisionLayer = layer;
+	}
+	
+	@Override
+	public void destroy() {
+		super.destroy();
+		
+		PhysicsManager.removePhysicsSprite(this);
 	}
 
 	@Override

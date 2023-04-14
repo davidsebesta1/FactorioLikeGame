@@ -19,7 +19,7 @@ public class ConveyorBelt extends StructureSprite {
 	private Item item;
 
 	private ConveyorBelt next;
-	
+
 	private boolean itemIsMoving;
 
 	private static final double TRANSPORT_SPEED = 20f;
@@ -43,7 +43,7 @@ public class ConveyorBelt extends StructureSprite {
 		return null;
 
 	}
-	
+
 	public static ConveyorBelt instantiateConveyorBelt(Texture texture, Vector2 location, ConveyorBeltDirection dir) {
 		try {
 			return new ConveyorBelt(texture, location, 0.7d, dir);
@@ -69,7 +69,10 @@ public class ConveyorBelt extends StructureSprite {
 	public void setItem(Item item) {
 		this.item = item;
 
-		item.setLocation(location);
+		if (item != null) {
+			item.setBeltAssigned(this);
+			item.setLocation(location);
+		}
 	}
 
 	public ConveyorBelt getNext() {
@@ -103,11 +106,11 @@ public class ConveyorBelt extends StructureSprite {
 	@Override
 	public void update() {
 		if (item != null && next != null) {
-			if(next.itemIsMoving || (!next.itemIsMoving && next.item == null)) {
+			if (next.itemIsMoving || (!next.itemIsMoving && next.item == null)) {
 				itemIsMoving = true;
-//				System.out.println(item.getLocation().add(new Vector2(direction.getDeltaX(), direction.getDeltaY()).mul((float) (TRANSPORT_SPEED * DeltaTime.getDeltaTime()))));
-				item.setLocation(item.getLocation().add(new Vector2(direction.getDeltaX(), direction.getDeltaY()).mul((float) (TRANSPORT_SPEED * DeltaTime.getDeltaTime()))));
-				
+				item.setLocation(item.getLocation().add(new Vector2(direction.getDeltaX(), direction.getDeltaY())
+						.mul(TRANSPORT_SPEED * DeltaTime.getDeltaTime())));
+
 				switch (direction) {
 				case UP:
 					if (item.getLocation().getY() < next.getLocation().getY()) {
@@ -134,13 +137,15 @@ public class ConveyorBelt extends StructureSprite {
 					}
 					break;
 				}
-				
+
 				Game.getInstance().getCurrentWorld().getChunkManager().updateSpriteChunk(item);
 			}
+		} else if (item != null && next == null) {
+			item.setLocation(location.add(direction.getDelta()));
 		} else {
 			itemIsMoving = false;
 		}
-		
+
 	}
 
 	public static double getTransportSpeed() {
@@ -157,6 +162,5 @@ public class ConveyorBelt extends StructureSprite {
 	public String ID() {
 		return "conveyorBelt";
 	}
-	
-	
+
 }

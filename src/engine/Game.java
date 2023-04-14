@@ -60,7 +60,7 @@ public class Game implements Runnable {
 		// AND SECOND
 		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 		resolution = new Vector2((int) screenSize.getWidth(), (int) screenSize.getHeight());
-		double size = 1024f;
+		double size = 1024d;
 		currentWorld = new GameWorld(new Vector2(size, size));
 
 		// WINDOW AS LAST
@@ -72,7 +72,7 @@ public class Game implements Runnable {
 		// FINALLY GAME LOOP
 		Thread thread = new Thread(this);
 		thread.start();
-		thread.setName("Main game loop thread");
+		thread.setName("GameLoopThread");
 	}
 
 	@Override
@@ -86,6 +86,7 @@ public class Game implements Runnable {
 
 			//Add sprites from queue to actual list
 			SpriteManager.frameSpriteSynchronization();
+			PhysicsManager.framePhysicsSpriteSync();
 			
 			//Update delta time
 			double deltaTime = 1.0 / TARGET_FPS;

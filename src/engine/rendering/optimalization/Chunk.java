@@ -62,7 +62,6 @@ public class Chunk {
 							(int) (sprite.getLocation().getY() - location.getY()), null);
 					
 					if(!isFullyDrawnSprite(sprite)) {
-						System.out.println(sprite + " aaaaaaa");
 						Game.getInstance().getCurrentWorld().getChunkManager().fixBetweenChunkSprite(sprite);
 					}
 				}
