@@ -5,7 +5,6 @@ import java.util.Collections;
 import java.util.List;
 
 import engine.Game;
-import engine.rendering.optimalization.ChunkManager;
 
 public class SpriteManager {
 	
@@ -33,24 +32,34 @@ public class SpriteManager {
 	public static synchronized void frameSpriteSynchronization() {
 
 		// Remove to remove sprites
-		spriteList.removeAll(spriteRemoveQueue);
-		spriteRemoveQueue.clear();
+		if(!spriteRemoveQueue.isEmpty()) {
+			spriteList.removeAll(spriteRemoveQueue);
+			spriteRemoveQueue.clear();
+		}
 
 		// Remove to remove update sprites
-		updateSprites.removeAll(spriteUpdateRemoveQueue);
-		spriteUpdateRemoveQueue.clear();
+		if(!spriteUpdateRemoveQueue.isEmpty()) {
+			updateSprites.removeAll(spriteUpdateRemoveQueue);
+			spriteUpdateRemoveQueue.clear();
+		}
 
-		// Add sprites
-		spriteList.addAll(spriteAddQueue);
-		Game.getInstance().getCurrentWorld().getChunkManager().assignChunk(spriteAddQueue);
-		spriteAddQueue.clear();
 
 		// Add updatable sprites
-		updateSprites.addAll(spriteUpdateAddQueue);
-		spriteUpdateAddQueue.clear();
+		if(!spriteUpdateAddQueue.isEmpty()) {
+			updateSprites.addAll(spriteUpdateAddQueue);
+			spriteUpdateAddQueue.clear();
+		}
+		
+		// Add sprites
+		if(!spriteAddQueue.isEmpty()) {
+			spriteList.addAll(spriteAddQueue);
+			Game.getInstance().getCurrentWorld().getChunkManager().assignChunk(spriteAddQueue);
+			spriteAddQueue.clear();
+			
+			// sort by z-depth
+			Collections.sort(spriteList);
+		}
 
-		// sort by z-depth
-		Collections.sort(spriteList);
 	}
 
 	public static synchronized void remove(Sprite sprite) {

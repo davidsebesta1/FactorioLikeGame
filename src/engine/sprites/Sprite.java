@@ -1,7 +1,6 @@
 package engine.sprites;
 
 import java.awt.Rectangle;
-import java.io.File;
 import java.io.Serializable;
 import java.util.Map;
 import java.util.Objects;

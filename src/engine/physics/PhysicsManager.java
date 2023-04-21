@@ -14,11 +14,17 @@ public class PhysicsManager {
 	}
 	
 	public static synchronized void framePhysicsSpriteSync() {
-		physicsSprites.removeAll(toRemove);
-		toRemove.clear();
+		if(!toRemove.isEmpty()) {
+			physicsSprites.removeAll(toRemove);
+			toRemove.clear();
+		}
 		
-		physicsSprites.addAll(toAdd);
-		toAdd.clear();
+		
+		if(!toAdd.isEmpty()) {
+			physicsSprites.addAll(toAdd);
+			toAdd.clear();
+		}
+		
 	}
 
 	public static void addPhysicsSprite(PhysicsSprite sprite) {

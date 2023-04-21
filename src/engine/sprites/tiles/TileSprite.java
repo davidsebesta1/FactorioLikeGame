@@ -12,7 +12,7 @@ public class TileSprite extends Sprite {
 	private static final long serialVersionUID = -1961159418183745510L;
 
 	private TileSprite(Texture texture, Vector2 location) {
-		super(texture, location, 0.1f);
+		super(texture, location, 0.1d);
 	}
 
 	public static TileSprite instantiateTileSprite(File file, Vector2 location) {

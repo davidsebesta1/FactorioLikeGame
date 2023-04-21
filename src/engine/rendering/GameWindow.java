@@ -20,9 +20,9 @@ public class GameWindow {
 		this.frame.setResizable(false);
 		this.panel = new GamePanel(size);
 
-		this.frame.setVisible(true);
 		this.frame.add(panel);
 		this.frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		this.frame.setVisible(true);
 	}
 
 	public void repaint() {

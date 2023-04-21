@@ -19,7 +19,7 @@ public class ChunkManager {
 
 	private HashSet<Chunk> updateQueue;
 
-	private CopyOnWriteArrayList<Chunk> activeChunks;
+	private ArrayList<Chunk> activeChunks;
 
 	private Player player;
 
@@ -27,7 +27,7 @@ public class ChunkManager {
 		this.chunkSize = chunkSize;
 		this.chunkMap = new Chunk[(int) (mapSize.getX() / chunkSize)][(int) (mapSize.getY() / chunkSize)];
 		this.player = player;
-		this.activeChunks = new CopyOnWriteArrayList<>();
+		this.activeChunks = new ArrayList<>();
 		this.updateQueue = new HashSet<>();
 
 		for (int i = 0; i < chunkMap.length; i++) {
@@ -199,7 +199,7 @@ public class ChunkManager {
 		return chunkMap;
 	}
 
-	public CopyOnWriteArrayList<Chunk> getActiveChunks() {
+	public ArrayList<Chunk> getActiveChunks() {
 		return activeChunks;
 	}
 

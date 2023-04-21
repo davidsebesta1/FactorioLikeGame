@@ -30,7 +30,7 @@ public class Game implements Runnable {
 
 	private TextureLibrary tl;
 
-	private static final int TARGET_FPS = 60;
+	private static final int TARGET_FPS = 144;
 
 	private long lastLoopTime = System.nanoTime();
 	private double unprocessedTime = 0;
@@ -45,8 +45,6 @@ public class Game implements Runnable {
 		isRunning = true;
 		instance = this;
 
-//		System.setProperty("sun.java2d.opengl", "true");
-
 		// INITALIZE FIRST
 		InputManager.initialize();
 		Log.initilize();
@@ -55,6 +53,7 @@ public class Game implements Runnable {
 		tl.loadAllTextures("textures/structures", TextureType.OPAQUE);
 		tl.loadAllTextures("textures/ores", TextureType.BITMASK);
 		tl.loadAllTextures("textures/items", TextureType.BITMASK);
+		tl.loadAllTextures("textures/icons", TextureType.OPAQUE);
 		tl.loadAllTextures("textures", TextureType.OPAQUE);
 
 		// AND SECOND
@@ -73,6 +72,7 @@ public class Game implements Runnable {
 		Thread thread = new Thread(this);
 		thread.start();
 		thread.setName("GameLoopThread");
+		thread.setPriority(Thread.MAX_PRIORITY);
 	}
 
 	@Override
@@ -109,7 +109,7 @@ public class Game implements Runnable {
 			Game.getInstance().getCurrentWorld().getChunkManager().runUpdateQueue();
 
 			// Render the scene
-			window.getPanel().repaint();
+			window.repaint();
 
 			// Frame rate lock
 			long timeToSleep = (long) ((1000.0 / TARGET_FPS) - (System.nanoTime() - lastLoopTime) / 1000000.0);
@@ -120,12 +120,12 @@ public class Game implements Runnable {
 					e.printStackTrace();
 				}
 			}
+			
 		}
 	}
 
 	public static Game getInstance() {
-		if (instance != null)
-			return instance;
+		if (instance != null) return instance;
 		return initializeInstance();
 	}
 

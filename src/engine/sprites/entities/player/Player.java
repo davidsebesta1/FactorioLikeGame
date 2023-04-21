@@ -12,18 +12,18 @@ import engine.rendering.Camera;
 import engine.rendering.textures.Texture;
 import engine.sprites.PhysicsSprite;
 import engine.sprites.SpriteManager;
+import engine.sprites.entities.player.UI.PlayerConstructionManager;
 import engine.time.DeltaTime;
-import math.MathUtilities;
 import math.Vector2;
 
 public class Player extends PhysicsSprite implements IMouseActionEventListener {
 	private static final long serialVersionUID = -6407007599351991639L;
 	private Camera camera;
+	private boolean inputEnabled;
 	
 	private PlayerInventory inventory;
 
-	private boolean inputEnabled;
-
+	private PlayerConstructionManager constructManager;
 	private boolean buildingModeEnabled;
 
 	private Player(Texture texture, Vector2 location, Vector2 velocity, float zDepth) {
@@ -32,6 +32,7 @@ public class Player extends PhysicsSprite implements IMouseActionEventListener {
 		this.collisionLayer = CollisionLayers.PLAYER;
 		this.camera = new Camera(new Vector2(0, 0));
 		this.inventory = new PlayerInventory();
+		this.constructManager = new PlayerConstructionManager(new Vector2(0,0));
 		
 		this.setVelocity(velocity);
 		this.setCollisionBox(new BoundingBox(this, false, location, this.getSize()));
@@ -155,10 +156,17 @@ public class Player extends PhysicsSprite implements IMouseActionEventListener {
 		return inventory.getItemAmount(ID);
 	}
 
+	@Override
 	public String toString() {
 		return inventory.toString();
 	}
-	
-	
+
+	public PlayerInventory getInventory() {
+		return inventory;
+	}
+
+	public PlayerConstructionManager getConstructManager() {
+		return constructManager;
+	}
 
 }

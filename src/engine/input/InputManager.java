@@ -11,10 +11,16 @@ import java.awt.event.MouseMotionListener;
 import java.awt.event.MouseWheelEvent;
 import java.awt.event.MouseWheelListener;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
+import java.util.Map;
 
 import engine.Game;
 import engine.rendering.Camera;
+import engine.sprites.Sprite;
+import engine.sprites.entities.player.UI.StructureButton;
+import engine.sprites.entities.player.UI.StructureTypeButton;
 import engine.sprites.tiles.TileSprite;
 import math.MathUtilities;
 import math.Vector2;
@@ -156,17 +162,13 @@ public class InputManager {
 	}
 
 	public static void fireMousePressed(Vector2 location) {
-		for (IMouseActionEventListener iMouseListener : mouseActionListeners) {
-			iMouseListener.mousePressed(location);
-		}
-
-		checkForTileClick(MathUtilities.screenToWorldCoordinates(location));
+//		checkForTileClick(MathUtilities.screenToWorldCoordinates(location));
+		checkForInventoryUIClick(location);
+		
 	}
 
 	public static void fireMouseReleased(Vector2 location) {
-		for (IMouseActionEventListener iMouseListener : mouseActionListeners) {
-			iMouseListener.mouseReleased(location);
-		}
+		
 	}
 
 	public static void fireMouseMotion(Vector2 location) {
@@ -180,7 +182,7 @@ public class InputManager {
 
 		for (int i = 0; i < tileSprites.length; i++) {
 			for (int j = 0; j < tileSprites[i].length; j++) {
-				if (isWithinTileBounds(worldCoordinates, tileSprites[i][j])) {
+				if (isWithinBounds(worldCoordinates, tileSprites[i][j])) {
 					System.out.println("Coords: " + worldCoordinates + " sprite: " + tileSprites[i][j]);
 					tileSprites[i][j].onMouseClicked();
 					return;
@@ -188,8 +190,59 @@ public class InputManager {
 			}
 		}
 	}
+	
+	private static void checkForInventoryUIClick(Vector2 clickCoords) {
+		HashMap<StructureTypeButton, HashSet<StructureButton>> all = Game.getInstance().getCurrentWorld().getPlayer().getConstructManager().getCategoryAndAvailableStructures();
+		
+//		for(StructureTypeButton b : buttons) {
+//			if(isWithinBounds(clickCoords, b)) {
+//				b.mousePressed(clickCoords);
+//				System.out.println(b);
+//				return;
+//			}
+//		}
+		
+		for (Map.Entry<StructureTypeButton, HashSet<StructureButton>> entry : all.entrySet()) {
+		    StructureTypeButton button = entry.getKey();
+		    HashSet<StructureButton> availableStructures = entry.getValue();
+		    if(isWithinBounds(clickCoords, button)) {
+		    	button.mousePressed(clickCoords);
+		    	System.out.println(button);
+		    	return;
+		    }
+		    for (StructureButton structure : availableStructures) {
+		    	if(isWithinBounds(clickCoords, structure)) {
+			    	structure.mousePressed(clickCoords);
+			    	System.out.println(structure);
+			    	return;
+			    }
+		    }
+		}
+	}
 
-	private static boolean isWithinTileBounds(Vector2 worldCoordinates, TileSprite sprite) {
+	private static boolean isWithinBounds(Vector2 worldCoordinates, Sprite sprite) {
+		if (sprite != null) {
+			return worldCoordinates.getX() >= sprite.getLocation().getX()
+					&& worldCoordinates.getX() < sprite.getLocation().getX() + sprite.getSize().getX()
+					&& worldCoordinates.getY() >= sprite.getLocation().getY()
+					&& worldCoordinates.getY() < sprite.getLocation().getY() + sprite.getSize().getY();
+		}
+
+		return false;
+	}
+	
+	private static boolean isWithinBounds(Vector2 worldCoordinates, StructureTypeButton sprite) {
+		if (sprite != null) {
+			return worldCoordinates.getX() >= sprite.getLocation().getX()
+					&& worldCoordinates.getX() < sprite.getLocation().getX() + sprite.getSize().getX()
+					&& worldCoordinates.getY() >= sprite.getLocation().getY()
+					&& worldCoordinates.getY() < sprite.getLocation().getY() + sprite.getSize().getY();
+		}
+
+		return false;
+	}
+	
+	private static boolean isWithinBounds(Vector2 worldCoordinates, StructureButton sprite) {
 		if (sprite != null) {
 			return worldCoordinates.getX() >= sprite.getLocation().getX()
 					&& worldCoordinates.getX() < sprite.getLocation().getX() + sprite.getSize().getX()
