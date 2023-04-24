@@ -88,6 +88,11 @@ public class Game implements Runnable {
 			SpriteManager.frameSpriteSynchronization();
 			PhysicsManager.framePhysicsSpriteSync();
 			
+			getCurrentWorld().getChunkManager().resolveAll();
+			
+			//Click, mouse moved, etc events
+			InputManager.runAllEvents();
+			
 			//Update delta time
 			double deltaTime = 1.0 / TARGET_FPS;
 			DeltaTime.updateDeltaTime(deltaTime);
@@ -105,8 +110,8 @@ public class Game implements Runnable {
 			PhysicsManager.resolveCollisions();
 
 			// Update chunks
-			Game.getInstance().getCurrentWorld().getChunkManager().updateActiveChunks();
-			Game.getInstance().getCurrentWorld().getChunkManager().runUpdateQueue();
+			getCurrentWorld().getChunkManager().updateActiveChunks();
+			getCurrentWorld().getChunkManager().runUpdateQueue();
 
 			// Render the scene
 			window.repaint();

@@ -10,9 +10,9 @@ import engine.rendering.textures.Texture;
 import engine.rendering.textures.TextureLibrary;
 import math.Vector2;
 
-public abstract class Sprite implements Comparable<Sprite>, ISpriteBehaviour, Serializable {
+public abstract class Sprite implements Comparable<Sprite>, ISpriteBehaviour, Serializable, Cloneable {
 	private static final long serialVersionUID = 2893665038957303083L;
-	
+
 	protected transient Texture texture;
 	protected String textureName;
 	protected double zDepth;
@@ -85,7 +85,7 @@ public abstract class Sprite implements Comparable<Sprite>, ISpriteBehaviour, Se
 		else
 			return -1;
 	}
-	
+
 	@Override
 	public int hashCode() {
 		return Objects.hash(isVisible, location, size, textureName, zDepth);
@@ -106,16 +106,16 @@ public abstract class Sprite implements Comparable<Sprite>, ISpriteBehaviour, Se
 	}
 
 	public static String getTextureNameByObject(Texture value) {
-		 for (Map.Entry<String, Texture> entry : TextureLibrary.getLibrary().entrySet()) {
-		        if (entry.getValue().equals(value)) {
-		            return entry.getKey();
-		        }
-		    }
-		    return null;
+		for (Map.Entry<String, Texture> entry : TextureLibrary.getLibrary().entrySet()) {
+			if (entry.getValue().equals(value)) {
+				return entry.getKey();
+			}
+		}
+		return null;
 	}
-	
+
 	public Rectangle getBoundsAsRectangle() {
-		return new Rectangle((int) this.location.getX(),(int) this.location.getY(),(int) this.size.getX(),(int) this.size.getY());
+		return new Rectangle((int) this.location.getX(), (int) this.location.getY(), (int) this.size.getX(), (int) this.size.getY());
 	}
 
 	@Override
@@ -149,4 +149,8 @@ public abstract class Sprite implements Comparable<Sprite>, ISpriteBehaviour, Se
 
 	@Override
 	public abstract String ID();
+
+	public Object clone() throws CloneNotSupportedException {
+		return super.clone();
+	}
 }

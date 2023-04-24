@@ -19,6 +19,10 @@ import math.Vector2;
 public class Chunk {
 
 	private ArrayList<Sprite> sprites;
+	
+	private ArrayList<Sprite> toAddNextFrame;
+	private ArrayList<Sprite> toRemoveNextFrame;
+	
 	private Vector2 location;
 	private Vector2 size;
 
@@ -27,7 +31,9 @@ public class Chunk {
 	private Rectangle rectangle;
 
 	public Chunk(Vector2 location, Vector2 size) {
-		sprites = new ArrayList<>();
+		this.sprites = new ArrayList<>();
+		this.toAddNextFrame = new ArrayList<>();
+		this.toRemoveNextFrame = new ArrayList<>();
 		this.location = location;
 		this.size = size;
 		
@@ -40,13 +46,26 @@ public class Chunk {
 	public void sort() {
 		Collections.sort(sprites);
 	}
+	
+	public void resolveFrame() {
+		if(needsResolve()){
+			sprites.removeAll(toRemoveNextFrame);
+			sprites.addAll(toAddNextFrame);
+			
+			toAddNextFrame.clear();
+			toRemoveNextFrame.clear();
+			
+			sort();
+			cacheImage();
+		}
+	}
 
 	public boolean tryAddSprite(Sprite sprite) {
-		return sprites.add(sprite);
+		return toAddNextFrame.add(sprite);
 	}
 
 	public boolean tryRemoveSprite(Sprite sprite) {
-		return sprites.remove(sprite);
+		return toRemoveNextFrame.add(sprite);
 	}
 
 	public void cacheImage() {
@@ -124,6 +143,10 @@ public class Chunk {
 
 	public Rectangle getRectangle() {
 		return rectangle;
+	}
+	
+	public boolean needsResolve() {
+		return !toAddNextFrame.isEmpty() || !toRemoveNextFrame.isEmpty();
 	}
 
 	@Override

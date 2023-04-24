@@ -69,14 +69,14 @@ public class StructureTypeButton implements IMouseActionEventListener {
 	}
 
 	@Override
-	public void mousePressed(Vector2 screenCoordinate) {
+	public void mousePrimaryPressed(Vector2 screenCoordinate) {
 		System.out.println("You clicked " + this);
 		owner.showCorrespondingStructButton(this);
 
 	}
 
 	@Override
-	public void mouseReleased(Vector2 screenCoordinate) {
+	public void mousePrimaryReleased(Vector2 screenCoordinate) {
 		// TODO Auto-generated method stub
 
 	}
@@ -114,5 +114,29 @@ public class StructureTypeButton implements IMouseActionEventListener {
 
 	public PlayerConstructionManager getOwner() {
 		return owner;
+	}
+
+	@Override
+	public void mouseSecondaryPressed(Vector2 screenCoordinate) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void mouseSecondaryReleased(Vector2 screenCoordinate) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void mouseMiddlePressed(Vector2 screenCoordinate) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void mouseMiddleReleased(Vector2 screenCoordinate) {
+		// TODO Auto-generated method stub
+		
 	}
 }

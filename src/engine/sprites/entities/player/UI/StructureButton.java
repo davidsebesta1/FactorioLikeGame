@@ -6,10 +6,14 @@ import java.util.Objects;
 import engine.input.IMouseActionEventListener;
 import engine.input.InputManager;
 import engine.rendering.textures.Texture;
+import engine.sprites.structures.StructureSprite;
 import math.Vector2;
 
 public class StructureButton implements IMouseActionEventListener {
 	private String structureID;
+	
+	//Assigned struct stuff
+	private StructureSprite templateStructure;
 
 	private Vector2 location;
 	private Vector2 size;
@@ -17,17 +21,18 @@ public class StructureButton implements IMouseActionEventListener {
 	
 	private Texture texture;
 	
-	private boolean isVisible = true;
+	private boolean isVisible = false;
 
 	private static ArrayList<StructureButton> buttons = new ArrayList<>();
 
-	public StructureButton(String structureID, Vector2 location, Vector2 size, PlayerConstructionManager owner, Texture texture) {
+	public StructureButton(String structureID, Vector2 location, Vector2 size, PlayerConstructionManager owner, Texture texture, StructureSprite templateStructure) {
 		super();
 		this.structureID = structureID;
 		this.location = location;
 		this.size = size;
 		this.owner = owner;
 		this.texture = texture;
+		this.templateStructure = templateStructure;
 
 		InputManager.addMouseActionListener(this);
 
@@ -74,16 +79,6 @@ public class StructureButton implements IMouseActionEventListener {
 		return buttons;
 	}
 
-	@Override
-	public void mousePressed(Vector2 screenCoordinate) {
-
-	}
-
-	@Override
-	public void mouseReleased(Vector2 screenCoordinate) {
-		// TODO Auto-generated method stub
-
-	}
 
 	@Override
 	public int hashCode() {
@@ -114,5 +109,44 @@ public class StructureButton implements IMouseActionEventListener {
 
 	public void setVisible(boolean isVisible) {
 		this.isVisible = isVisible;
+	}
+
+	public StructureSprite getTemplateStructure() {
+		return templateStructure;
+	}
+	
+	@Override
+	public void mousePrimaryPressed(Vector2 screenCoordinate) {
+		owner.setCurrentlySelected(this);
+	}
+
+	@Override
+	public void mousePrimaryReleased(Vector2 screenCoordinate) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void mouseSecondaryPressed(Vector2 screenCoordinate) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void mouseSecondaryReleased(Vector2 screenCoordinate) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void mouseMiddlePressed(Vector2 screenCoordinate) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void mouseMiddleReleased(Vector2 screenCoordinate) {
+		// TODO Auto-generated method stub
+		
 	}
 }

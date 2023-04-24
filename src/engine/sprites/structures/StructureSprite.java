@@ -1,9 +1,7 @@
 package engine.sprites.structures;
 
-import java.io.File;
 import java.util.Objects;
 
-import engine.Game;
 import engine.physics.BoundingBox;
 import engine.rendering.textures.Texture;
 import engine.sprites.PhysicsSprite;

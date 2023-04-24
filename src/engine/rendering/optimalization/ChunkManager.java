@@ -32,8 +32,8 @@ public class ChunkManager {
 
 		for (int i = 0; i < chunkMap.length; i++) {
 			for (int j = 0; j < chunkMap[i].length; j++) {
-				chunkMap[i][j] = new Chunk(new Vector2(i * chunkSize, j * chunkSize),
-						new Vector2(chunkSize, chunkSize));
+				chunkMap[i][j] = new Chunk(new Vector2(i * chunkSize, j
+						* chunkSize), new Vector2(chunkSize, chunkSize));
 			}
 		}
 	}
@@ -58,6 +58,7 @@ public class ChunkManager {
 
 	public void runUpdateQueue() {
 		for (Chunk chunk : updateQueue) {
+			System.out.println(chunk);
 			chunk.sort();
 			chunk.cacheImage();
 		}
@@ -65,14 +66,24 @@ public class ChunkManager {
 		updateQueue.clear();
 	}
 
+	public void resolveAll() {
+		for (int i = 0; i < chunkMap.length; i++) {
+			for (int j = 0; j < chunkMap[i].length; j++) {
+				if(chunkMap[i][j].needsResolve()) chunkMap[i][j].resolveFrame();
+			}
+		}
+	}
+
+
 	public void updateSpriteChunk(Sprite sprite) {
-		if (sprite instanceof Background || sprite instanceof Player)
-			return;
+		if (sprite instanceof Background || sprite instanceof Player) return;
 		for (int i = 0; i < chunkMap.length; i++) {
 			for (int j = 0; j < chunkMap[i].length; j++) {
 				if (chunkMap[i][j].tryRemoveSprite(sprite)) {
 					assignChunk(sprite);
 					addChunkToUpdateQueue(chunkMap[i][j]);
+					
+					System.out.println("a");
 					return;
 				}
 			}
@@ -87,10 +98,10 @@ public class ChunkManager {
 	}
 
 	public void assignChunk(Sprite sprite) {
+		if(sprite == null) return;
 		for (int i = 0; i < chunkMap.length; i++) {
 			for (int j = 0; j < chunkMap[i].length; j++) {
-				if (sprite instanceof Background || sprite instanceof Player)
-					continue;
+				if (sprite instanceof Background || sprite instanceof Player) continue;
 				if (chunkMap[i][j].isWithinChunk(sprite)) {
 					chunkMap[i][j].tryAddSprite(sprite);
 					addChunkToUpdateQueue(chunkMap[i][j]);
@@ -117,24 +128,23 @@ public class ChunkManager {
 	public void fixBetweenChunkSprite(Sprite sprite) {
 		Chunk chunk = getChunkBySprite(sprite);
 		Rectangle rect = sprite.getBoundsAsRectangle();
-		
+
 		HashMap<Chunk, Rectangle> chunksAndRect = new HashMap<>();
-		for(Chunk c : surroundingChunks(chunk)) {
+		for (Chunk c : surroundingChunks(chunk)) {
 			chunksAndRect.put(c, c.getRectangle());
 		}
-		
 
-		
 		//chunk if sprite bounds rect and chunk bounds rect collide, if they do, add him forcefully to the chunk rendering
 		for (Map.Entry<Chunk, Rectangle> entry : chunksAndRect.entrySet()) {
-		    Chunk ch = entry.getKey();
-		    Rectangle re = entry.getValue();
-		   
-		    if(re.intersects(rect)) {
-		    	ch.tryAddSprite(sprite);
-		    }
+			Chunk ch = entry.getKey();
+			Rectangle re = entry.getValue();
+
+			if (re.intersects(rect)) {
+				ch.tryAddSprite(sprite);
+				addChunkToUpdateQueue(ch);
+			}
 		}
-		
+
 	}
 
 	public ArrayList<Chunk> surroundingChunks(Chunk chunk) {
@@ -157,11 +167,11 @@ public class ChunkManager {
 	public void forceAddSpriteToChunk(Chunk chunk, Sprite spite) {
 		chunk.tryAddSprite(spite);
 	}
-	
+
 	public void forceRemoveSprite(Sprite sprite) {
 		for (int i = 0; i < chunkMap.length; i++) {
 			for (int j = 0; j < chunkMap[i].length; j++) {
-				if(chunkMap[i][j].tryRemoveSprite(sprite)) {
+				if (chunkMap[i][j].tryRemoveSprite(sprite)) {
 					addChunkToUpdateQueue(chunkMap[i][j]);
 				}
 			}
@@ -181,9 +191,9 @@ public class ChunkManager {
 
 		for (int i = 0; i < chunkMap.length; i++) {
 			for (int j = 0; j < chunkMap[i].length; j++) {
-//				if (chunkMap[i][j].getSprites().isEmpty()) continue;
+				//				if (chunkMap[i][j].getSprites().isEmpty()) continue;
 
-//				System.out.println(i + "" + j + " mag " + (chunkMap[i][j].getLocation().sub(player.getLocation()).magnitude()) + " " + player.getLocation());
+				//				System.out.println(i + "" + j + " mag " + (chunkMap[i][j].getLocation().sub(player.getLocation()).magnitude()) + " " + player.getLocation());
 				if (chunkMap[i][j].getCenterLocation().sub(player.getLocation()).magnitude() <= 1024)
 					activeChunks.add(chunkMap[i][j]);
 			}

@@ -115,14 +115,14 @@ public class Player extends PhysicsSprite implements IMouseActionEventListener {
 	}
 
 	@Override
-	public void mousePressed(Vector2 screenCoordinate) {
+	public void mousePrimaryPressed(Vector2 screenCoordinate) {
 //		System.out.println(screenCoordinate);
 //		System.out.println(Camera.screenToWorldCoordinates(screenCoordinate));
 
 	}
 
 	@Override
-	public void mouseReleased(Vector2 screenCoordinate) {
+	public void mousePrimaryReleased(Vector2 screenCoordinate) {
 		// Unused
 
 	}
@@ -167,6 +167,30 @@ public class Player extends PhysicsSprite implements IMouseActionEventListener {
 
 	public PlayerConstructionManager getConstructManager() {
 		return constructManager;
+	}
+
+	@Override
+	public void mouseSecondaryPressed(Vector2 screenCoordinate) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void mouseSecondaryReleased(Vector2 screenCoordinate) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void mouseMiddlePressed(Vector2 screenCoordinate) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void mouseMiddleReleased(Vector2 screenCoordinate) {
+		// TODO Auto-generated method stub
+		
 	}
 
 }

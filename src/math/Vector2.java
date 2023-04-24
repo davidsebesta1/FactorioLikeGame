@@ -13,6 +13,8 @@ public class Vector2 implements Serializable{
 	public static final transient Vector2 right = new Vector2(-1, 0);
 	public static final transient Vector2 up = new Vector2(0, 1);
 	public static final transient Vector2 down = new Vector2(0, -1);
+	
+	public static final transient Vector2 templateSpawn = new Vector2(999999,999999);
 
 	// Constructor
 	public Vector2(float x, float y) {

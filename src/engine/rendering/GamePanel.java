@@ -19,6 +19,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import javax.swing.JPanel;
+import javax.swing.SwingUtilities;
 import javax.swing.Timer;
 
 import engine.Game;
@@ -165,13 +166,28 @@ public class GamePanel extends JPanel implements MouseListener {
 	@Override
 	public void mousePressed(MouseEvent e) {
 		Vector2 location = new Vector2(e.getLocationOnScreen().getX(), e.getLocationOnScreen().getY());
-		InputManager.fireMousePressed(location);
+		
+		if(SwingUtilities.isLeftMouseButton(e)){
+			InputManager.setRunLMBPressed(true);
+			InputManager.setPressedPosition(location);
+		} else if (SwingUtilities.isRightMouseButton(e)) {
+			InputManager.setRunRMBPressed(true);
+			InputManager.setPressedPosition(location);
+		}
+		
 	}
 
 	@Override
 	public void mouseReleased(MouseEvent e) {
 		Vector2 location = new Vector2(e.getLocationOnScreen().getX(), e.getLocationOnScreen().getY());
-		InputManager.fireMouseReleased(location);
+		
+		if(SwingUtilities.isLeftMouseButton(e)){
+			InputManager.setRunLMBReleased(true);
+			InputManager.setReleasedPosition(location);
+		} else if (SwingUtilities.isRightMouseButton(e)) {
+			InputManager.setRunRMBReleased(true);
+			InputManager.setReleasedPosition(location);
+		}
 	}
 
 	@Override

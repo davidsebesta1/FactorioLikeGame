@@ -9,19 +9,28 @@ import java.util.HashSet;
 import java.util.Map;
 
 import engine.Game;
+import engine.input.IMouseActionEventListener;
+import engine.input.InputManager;
+import engine.rendering.textures.Texture;
 import engine.rendering.textures.TextureLibrary;
+import engine.sprites.structures.StructureSprite;
+import engine.sprites.structures.command.CoreModule;
 import math.Vector2;
 
-public class PlayerConstructionManager {
+public class PlayerConstructionManager implements IMouseActionEventListener {
 
 	private HashMap<StructureTypeButton, HashSet<StructureButton>> categoryAndAvailableStructures;
 	private ArrayList<Vector2> rightRectangleSlotLocations;
 
 	private HashSet<StructureButton> currentlyShowStructButtons;
 
+	private HashMap<String, StructureSprite> structureIdentifierTemplate;
+
 	private Vector2 location;
 
 	private Color backgroundInvColor = new Color(120, 120, 120, 200);
+
+	private StructureButton currentlySelected = null;
 
 	public PlayerConstructionManager(Vector2 location) {
 		super();
@@ -29,18 +38,21 @@ public class PlayerConstructionManager {
 		this.categoryAndAvailableStructures = new HashMap<>();
 		this.rightRectangleSlotLocations = new ArrayList<>();
 		this.currentlyShowStructButtons = new HashSet<>();
+		this.structureIdentifierTemplate = new HashMap<>();
+		
+		InputManager.addMouseActionListener(this);
 
 		initializeRightRectangleLocations();
 		initializeLeftRectangleButtons();
-		
-		test( getStructTypeButtonByIdentifier("TransportStructures"));
+
+		registerStructures();
+
+		showCorrespondingStructButton(getStructTypeButtonByIdentifier("CommandStructures"));
 
 	}
 
-	public void test(StructureTypeButton button) {
-		if(button != null) {
-			categoryAndAvailableStructures.get(button).add(new StructureButton("basicDrill", new Vector2(0,0), new Vector2(32, 32), this, TextureLibrary.retrieveTexture("testStructIcon")));
-		}
+	private void registerStructures() {
+		registerStructure("CommandStructures", "coreModule", TextureLibrary.retrieveTexture("testStructIcon"), CoreModule.instantiateCoreModule(TextureLibrary.retrieveTexture("coreModule"), Vector2.templateSpawn));
 	}
 
 	private void initializeLeftRectangleButtons() {
@@ -50,7 +62,6 @@ public class PlayerConstructionManager {
 		int upperRectHeight = (int) (256.0 / 5.0);
 
 		// draw bottom rectangles
-		int bottomRectHeight = (int) (256.0 * 0.98 - upperRectHeight);
 		int bottomRectY = (int) loc.getY() - 254 + upperRectHeight + 2;
 
 		int pointX = (int) loc.getX() + 9;
@@ -72,7 +83,7 @@ public class PlayerConstructionManager {
 		for (int i = 0; i < tempRect.size(); i++) {
 			switch (i) {
 			case 0:
-				categoryAndAvailableStructures.put(new StructureTypeButton("CommmandStructures", new Vector2(tempRect.get(i).getX(), tempRect.get(i).getY()), new Vector2(32, 32), this, TextureLibrary.retrieveTexture("testTypeIcon")), new HashSet<>());
+				categoryAndAvailableStructures.put(new StructureTypeButton("CommandStructures", new Vector2(tempRect.get(i).getX(), tempRect.get(i).getY()), new Vector2(32, 32), this, TextureLibrary.retrieveTexture("testTypeIcon")), new HashSet<>());
 				break;
 			case 1:
 				categoryAndAvailableStructures.put(new StructureTypeButton("TransportStructures", new Vector2(tempRect.get(i).getX(), tempRect.get(i).getY()), new Vector2(32, 32), this, TextureLibrary.retrieveTexture("testTypeIcon")), new HashSet<>());
@@ -91,8 +102,7 @@ public class PlayerConstructionManager {
 				break;
 			}
 		}
-		
-		
+
 	}
 
 	public StructureTypeButton getStructTypeButtonByIdentifier(String identifier) {
@@ -111,14 +121,11 @@ public class PlayerConstructionManager {
 		int upperRectHeight2 = (int) (256.0 / 5.0);
 
 		// draw bottom rectangles
-		int bottomRectHeight2 = (int) (256.0 * 0.98 - upperRectHeight2);
 		int bottomRectY2 = (int) loc2.getY() - 254 + upperRectHeight2 + 2;
 
 		int pointX2 = (int) loc2.getX() + 120;
 		int pointY2 = bottomRectY2 + 7;
 		int pointSpacing2 = 56;
-
-		ArrayList<Rectangle> tempRect2 = new ArrayList<>();
 
 		for (int i = 0; i < 3; i++) {
 			for (int j = 0; j < 2; j++) {
@@ -180,6 +187,7 @@ public class PlayerConstructionManager {
 					structure.setLocation(rightRectangleSlotLocations.get(index));
 					currentlyShowStructButtons.add(structure);
 					index++;
+					System.out.println(structure);
 				}
 
 				return true;
@@ -188,6 +196,15 @@ public class PlayerConstructionManager {
 			return false;
 		}
 		return false;
+	}
+
+	public boolean registerStructure(String category, String name, Texture iconTexture, StructureSprite template) {
+		StructureTypeButton categoryButton = getStructTypeButtonByIdentifier(category);
+		if (categoryButton != null) {
+			categoryAndAvailableStructures.get(categoryButton).add(new StructureButton(name, new Vector2(0, 0), new Vector2(32, 32), this, iconTexture, template));
+			structureIdentifierTemplate.put(name, template);
+		}
+		return true;
 	}
 
 	public Vector2 getLocation() {
@@ -204,6 +221,52 @@ public class PlayerConstructionManager {
 
 	public Color getBackgroundInvColor() {
 		return backgroundInvColor;
+	}
+
+	public StructureButton getCurrentlySelected() {
+		return currentlySelected;
+	}
+
+	public void setCurrentlySelected(StructureButton currentlySelected) {
+		this.currentlySelected = currentlySelected;
+		
+		System.out.println("Curr selected: " + currentlySelected);
+	}
+
+	@Override
+	public void mousePrimaryPressed(Vector2 screenCoordinate) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void mousePrimaryReleased(Vector2 screenCoordinate) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void mouseSecondaryPressed(Vector2 screenCoordinate) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void mouseSecondaryReleased(Vector2 screenCoordinate) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void mouseMiddlePressed(Vector2 screenCoordinate) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void mouseMiddleReleased(Vector2 screenCoordinate) {
+		// TODO Auto-generated method stub
+		
 	}
 
 }

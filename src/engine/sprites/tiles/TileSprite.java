@@ -5,7 +5,9 @@ import java.io.File;
 import engine.Game;
 import engine.rendering.textures.Texture;
 import engine.sprites.Sprite;
-import engine.sprites.SpriteManager;
+import engine.sprites.entities.player.UI.StructureButton;
+import engine.sprites.structures.StructureMap;
+import engine.sprites.structures.StructureSprite;
 import math.Vector2;
 
 public class TileSprite extends Sprite {
@@ -38,26 +40,33 @@ public class TileSprite extends Sprite {
 	
 	@Override
 	public void onMouseClicked() {
-		this.destroy();
+		StructureButton template = Game.getInstance().getCurrentWorld().getPlayer().getConstructManager().getCurrentlySelected();
+		if(template != null) {
+			StructureSprite sprite = null;
+			try {
+				sprite = (StructureSprite) template.getTemplateStructure().clone();
+			} catch (CloneNotSupportedException e) {
+				e.printStackTrace();
+			}
+			
+			if(sprite != null) {
+				Vector2 locOnMap = StructureMap.worldToStructureMapCoordinate(this.location);
+				System.out.println(Game.getInstance().getCurrentWorld().getStructureMap().tryAddStructureAtLocation(sprite, locOnMap));
+			}
+		}
 	}
 
 	@Override
 	public String toString() {
 		return "TileSprite [location=" + location + ", size=" + size + ", getzDepth()=" + getzDepth()
-				+ ", getTexture()=" + getTexture() + ", getLocation()=" + getLocation() + ", getSize()=" + getSize()
-				+ ", isVisible()=" + isVisible() + ", hashCode()=" + hashCode() + ", toString()=" + super.toString()
-				+ ", getClass()=" + getClass() + "]";
+				+ ", getTexture()=" + getTexture() + ", getLocation()=" + getLocation()
+				+ ", isVisible()=" + isVisible() +", toString()=" + super.toString();
 	}
 	
 	@Override
 	public void destroy() {
-		try {
-			SpriteManager.remove(this);
-			Game.getInstance().getCurrentWorld().getTiles().tryToRemove(this);
-
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+		super.destroy();
+		Game.getInstance().getCurrentWorld().getTiles().tryToRemove(this);
 	}
 
 	@Override

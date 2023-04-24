@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.security.InvalidParameterException;
 import java.util.ArrayList;
 
+import engine.Game;
 import engine.sprites.structures.conveyors.ConveyorBelt;
 import engine.sprites.structures.conveyors.ConveyorBeltManager;
 import engine.sprites.tiles.TileSprite;
@@ -40,8 +41,7 @@ public class StructureMap implements Serializable {
 			map[(int) locationOnStructMap.getX()][(int) locationOnStructMap.getY()] = structure;
 
 			// Set location based on tile size * location
-			structure.setLocation(
-					new Vector2(locationOnStructMap.getX() * SPRITE_SIZE, locationOnStructMap.getY() * SPRITE_SIZE));
+			structure.setLocation(new Vector2(locationOnStructMap.getX() * SPRITE_SIZE, locationOnStructMap.getY() * SPRITE_SIZE));
 
 			for (int i = (int) locationOnStructMap.getX(); i < locationOnStructMap.getX()
 					+ structure.getTileSizeUnits().getX(); i++) {
@@ -54,6 +54,11 @@ public class StructureMap implements Serializable {
 			// If it is instance of conveyor belt, add it to the manager
 			if (structure instanceof ConveyorBelt) {
 				ConveyorBeltManager.addBelt((ConveyorBelt) structure);
+			}
+			
+			if(Game.getInstance().getCurrentWorld() != null) {
+				Game.getInstance().getCurrentWorld().getChunkManager().assignChunk(structure);
+				Game.getInstance().getCurrentWorld().getChunkManager().fixBetweenChunkSprite(structure);
 			}
 
 			return true;

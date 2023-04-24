@@ -1,5 +1,7 @@
 package engine.sprites.structures.drills;
 
+import java.util.Objects;
+
 import engine.Game;
 import engine.physics.CollisionLayers;
 import engine.rendering.textures.Texture;
@@ -116,4 +118,24 @@ public class BasicDrill extends StructureSprite {
 		return "basicDrill";
 	}
 
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = super.hashCode();
+		result = prime * result + Objects.hash(elapsedTime, minedItem);
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (!super.equals(obj))
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		BasicDrill other = (BasicDrill) obj;
+		return Double.doubleToLongBits(elapsedTime) == Double.doubleToLongBits(other.elapsedTime)
+				&& Objects.equals(minedItem, other.minedItem);
+	}
 }
