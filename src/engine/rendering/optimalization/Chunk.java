@@ -10,9 +10,11 @@ import java.awt.Transparency;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashSet;
+import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 
-import engine.Game;
 import engine.sprites.Sprite;
 import math.Vector2;
 
@@ -20,8 +22,8 @@ public class Chunk {
 
 	private ArrayList<Sprite> sprites;
 	
-	private ArrayList<Sprite> toAddNextFrame;
-	private ArrayList<Sprite> toRemoveNextFrame;
+	private HashSet<Sprite> toAddNextFrame;
+	private HashSet<Sprite> toRemoveNextFrame;
 	
 	private Vector2 location;
 	private Vector2 size;
@@ -32,8 +34,8 @@ public class Chunk {
 
 	public Chunk(Vector2 location, Vector2 size) {
 		this.sprites = new ArrayList<>();
-		this.toAddNextFrame = new ArrayList<>();
-		this.toRemoveNextFrame = new ArrayList<>();
+		this.toAddNextFrame = new HashSet<>();
+		this.toRemoveNextFrame = new HashSet<>();
 		this.location = location;
 		this.size = size;
 		
@@ -43,11 +45,7 @@ public class Chunk {
 		buffer = gfxConfig.createCompatibleImage((int) size.getX(), (int) size.getY(), Transparency.BITMASK);
 	}
 	
-	public void sort() {
-		Collections.sort(sprites);
-	}
-	
-	public void resolveFrame() {
+	public synchronized void resolveFrame() {
 		if(needsResolve()){
 			sprites.removeAll(toRemoveNextFrame);
 			sprites.addAll(toAddNextFrame);
@@ -59,12 +57,16 @@ public class Chunk {
 			cacheImage();
 		}
 	}
+	
+	public synchronized void sort() {
+		Collections.sort(sprites);
+	}
 
-	public boolean tryAddSprite(Sprite sprite) {
+	public synchronized boolean tryAddSprite(Sprite sprite) {
 		return toAddNextFrame.add(sprite);
 	}
 
-	public boolean tryRemoveSprite(Sprite sprite) {
+	public synchronized boolean tryRemoveSprite(Sprite sprite) {
 		return toRemoveNextFrame.add(sprite);
 	}
 
@@ -80,9 +82,9 @@ public class Chunk {
 					g2d.drawImage(sprite.getTexture().getImage(), (int) (sprite.getLocation().getX() - location.getX()),
 							(int) (sprite.getLocation().getY() - location.getY()), null);
 					
-					if(!isFullyDrawnSprite(sprite)) {
-						Game.getInstance().getCurrentWorld().getChunkManager().fixBetweenChunkSprite(sprite);
-					}
+//					if(!isFullyDrawnSprite(sprite)) {
+//						Game.getInstance().getCurrentWorld().getChunkManager().fixBetweenChunkSprite(sprite);
+//					}
 				}
 		}
 		

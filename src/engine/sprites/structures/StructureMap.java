@@ -45,9 +45,8 @@ public class StructureMap implements Serializable {
 
 			for (int i = (int) locationOnStructMap.getX(); i < locationOnStructMap.getX()
 					+ structure.getTileSizeUnits().getX(); i++) {
-				for (int j = (int) locationOnStructMap.getY(); j < locationOnStructMap.getY()
-						+ structure.getTileSizeUnits().getY(); j++) {
-					occupiedMap[i][j] = true; // Update occupied map
+				for (int j = (int) locationOnStructMap.getY(); j < locationOnStructMap.getY() + structure.getTileSizeUnits().getY(); j++) {
+					if(isInBounds(i,j)) occupiedMap[i][j] = true; // Update occupied map
 				}
 			}
 
@@ -93,14 +92,13 @@ public class StructureMap implements Serializable {
 	}
 
 	private boolean checkForOccupiedSpaces(StructureSprite structure, Vector2 locationOnStructMap) {
-		if (!isInBounds((int) locationOnStructMap.getX(), (int) locationOnStructMap.getY()))
-			return false;
+		if (!isInBounds((int) locationOnStructMap.getX(), (int) locationOnStructMap.getY())) return false;
 
 		for (int i = (int) locationOnStructMap.getX(); i < locationOnStructMap.getX()
 				+ structure.getTileSizeUnits().getX(); i++) {
 			for (int j = (int) locationOnStructMap.getY(); j < locationOnStructMap.getY()
 					+ structure.getTileSizeUnits().getY(); j++) {
-				if (occupiedMap[i][j])
+				if (isInBounds(i,j) && occupiedMap[i][j])
 					return false; // any occupied field found within coordinates and destination, return false
 			}
 		}
@@ -136,7 +134,8 @@ public class StructureMap implements Serializable {
 	public static Vector2 worldToStructureMapCoordinate(Vector2 worldLocation) {
 		if (worldLocation.getX() > 0 && worldLocation.getY() > 0)
 			return new Vector2(worldLocation.getX() / 32, worldLocation.getY() / 32);
-		throw new InvalidParameterException( "World location cannot be negative value for two dimensionl array conversion");
+		System.out.println( "World location cannot be negative value for two dimensionl array conversion");
+		return Vector2.zero;
 	}
 
 	public ArrayList<StructureSprite> getAdjacentStructures(Vector2 locationOnStructMap) {

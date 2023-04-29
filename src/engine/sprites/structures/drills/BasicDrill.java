@@ -5,10 +5,8 @@ import java.util.Objects;
 import engine.Game;
 import engine.physics.CollisionLayers;
 import engine.rendering.textures.Texture;
-import engine.rendering.textures.TextureLibrary;
 import engine.sprites.objects.Item;
-import engine.sprites.objects.minable.Coal;
-import engine.sprites.ores.CoalOre;
+import engine.sprites.objects.minable.OreItem;
 import engine.sprites.ores.OreMap;
 import engine.sprites.ores.OreSprite;
 import engine.sprites.structures.StructureMap;
@@ -85,8 +83,9 @@ public class BasicDrill extends StructureSprite {
 		}
 	}
 	
-	public Item resolveMinedItemType(OreSprite sprite) {
-		if(sprite instanceof CoalOre) return Coal.instantiateCoal(TextureLibrary.retrieveTexture("coal"), Vector2.zero);
+	//Need to add all possible items here
+	public OreItem resolveMinedItemType(OreSprite sprite) {
+//		if(sprite instanceof CoalOre) return Coal.instantiateCoal(TextureLibrary.retrieveTexture("coal"), Vector2.templateSpawn);
 		
 		return null;
 	}
@@ -113,8 +112,7 @@ public class BasicDrill extends StructureSprite {
 		return null;
 	}
 
-	@Override
-	public String ID() {
+	public static String ID() {
 		return "basicDrill";
 	}
 

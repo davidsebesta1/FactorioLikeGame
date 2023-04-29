@@ -4,5 +4,7 @@ public interface ISpriteBehaviour {
 	public abstract void start();
 	public abstract void update();
 	public abstract void onMouseClicked();
-	public abstract String ID();
+	public static String ID() {
+		return null;
+	}
 }

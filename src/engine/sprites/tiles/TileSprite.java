@@ -49,9 +49,13 @@ public class TileSprite extends Sprite {
 				e.printStackTrace();
 			}
 			
-			if(sprite != null) {
+			if(sprite != null && template.getTemplateStructure().hasEnoughItemsForConstruct(Game.getInstance().getCurrentWorld().getPlayer().getInventory())) {
 				Vector2 locOnMap = StructureMap.worldToStructureMapCoordinate(this.location);
-				System.out.println(Game.getInstance().getCurrentWorld().getStructureMap().tryAddStructureAtLocation(sprite, locOnMap));
+				boolean validConstruct = Game.getInstance().getCurrentWorld().getStructureMap().tryAddStructureAtLocation(sprite, locOnMap);
+				System.out.println(validConstruct + " aaaaa");
+				if(validConstruct) {
+					Game.getInstance().getCurrentWorld().getPlayer().getInventory().removeStuffFromInventory(template.getTemplateStructure().getResourceCost());
+				}
 			}
 		}
 	}
@@ -66,8 +70,10 @@ public class TileSprite extends Sprite {
 	@Override
 	public void destroy() {
 		super.destroy();
-		Game.getInstance().getCurrentWorld().getTiles().tryToRemove(this);
+		Game.getInstance().getTileMap().tryToRemove(this);
 	}
+
+	
 
 	@Override
 	public int hashCode() {
@@ -76,17 +82,19 @@ public class TileSprite extends Sprite {
 
 	@Override
 	public boolean equals(Object obj) {
-		if (this == obj)
+		if (this == obj) {
 			return true;
-		if (!super.equals(obj))
+		}
+		if (!super.equals(obj)) {
 			return false;
-		if (getClass() != obj.getClass())
+		}
+		if (!(obj instanceof TileSprite)) {
 			return false;
+		}
 		return true;
 	}
 
-	@Override
-	public String ID() {
+	public static String ID() {
 		return "tileSprite";
 	}
 	

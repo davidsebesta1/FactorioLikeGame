@@ -5,11 +5,7 @@ import java.util.Random;
 import engine.rendering.optimalization.ChunkManager;
 import engine.rendering.textures.TextureLibrary;
 import engine.sprites.Background;
-import engine.sprites.Sprite;
-import engine.sprites.SpriteManager;
 import engine.sprites.entities.player.Player;
-import engine.sprites.objects.minable.Coal;
-import engine.sprites.ores.CoalOre;
 import engine.sprites.ores.OreMap;
 import engine.sprites.structures.StructureMap;
 import engine.sprites.structures.command.CoreModule;
@@ -78,7 +74,7 @@ public class GameWorld {
 		BasicDrill drill1 = BasicDrill.instantiateBasicDrill(TextureLibrary.retrieveTexture("basicDrill"), new Vector2(0,0));
 		structureMap.tryAddStructureAtLocation(drill1, new Vector2(4, 8));
 		
-		oreMap.tryAddOreAtLocation(CoalOre.instantiateSprite(TextureLibrary.retrieveTexture("coalOre"), new Vector2(0, 0), 5), new Vector2(4,8));
+//		oreMap.tryAddOreAtLocation(CoalOre.instantiateSprite(TextureLibrary.retrieveTexture("coalOre"), new Vector2(0, 0), 5), new Vector2(4,8));
 	
 		
 	}
@@ -103,7 +99,7 @@ public class GameWorld {
 		return size;
 	}
 
-	public TileMap getTiles() {
+	public TileMap getTileMap() {
 		return tiles;
 	}
 

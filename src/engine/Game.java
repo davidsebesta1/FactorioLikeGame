@@ -3,16 +3,19 @@ package engine;
 import java.awt.Dimension;
 import java.awt.DisplayMode;
 import java.awt.Toolkit;
-import java.io.Serializable;
 
 import engine.input.InputManager;
 import engine.physics.PhysicsManager;
 import engine.rendering.GameWindow;
+import engine.rendering.optimalization.ChunkManager;
 import engine.rendering.textures.TextureLibrary;
 import engine.rendering.textures.TextureType;
 import engine.sprites.Background;
 import engine.sprites.SpriteManager;
-import engine.sprites.structures.command.CoreModule;
+import engine.sprites.entities.player.Player;
+import engine.sprites.ores.OreMap;
+import engine.sprites.structures.StructureMap;
+import engine.sprites.tiles.TileMap;
 import engine.time.DeltaTime;
 import engine.world.GameWorld;
 import main.Log;
@@ -54,6 +57,7 @@ public class Game implements Runnable {
 		tl.loadAllTextures("textures/ores", TextureType.BITMASK);
 		tl.loadAllTextures("textures/items", TextureType.BITMASK);
 		tl.loadAllTextures("textures/icons", TextureType.OPAQUE);
+		tl.loadAllTextures("textures/UIElements", TextureType.TRANSPARENT);
 		tl.loadAllTextures("textures", TextureType.OPAQUE);
 
 		// AND SECOND
@@ -67,6 +71,8 @@ public class Game implements Runnable {
 		DisplayMode displayMode = screen.findFirstCompatibleMode(POSSIBLE_MODES);
 		screen.setFullScreen(displayMode);
 		window = GameWindow.initiateInstance(resolution);
+		
+		window.getPanel().init();
 
 		// FINALLY GAME LOOP
 		Thread thread = new Thread(this);
@@ -171,6 +177,28 @@ public class Game implements Runnable {
 	public ScreenManager getScreenManager() {
 		return screen;
 	}
-	
-	
+
+	public Background getBackground() {
+		return currentWorld.getBackground();
+	}
+
+	public Player getPlayer() {
+		return currentWorld.getPlayer();
+	}
+
+	public TileMap getTileMap() {
+		return currentWorld.getTileMap();
+	}
+
+	public StructureMap getStructureMap() {
+		return currentWorld.getStructureMap();
+	}
+
+	public ChunkManager getChunkManager() {
+		return currentWorld.getChunkManager();
+	}
+
+	public OreMap getOreMap() {
+		return currentWorld.getOreMap();
+	}
 }

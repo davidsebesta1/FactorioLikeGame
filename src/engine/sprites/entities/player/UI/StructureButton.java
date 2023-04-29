@@ -1,11 +1,13 @@
 package engine.sprites.entities.player.UI;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Objects;
 
 import engine.input.IMouseActionEventListener;
 import engine.input.InputManager;
 import engine.rendering.textures.Texture;
+import engine.sprites.objects.Item;
 import engine.sprites.structures.StructureSprite;
 import math.Vector2;
 
@@ -115,6 +117,14 @@ public class StructureButton implements IMouseActionEventListener {
 		return templateStructure;
 	}
 	
+	public String getDisplayName() {
+		return templateStructure.getDisplayName();
+	}
+	
+	public HashMap<String, Integer> getResourceCost() {
+		return templateStructure.getResourceCost();
+	}
+
 	@Override
 	public void mousePrimaryPressed(Vector2 screenCoordinate) {
 		owner.setCurrentlySelected(this);

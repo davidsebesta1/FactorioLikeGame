@@ -19,6 +19,7 @@ public class GameWindow {
 		this.frame = Game.getInstance().getScreenManager().getFullScreenWindow();
 		this.frame.setResizable(false);
 		this.panel = new GamePanel(size);
+		this.panel.setLocation(0, 1);
 
 		this.frame.add(panel);
 		this.frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -26,7 +27,7 @@ public class GameWindow {
 	}
 
 	public void repaint() {
-		frame.repaint();
+		panel.updateImage();
 	}
 
 	public static GameWindow getInstance() {

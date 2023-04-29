@@ -244,7 +244,7 @@ public class InputManager {
 	}
 
 	private static boolean checkForTileClick(Vector2 worldCoordinates) {
-		TileSprite[][] tileSprites = Game.getInstance().getCurrentWorld().getTiles().getMap();
+		TileSprite[][] tileSprites = Game.getInstance().getCurrentWorld().getTileMap().getMap();
 
 		for (int i = 0; i < tileSprites.length; i++) {
 			for (int j = 0; j < tileSprites[i].length; j++) {

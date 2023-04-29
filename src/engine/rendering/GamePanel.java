@@ -1,11 +1,12 @@
 package engine.rendering;
 
+import java.awt.Canvas;
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.GraphicsConfiguration;
 import java.awt.GraphicsEnvironment;
-import java.awt.Rectangle;
 import java.awt.RenderingHints;
 import java.awt.Toolkit;
 import java.awt.Transparency;
@@ -14,9 +15,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.image.BufferedImage;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
+import java.awt.image.BufferStrategy;
 
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
@@ -24,26 +23,77 @@ import javax.swing.Timer;
 
 import engine.Game;
 import engine.input.InputManager;
-import engine.rendering.optimalization.Chunk;
 import engine.rendering.optimalization.ChunkManager;
 import engine.sprites.Background;
 import engine.sprites.entities.player.Player;
-import math.MathUtilities;
 import math.Vector2;
 
-public class GamePanel extends JPanel implements MouseListener {
+
+public class GamePanel extends JPanel {
 	private static final long serialVersionUID = -5792040577297371507L;
 
 	private transient BufferedImage buffer;
+	
+	private Canvas canvas;
 
 	private transient int fps = 0;
+	
+	private transient BufferStrategy bs;
+	private transient Graphics g;
 
 	public GamePanel(Vector2 size) {
 		this.setSize((int) size.getX(), (int) size.getY());
 		this.setBackground(Color.black);
-		this.setDoubleBuffered(true);
 		this.setFocusable(true);
-		this.addMouseListener(this);
+		
+		this.canvas = new Canvas();
+		this.canvas.setSize(new Dimension(1920,(int) size.getY()));
+		this.canvas.setLocation(0, 0);
+		this.canvas.addMouseListener(new MouseListener() {
+
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				/* Unused */ }
+
+			@Override
+			public void mousePressed(MouseEvent e) {
+				Vector2 location = new Vector2(e.getLocationOnScreen().getX(), e.getLocationOnScreen().getY());
+				
+				if(SwingUtilities.isLeftMouseButton(e)){
+					InputManager.setRunLMBPressed(true);
+					InputManager.setPressedPosition(location);
+				} else if (SwingUtilities.isRightMouseButton(e)) {
+					InputManager.setRunRMBPressed(true);
+					InputManager.setPressedPosition(location);
+				}
+				
+			}
+
+			@Override
+			public void mouseReleased(MouseEvent e) {
+				Vector2 location = new Vector2(e.getLocationOnScreen().getX(), e.getLocationOnScreen().getY());
+				
+				if(SwingUtilities.isLeftMouseButton(e)){
+					InputManager.setRunLMBReleased(true);
+					InputManager.setReleasedPosition(location);
+				} else if (SwingUtilities.isRightMouseButton(e)) {
+					InputManager.setRunRMBReleased(true);
+					InputManager.setReleasedPosition(location);
+				}
+			}
+
+			@Override
+			public void mouseEntered(MouseEvent e) {
+				/* Unused */
+			}
+
+			@Override
+			public void mouseExited(MouseEvent e) {
+				/* Unused */
+			}
+			
+		});
+		this.add(canvas);
 
 		GraphicsConfiguration gfxConfig = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice().getDefaultConfiguration();
 		buffer = gfxConfig.createCompatibleImage((int) size.getX(), (int) size.getY(), Transparency.OPAQUE);
@@ -58,11 +108,17 @@ public class GamePanel extends JPanel implements MouseListener {
 		});
 		fpsTimer.start();
 	}
+	
+	public void init() {
+		this.canvas.createBufferStrategy(2);
+		this.bs = canvas.getBufferStrategy();
+		this.g = bs.getDrawGraphics();
+	}
 
 	private void render() {
 		// Render to off-screen buffer
-		Graphics g = buffer.getGraphics();
-		Graphics2D g2d = (Graphics2D) g;
+		Graphics graphics = buffer.getGraphics();
+		Graphics2D g2d = (Graphics2D) graphics;
 
 		g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_OFF);
 
@@ -116,10 +172,26 @@ public class GamePanel extends JPanel implements MouseListener {
 				- Game.getInstance().getCurrentWorld().getPlayer().getCamera().getLocation().getX()), (int) (player.getLocation().getY()
 						- Game.getInstance().getCurrentWorld().getPlayer().getCamera().getLocation().getY()), null);
 
+		
+		
 		// Release resources
 		g2d.dispose();
-		g.dispose();
+		graphics.dispose();
 
+	}
+	
+	public void updateImage() {
+		render();
+		Game.getInstance().getCurrentWorld().getPlayer().getConstructManager().paint((Graphics2D) buffer.getGraphics());
+		g.drawImage(buffer, 0, 0, canvas.getWidth(), canvas.getHeight(), null);
+		
+		g.setColor(Color.red);
+		g.drawString("FPS: " + Game.getInstance().getFramesPerSecond(), 10, 15);
+        bs.show();
+        
+		Toolkit.getDefaultToolkit().sync();
+
+		fps++;
 	}
 
 	@Override
@@ -157,47 +229,6 @@ public class GamePanel extends JPanel implements MouseListener {
 
 		fps++;
 
-	}
-
-	@Override
-	public void mouseClicked(MouseEvent e) {
-		/* Unused */ }
-
-	@Override
-	public void mousePressed(MouseEvent e) {
-		Vector2 location = new Vector2(e.getLocationOnScreen().getX(), e.getLocationOnScreen().getY());
-		
-		if(SwingUtilities.isLeftMouseButton(e)){
-			InputManager.setRunLMBPressed(true);
-			InputManager.setPressedPosition(location);
-		} else if (SwingUtilities.isRightMouseButton(e)) {
-			InputManager.setRunRMBPressed(true);
-			InputManager.setPressedPosition(location);
-		}
-		
-	}
-
-	@Override
-	public void mouseReleased(MouseEvent e) {
-		Vector2 location = new Vector2(e.getLocationOnScreen().getX(), e.getLocationOnScreen().getY());
-		
-		if(SwingUtilities.isLeftMouseButton(e)){
-			InputManager.setRunLMBReleased(true);
-			InputManager.setReleasedPosition(location);
-		} else if (SwingUtilities.isRightMouseButton(e)) {
-			InputManager.setRunRMBReleased(true);
-			InputManager.setReleasedPosition(location);
-		}
-	}
-
-	@Override
-	public void mouseEntered(MouseEvent e) {
-		/* Unused */
-	}
-
-	@Override
-	public void mouseExited(MouseEvent e) {
-		/* Unused */
 	}
 
 	public BufferedImage getBuffer() {

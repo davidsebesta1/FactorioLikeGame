@@ -26,8 +26,7 @@ public class Background extends Sprite {
 
 	}
 
-	@Override
-	public String ID() {
+	public static String ID() {
 		return "backgroundSprite";
 	}
 

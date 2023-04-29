@@ -2,9 +2,11 @@ package engine.sprites.objects;
 
 import java.util.Objects;
 
+import engine.Game;
 import engine.physics.BoundingBox;
 import engine.physics.CollisionLayers;
 import engine.rendering.textures.Texture;
+import engine.rendering.textures.TextureLibrary;
 import engine.sprites.PhysicsSprite;
 import engine.sprites.structures.conveyors.ConveyorBelt;
 import math.Vector2;
@@ -15,7 +17,7 @@ public abstract class Item extends PhysicsSprite {
 	
 	protected ConveyorBelt beltAssigned;
 
-	protected Item(Texture texture, Vector2 location, float zDepth) {
+	protected Item(Texture texture, Vector2 location, double zDepth) {
 		super(texture, location, zDepth);
 		this.collisionLayer = CollisionLayers.ITEM;
 		this.setCollisionBox(new BoundingBox(this, false, location, this.getSize()));
@@ -36,6 +38,8 @@ public abstract class Item extends PhysicsSprite {
 		if(beltAssigned != null) {
 			beltAssigned.setItem(null);
 		}
+		
+		Game.getInstance().getCurrentWorld().getChunkManager().forceRemoveSprite(this);
 	}
 
 	@Override
@@ -56,5 +60,21 @@ public abstract class Item extends PhysicsSprite {
 			return false;
 		Item other = (Item) obj;
 		return Objects.equals(beltAssigned, other.beltAssigned);
+	}
+
+	public static String ID() {
+		return ID;
+	}
+	
+	public String getID() {
+		return ID;
+	}
+	
+	public static Texture getTextureByItemID(String ID) {
+		switch (ID) {
+		case "coalItem": return TextureLibrary.retrieveTexture("coal");
+		default: return TextureLibrary.retrieveTexture("testStructIcon");
+		}
+		
 	}
 }

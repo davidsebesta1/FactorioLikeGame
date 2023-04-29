@@ -1,6 +1,7 @@
 package engine.sprites.structures.command;
 
 import java.io.File;
+import java.util.HashMap;
 
 import engine.Game;
 import engine.physics.CollisionLayers;
@@ -16,6 +17,10 @@ public class CoreModule extends StructureSprite {
 	private CoreModule(Texture texture, Vector2 location, double zDepth) {
 		super(texture, location, zDepth);
 		this.collisionLayer = CollisionLayers.STRUCTURE;
+		
+		this.resourceCost = new HashMap<>();
+		this.displayName = "Core Module";
+		this.resourceCost.put("coalItem", 2);
 	}
 
 	public static CoreModule instantiateCoreModule(File file, Vector2 location) {
@@ -55,22 +60,21 @@ public class CoreModule extends StructureSprite {
 		return true;
 	}
 
-	@Override
-	public String ID() {
+	public static String ID() {
 		return "coreModule";
 	}
 	
 	@Override
 	public void enteredCollision(PhysicsSprite sprite) {
-		if(sprite != null && sprite instanceof Item) {
-			Item item = (Item) sprite;
-			
-			Game.getInstance().getCurrentWorld().getPlayer().tryAddItemToInventory(item.ID(), 1);
-			System.out.println(Game.getInstance().getCurrentWorld().getPlayer().getItemAmount(item.ID()));
-			item.destroy();
-			
+		if (sprite instanceof Item) {
+		    Item item = (Item) sprite;
+		    String itemId = item.getID();
+		    Game.getInstance().getCurrentWorld().getPlayer().tryAddItemToInventory(itemId, 1);
+		    System.out.println(Game.getInstance().getCurrentWorld().getPlayer().getItemAmount(itemId) + itemId);
+		    item.destroy();
 		}
 	}
+	
 
 	
 	

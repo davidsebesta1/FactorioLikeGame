@@ -2,7 +2,6 @@ package engine.sprites;
 
 import java.util.Objects;
 
-import engine.Game;
 import engine.physics.BoundingBox;
 import engine.physics.CollisionLayers;
 import engine.physics.PhysicsManager;
@@ -104,6 +103,8 @@ public abstract class PhysicsSprite extends Sprite implements IPhysicsBehaviour 
 		PhysicsManager.removePhysicsSprite(this);
 	}
 
-	@Override
-	public abstract String ID();
+	public static String ID() {
+		return "physicsSprite";
+		
+	}
 }

@@ -21,7 +21,7 @@ public class Player extends PhysicsSprite implements IMouseActionEventListener {
 	private Camera camera;
 	private boolean inputEnabled;
 	
-	private PlayerInventory inventory;
+	private Inventory inventory;
 
 	private PlayerConstructionManager constructManager;
 	private boolean buildingModeEnabled;
@@ -31,7 +31,7 @@ public class Player extends PhysicsSprite implements IMouseActionEventListener {
 
 		this.collisionLayer = CollisionLayers.PLAYER;
 		this.camera = new Camera(new Vector2(0, 0));
-		this.inventory = new PlayerInventory();
+		this.inventory = new Inventory();
 		this.constructManager = new PlayerConstructionManager(new Vector2(0,0));
 		
 		this.setVelocity(velocity);
@@ -139,8 +139,7 @@ public class Player extends PhysicsSprite implements IMouseActionEventListener {
 		}
 	}
 
-	@Override
-	public String ID() {
+	public static String ID() {
 		return "playerEntity";
 	}
 
@@ -161,7 +160,7 @@ public class Player extends PhysicsSprite implements IMouseActionEventListener {
 		return inventory.toString();
 	}
 
-	public PlayerInventory getInventory() {
+	public Inventory getInventory() {
 		return inventory;
 	}
 

@@ -87,7 +87,7 @@ public class ConveyorBelt extends StructureSprite {
 	public int hashCode() {
 		final int prime = 31;
 		int result = super.hashCode();
-		result = prime * result + Objects.hash(direction, item, next);
+		result = prime * result + Objects.hash(direction, next);
 		return result;
 	}
 
@@ -158,8 +158,7 @@ public class ConveyorBelt extends StructureSprite {
 				+ tileSizeUnits + ", location=" + location + "]";
 	}
 
-	@Override
-	public String ID() {
+	public static String ID() {
 		return "conveyorBelt";
 	}
 

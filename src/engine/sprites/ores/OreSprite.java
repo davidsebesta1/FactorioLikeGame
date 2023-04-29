@@ -10,10 +10,14 @@ public abstract class OreSprite extends Sprite {
 	private static final long serialVersionUID = -805356985399189622L;
 
 	protected int oreAmount;
+	
+	//Multiplier for mining time
+	protected final double miningHardness;
 
-	protected OreSprite(Texture texture, Vector2 location, double zDepth, int oreAmount) {
+	protected OreSprite(Texture texture, Vector2 location, double zDepth, int oreAmount, double miningHardness) {
 		super(texture, location, zDepth);
 		this.oreAmount = oreAmount;
+		this.miningHardness = miningHardness;
 	}
 	
 	@Override
@@ -49,5 +53,9 @@ public abstract class OreSprite extends Sprite {
 		}
 		
 		return true;
+	}
+	
+	public static String ID() {
+		return "oreSprite";
 	}
 }

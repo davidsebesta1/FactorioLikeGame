@@ -147,8 +147,9 @@ public abstract class Sprite implements Comparable<Sprite>, ISpriteBehaviour, Se
 		// Have to be overridden
 	}
 
-	@Override
-	public abstract String ID();
+	public static String ID() {
+		return "defaultSprite";
+	}
 
 	public Object clone() throws CloneNotSupportedException {
 		return super.clone();

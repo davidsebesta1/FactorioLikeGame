@@ -1,6 +1,7 @@
 package engine.sprites.entities.player.UI;
 
 import java.awt.Color;
+import java.awt.Font;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
 import java.util.ArrayList;
@@ -13,6 +14,8 @@ import engine.input.IMouseActionEventListener;
 import engine.input.InputManager;
 import engine.rendering.textures.Texture;
 import engine.rendering.textures.TextureLibrary;
+import engine.sprites.entities.player.Inventory;
+import engine.sprites.objects.Item;
 import engine.sprites.structures.StructureSprite;
 import engine.sprites.structures.command.CoreModule;
 import math.Vector2;
@@ -39,11 +42,11 @@ public class PlayerConstructionManager implements IMouseActionEventListener {
 		this.rightRectangleSlotLocations = new ArrayList<>();
 		this.currentlyShowStructButtons = new HashSet<>();
 		this.structureIdentifierTemplate = new HashMap<>();
-		
+
 		InputManager.addMouseActionListener(this);
 
-		initializeRightRectangleLocations();
-		initializeLeftRectangleButtons();
+		initializeStructButtons();
+		initializeStructTypeButtons();
 
 		registerStructures();
 
@@ -55,7 +58,7 @@ public class PlayerConstructionManager implements IMouseActionEventListener {
 		registerStructure("CommandStructures", "coreModule", TextureLibrary.retrieveTexture("testStructIcon"), CoreModule.instantiateCoreModule(TextureLibrary.retrieveTexture("coreModule"), Vector2.templateSpawn));
 	}
 
-	private void initializeLeftRectangleButtons() {
+	private void initializeStructTypeButtons() {
 		//LEFT RECTANGLE
 		Vector2 loc = new Vector2(0, Game.getInstance().getResolution().getY());
 
@@ -64,9 +67,9 @@ public class PlayerConstructionManager implements IMouseActionEventListener {
 		// draw bottom rectangles
 		int bottomRectY = (int) loc.getY() - 254 + upperRectHeight + 2;
 
-		int pointX = (int) loc.getX() + 9;
+		int pointX = (int) loc.getX() + 3;
 		int pointY = bottomRectY + 7;
-		int pointSpacing = 56;
+		int pointSpacing = 35;
 
 		ArrayList<Rectangle> tempRect = new ArrayList<>();
 
@@ -76,8 +79,8 @@ public class PlayerConstructionManager implements IMouseActionEventListener {
 
 				pointX += pointSpacing;
 			}
-			pointY += pointSpacing;
-			pointX = (int) loc.getX() + 9;
+			pointY += pointSpacing * 1;
+			pointX = (int) loc.getX() + 3;
 		}
 
 		for (int i = 0; i < tempRect.size(); i++) {
@@ -114,7 +117,7 @@ public class PlayerConstructionManager implements IMouseActionEventListener {
 		return null;
 	}
 
-	private void initializeRightRectangleLocations() {
+	private void initializeStructButtons() {
 		//RIGHT RECTANGLE
 		Vector2 loc2 = new Vector2(0, Game.getInstance().getResolution().getY());
 
@@ -123,7 +126,7 @@ public class PlayerConstructionManager implements IMouseActionEventListener {
 		// draw bottom rectangles
 		int bottomRectY2 = (int) loc2.getY() - 254 + upperRectHeight2 + 2;
 
-		int pointX2 = (int) loc2.getX() + 120;
+		int pointX2 = (int) loc2.getX() + 80;
 		int pointY2 = bottomRectY2 + 7;
 		int pointSpacing2 = 56;
 
@@ -139,25 +142,9 @@ public class PlayerConstructionManager implements IMouseActionEventListener {
 	}
 
 	public void paint(Graphics2D g2d) {
-		Vector2 loc = new Vector2(0, Game.getInstance().getResolution().getY());
+		Vector2 loc = new Vector2(0, Game.getInstance().getResolution().getY() - 265);
 
-		// draw background rectangle
-		g2d.setColor(backgroundInvColor);
-		g2d.fillRect((int) loc.getX(), (int) loc.getY() - 256, 216, 256);
-
-		// draw upper rectangle
-		int upperRectHeight = (int) (256.0 / 5.0);
-		g2d.setColor(Color.GRAY);
-		g2d.fillRect((int) loc.getX() + 2, (int) loc.getY() - 254, 212, upperRectHeight);
-
-		// draw bottom rectangles
-		int bottomRectHeight = (int) (256.0 * 0.98 - upperRectHeight);
-		int bottomRectY = (int) loc.getY() - 254 + upperRectHeight + 2;
-		g2d.setColor(Color.DARK_GRAY);
-		g2d.fillRect((int) loc.getX() + 2, bottomRectY, 105, bottomRectHeight);
-		g2d.fillRect((int) loc.getX() + 109, bottomRectY, 105, bottomRectHeight);
-
-		// draw points for images
+		g2d.drawImage(TextureLibrary.retrieveTexture("inventoryBackground").getImage(), 0, (int) loc.getY(), null);
 
 		for (Map.Entry<StructureTypeButton, HashSet<StructureButton>> entry : categoryAndAvailableStructures.entrySet()) {
 			StructureTypeButton button = entry.getKey();
@@ -166,6 +153,25 @@ public class PlayerConstructionManager implements IMouseActionEventListener {
 			for (StructureButton structure : availableStructures) {
 				if (structure.isVisible())
 					g2d.drawImage(structure.getTexture().getImage(), (int) structure.getLocation().getX(), (int) structure.getLocation().getY(), null);
+			}
+		}
+
+		if (currentlySelected != null) {
+			Vector2 loc2 = new Vector2(20, loc.getY() + 23);
+			Inventory inv = Game.getInstance().getCurrentWorld().getPlayer().getInventory();
+
+			g2d.drawImage(currentlySelected.getTexture().getImage(), (int) loc2.getX(), (int) loc2.getY(), null);
+			g2d.setFont(new Font("Eurostile", 1, 15));
+			g2d.setColor(Color.white);
+			g2d.drawString(currentlySelected.getDisplayName(), (int) loc2.getX() + 40, (int) loc2.getY() + 12);
+			
+			int resourceX = (int) loc2.getX() + 35;
+			int resourceY =  (int) loc2.getY() + 10;
+			for (Map.Entry<String, Integer> entry : currentlySelected.getResourceCost().entrySet()) {
+				String itemID = entry.getKey();
+				int amount = entry.getValue();
+				g2d.drawImage(Item.getTextureByItemID(itemID).getImage(), resourceX, resourceY, null);
+				g2d.drawString(inv.getItemAmount(itemID) + "/" + amount, resourceX + 30, resourceY + 20);
 			}
 		}
 	}
@@ -229,44 +235,44 @@ public class PlayerConstructionManager implements IMouseActionEventListener {
 
 	public void setCurrentlySelected(StructureButton currentlySelected) {
 		this.currentlySelected = currentlySelected;
-		
+
 		System.out.println("Curr selected: " + currentlySelected);
 	}
 
 	@Override
 	public void mousePrimaryPressed(Vector2 screenCoordinate) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void mousePrimaryReleased(Vector2 screenCoordinate) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void mouseSecondaryPressed(Vector2 screenCoordinate) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void mouseSecondaryReleased(Vector2 screenCoordinate) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void mouseMiddlePressed(Vector2 screenCoordinate) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void mouseMiddleReleased(Vector2 screenCoordinate) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 }
