@@ -49,7 +49,7 @@ public class Log {
 	public static void info(String message) {
 		try {
 			String timeAsString = instance.logDTF.format(LocalDateTime.now());
-			instance.writer.append("[Log]" + message + " [Time] " + timeAsString);
+			instance.writer.append("\n[Log]" + message + " [Time] " + timeAsString);
 			instance.writer.flush();
 		} catch (IOException e) {
 			e.printStackTrace();

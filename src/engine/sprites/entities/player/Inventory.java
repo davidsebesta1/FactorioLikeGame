@@ -51,6 +51,14 @@ public class Inventory implements Serializable{
 		return allRemoved;
 	}
 	
+	public synchronized boolean containsItemWithID(String id) {
+		for(String key : IDAndAmount.keySet()) {
+			if(key.equals(id)) return true;
+		}
+		
+		return false;
+	}
+	
 	public int getItemAmount(String ID) {
 		if(ID != null && IDAndAmount.keySet().contains(ID)) return IDAndAmount.get(ID);
 		return 0;

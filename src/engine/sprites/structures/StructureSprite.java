@@ -27,6 +27,7 @@ public abstract class StructureSprite extends PhysicsSprite {
 		this.tileSizeUnits = new Vector2(texture.getImage().getWidth() / 32, texture.getImage().getHeight() / 32);
 
 		this.setCollisionBox(new BoundingBox(this, true, location, this.getSize()));
+		this.resourceCost = new HashMap<>();
 	}
 
 	public Vector2 getTileSizeUnits() {

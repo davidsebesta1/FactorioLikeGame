@@ -130,8 +130,8 @@ public class GamePanel extends JPanel {
 		ChunkManager manager = Game.getInstance().getCurrentWorld().getChunkManager();
 
 		g2d.drawImage(background.getTexture().getImage(), (int) (background.getLocation().getX()
-				- Game.getInstance().getCurrentWorld().getPlayer().getCamera().getLocation().getX()), (int) (background.getLocation().getY()
-						- Game.getInstance().getCurrentWorld().getPlayer().getCamera().getLocation().getY()), null);
+				- player.getCamera().getLocation().getX()), (int) (background.getLocation().getY()
+						- player.getCamera().getLocation().getY()), null);
 		
 
 		// Zoom scale
@@ -169,8 +169,8 @@ public class GamePanel extends JPanel {
 
 		// Draw player sprite
 		g2d.drawImage(player.getTexture().getImage(), (int) (player.getLocation().getX()
-				- Game.getInstance().getCurrentWorld().getPlayer().getCamera().getLocation().getX()), (int) (player.getLocation().getY()
-						- Game.getInstance().getCurrentWorld().getPlayer().getCamera().getLocation().getY()), null);
+				- player.getCamera().getLocation().getX()), (int) (player.getLocation().getY()
+						- player.getCamera().getLocation().getY()), null);
 
 		
 		

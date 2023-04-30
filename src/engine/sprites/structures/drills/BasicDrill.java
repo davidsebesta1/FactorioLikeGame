@@ -5,10 +5,13 @@ import java.util.Objects;
 import engine.Game;
 import engine.physics.CollisionLayers;
 import engine.rendering.textures.Texture;
+import engine.rendering.textures.TextureLibrary;
 import engine.sprites.objects.Item;
 import engine.sprites.objects.minable.OreItem;
+import engine.sprites.objects.minable.Titanium;
 import engine.sprites.ores.OreMap;
 import engine.sprites.ores.OreSprite;
+import engine.sprites.ores.oresprites.TitaniumOre;
 import engine.sprites.structures.StructureMap;
 import engine.sprites.structures.StructureSprite;
 import engine.sprites.structures.conveyors.ConveyorBelt;
@@ -85,7 +88,7 @@ public class BasicDrill extends StructureSprite {
 	
 	//Need to add all possible items here
 	public OreItem resolveMinedItemType(OreSprite sprite) {
-//		if(sprite instanceof CoalOre) return Coal.instantiateCoal(TextureLibrary.retrieveTexture("coal"), Vector2.templateSpawn);
+		if(sprite instanceof TitaniumOre) return Titanium.instantiateTitanium(TextureLibrary.retrieveTexture("titaniumItem"), Vector2.templateSpawn);
 		
 		return null;
 	}
@@ -114,6 +117,10 @@ public class BasicDrill extends StructureSprite {
 
 	public static String ID() {
 		return "basicDrill";
+	}
+	
+	public String getID() {
+		return ID();
 	}
 
 	@Override

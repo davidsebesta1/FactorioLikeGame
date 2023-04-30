@@ -4,6 +4,8 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import main.Log;
+
 public class TextureLibrary {
 	
 	private static HashMap<String, Texture> library;
@@ -19,6 +21,8 @@ public class TextureLibrary {
 		if(library.containsKey(textureName)) return false;
 		
 		library.put(textureName, texture);
+		
+		Log.info("Loaded texture " + textureName);
 		return true;
 	}
 	
@@ -29,6 +33,8 @@ public class TextureLibrary {
 		library.put(textureName + "1", Texture.rotateImage(texture, Math.PI / 2));
 		library.put(textureName + "2", Texture.rotateImage(texture, Math.PI));
 		library.put(textureName + "3", Texture.rotateImage(texture, (Math.PI * 3) / 2));
+		
+		Log.info("Loaded variation texture " + textureName);
 		return true;
 		
 	}
@@ -40,7 +46,7 @@ public class TextureLibrary {
 	
 	public static Texture retrieveTexture(String textureName) {
 		if(library.containsKey(textureName)) return library.get(textureName);
-		return null;
+		return library.get("unknownTexture");
 	}
 	
 	public static HashMap<String, Texture> getLibrary() {

@@ -31,6 +31,9 @@ public class ConveyorBelt extends StructureSprite {
 		this.itemIsMoving = false;
 
 		PhysicsManager.removePhysicsSprite(this);
+		
+		this.displayName = "Conveyor Belt";
+		this.resourceCost.put("titanium", 1);
 	}
 
 	public static ConveyorBelt instantiateConveyorBelt(File file, Vector2 location, ConveyorBeltDirection dir) {
@@ -160,6 +163,10 @@ public class ConveyorBelt extends StructureSprite {
 
 	public static String ID() {
 		return "conveyorBelt";
+	}
+	
+	public String getID() {
+		return ID();
 	}
 
 }

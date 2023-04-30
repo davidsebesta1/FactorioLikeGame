@@ -18,7 +18,6 @@ public class CoreModule extends StructureSprite {
 		super(texture, location, zDepth);
 		this.collisionLayer = CollisionLayers.STRUCTURE;
 		
-		this.resourceCost = new HashMap<>();
 		this.displayName = "Core Module";
 		this.resourceCost.put("coalItem", 2);
 	}
@@ -62,6 +61,10 @@ public class CoreModule extends StructureSprite {
 
 	public static String ID() {
 		return "coreModule";
+	}
+	
+	public String getID() {
+		return ID();
 	}
 	
 	@Override

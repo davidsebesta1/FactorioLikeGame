@@ -70,11 +70,11 @@ public abstract class Item extends PhysicsSprite {
 		return ID;
 	}
 	
-	public static Texture getTextureByItemID(String ID) {
-		switch (ID) {
-		case "coalItem": return TextureLibrary.retrieveTexture("coal");
-		default: return TextureLibrary.retrieveTexture("testStructIcon");
+	public static Texture retriveTextureByID(String ID) {
+		switch(ID) {
+		case "coal": return TextureLibrary.retrieveTexture("coal");
+		case "titanium": return TextureLibrary.retrieveTexture("titanium");
+		default: return TextureLibrary.retrieveTexture("unknownTexture");
 		}
-		
 	}
 }

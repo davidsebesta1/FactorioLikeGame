@@ -10,17 +10,17 @@ import java.util.HashSet;
 import java.util.Map;
 
 import engine.Game;
-import engine.input.IMouseActionEventListener;
-import engine.input.InputManager;
 import engine.rendering.textures.Texture;
 import engine.rendering.textures.TextureLibrary;
 import engine.sprites.entities.player.Inventory;
 import engine.sprites.objects.Item;
 import engine.sprites.structures.StructureSprite;
 import engine.sprites.structures.command.CoreModule;
+import engine.sprites.structures.conveyors.ConveyorBelt;
+import engine.sprites.structures.conveyors.ConveyorBeltDirection;
 import math.Vector2;
 
-public class PlayerConstructionManager implements IMouseActionEventListener {
+public class PlayerConstructionManager {
 
 	private HashMap<StructureTypeButton, HashSet<StructureButton>> categoryAndAvailableStructures;
 	private ArrayList<Vector2> rightRectangleSlotLocations;
@@ -43,8 +43,6 @@ public class PlayerConstructionManager implements IMouseActionEventListener {
 		this.currentlyShowStructButtons = new HashSet<>();
 		this.structureIdentifierTemplate = new HashMap<>();
 
-		InputManager.addMouseActionListener(this);
-
 		initializeStructButtons();
 		initializeStructTypeButtons();
 
@@ -56,6 +54,7 @@ public class PlayerConstructionManager implements IMouseActionEventListener {
 
 	private void registerStructures() {
 		registerStructure("CommandStructures", "coreModule", TextureLibrary.retrieveTexture("testStructIcon"), CoreModule.instantiateCoreModule(TextureLibrary.retrieveTexture("coreModule"), Vector2.templateSpawn));
+		registerStructure("TransportStructures", "conveyorBelt", TextureLibrary.retrieveTexture("testStructIcon"), ConveyorBelt.instantiateConveyorBelt(TextureLibrary.retrieveTexture("coreModule"), Vector2.templateSpawn, ConveyorBeltDirection.RIGHT));
 	}
 
 	private void initializeStructTypeButtons() {
@@ -144,8 +143,10 @@ public class PlayerConstructionManager implements IMouseActionEventListener {
 	public void paint(Graphics2D g2d) {
 		Vector2 loc = new Vector2(0, Game.getInstance().getResolution().getY() - 265);
 
+		//Inventory background
 		g2d.drawImage(TextureLibrary.retrieveTexture("inventoryBackground").getImage(), 0, (int) loc.getY(), null);
 
+		//Type buttons and their structures
 		for (Map.Entry<StructureTypeButton, HashSet<StructureButton>> entry : categoryAndAvailableStructures.entrySet()) {
 			StructureTypeButton button = entry.getKey();
 			HashSet<StructureButton> availableStructures = entry.getValue();
@@ -156,6 +157,7 @@ public class PlayerConstructionManager implements IMouseActionEventListener {
 			}
 		}
 
+		//Currently selected
 		if (currentlySelected != null) {
 			Vector2 loc2 = new Vector2(20, loc.getY() + 23);
 			Inventory inv = Game.getInstance().getCurrentWorld().getPlayer().getInventory();
@@ -167,10 +169,12 @@ public class PlayerConstructionManager implements IMouseActionEventListener {
 			
 			int resourceX = (int) loc2.getX() + 35;
 			int resourceY =  (int) loc2.getY() + 10;
+			
+			
 			for (Map.Entry<String, Integer> entry : currentlySelected.getResourceCost().entrySet()) {
 				String itemID = entry.getKey();
 				int amount = entry.getValue();
-				g2d.drawImage(Item.getTextureByItemID(itemID).getImage(), resourceX, resourceY, null);
+				g2d.drawImage(TextureLibrary.retrieveTexture(itemID).getImage(), resourceX, resourceY, null);
 				g2d.drawString(inv.getItemAmount(itemID) + "/" + amount, resourceX + 30, resourceY + 20);
 			}
 		}
@@ -209,8 +213,9 @@ public class PlayerConstructionManager implements IMouseActionEventListener {
 		if (categoryButton != null) {
 			categoryAndAvailableStructures.get(categoryButton).add(new StructureButton(name, new Vector2(0, 0), new Vector2(32, 32), this, iconTexture, template));
 			structureIdentifierTemplate.put(name, template);
+			return true;
 		}
-		return true;
+		return false;
 	}
 
 	public Vector2 getLocation() {
@@ -237,42 +242,6 @@ public class PlayerConstructionManager implements IMouseActionEventListener {
 		this.currentlySelected = currentlySelected;
 
 		System.out.println("Curr selected: " + currentlySelected);
-	}
-
-	@Override
-	public void mousePrimaryPressed(Vector2 screenCoordinate) {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public void mousePrimaryReleased(Vector2 screenCoordinate) {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public void mouseSecondaryPressed(Vector2 screenCoordinate) {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public void mouseSecondaryReleased(Vector2 screenCoordinate) {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public void mouseMiddlePressed(Vector2 screenCoordinate) {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public void mouseMiddleReleased(Vector2 screenCoordinate) {
-		// TODO Auto-generated method stub
-
 	}
 
 }
