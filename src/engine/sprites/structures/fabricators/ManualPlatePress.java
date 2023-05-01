@@ -161,4 +161,9 @@ public class ManualPlatePress extends StructureSprite{
 	public String toString() {
 		return "ManualPlatePress [storage=" + storage + "]";
 	}
+
+	@Override
+	public StructureSprite createCopy(String[] args) {
+		return instantiateManualPlatePress(TextureLibrary.retrieveTexture("manualPlatePress"), Vector2.templateSpawn);
+	}
 }

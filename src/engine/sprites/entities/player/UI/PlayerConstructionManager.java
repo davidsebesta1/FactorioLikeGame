@@ -10,17 +10,20 @@ import java.util.HashSet;
 import java.util.Map;
 
 import engine.Game;
+import engine.input.IMouseMotionEventListener;
+import engine.input.InputManager;
 import engine.rendering.textures.Texture;
 import engine.rendering.textures.TextureLibrary;
 import engine.sprites.entities.player.Inventory;
-import engine.sprites.objects.Item;
+import engine.sprites.structures.StructureMap;
 import engine.sprites.structures.StructureSprite;
 import engine.sprites.structures.command.CoreModule;
 import engine.sprites.structures.conveyors.ConveyorBelt;
 import engine.sprites.structures.conveyors.ConveyorBeltDirection;
+import math.MathUtilities;
 import math.Vector2;
 
-public class PlayerConstructionManager {
+public class PlayerConstructionManager implements IMouseMotionEventListener{
 
 	private HashMap<StructureTypeButton, HashSet<StructureButton>> categoryAndAvailableStructures;
 	private ArrayList<Vector2> rightRectangleSlotLocations;
@@ -42,6 +45,8 @@ public class PlayerConstructionManager {
 		this.rightRectangleSlotLocations = new ArrayList<>();
 		this.currentlyShowStructButtons = new HashSet<>();
 		this.structureIdentifierTemplate = new HashMap<>();
+		
+		InputManager.addMouseMotionListener(this);
 
 		initializeStructButtons();
 		initializeStructTypeButtons();
@@ -54,7 +59,7 @@ public class PlayerConstructionManager {
 
 	private void registerStructures() {
 		registerStructure("CommandStructures", "coreModule", TextureLibrary.retrieveTexture("testStructIcon"), CoreModule.instantiateCoreModule(TextureLibrary.retrieveTexture("coreModule"), Vector2.templateSpawn));
-		registerStructure("TransportStructures", "conveyorBelt", TextureLibrary.retrieveTexture("testStructIcon"), ConveyorBelt.instantiateConveyorBelt(TextureLibrary.retrieveTexture("coreModule"), Vector2.templateSpawn, ConveyorBeltDirection.RIGHT));
+		registerStructure("TransportStructures", "conveyorBelt", TextureLibrary.retrieveTexture("testStructIcon"), ConveyorBelt.instantiateConveyorBelt(TextureLibrary.retrieveTexture("beltRIGHT"), Vector2.templateSpawn, ConveyorBeltDirection.RIGHT));
 	}
 
 	private void initializeStructTypeButtons() {
@@ -217,6 +222,26 @@ public class PlayerConstructionManager {
 		}
 		return false;
 	}
+	
+	public void tryRotateCurrentlySelected() {
+		if(currentlySelected.getTemplateStructure() instanceof ConveyorBelt) {
+			ConveyorBelt belt = (ConveyorBelt)currentlySelected.getTemplateStructure();
+			switch(belt.getDirection()) {
+			case UP:
+				currentlySelected.setTemplateStructure(ConveyorBelt.instantiateConveyorBelt(TextureLibrary.retrieveTexture("beltLEFT"), Vector2.templateSpawn, ConveyorBeltDirection.LEFT));
+				break;
+			case LEFT:
+				currentlySelected.setTemplateStructure(ConveyorBelt.instantiateConveyorBelt(TextureLibrary.retrieveTexture("beltDOWN"), Vector2.templateSpawn, ConveyorBeltDirection.DOWN));
+				break;
+			case DOWN:
+				currentlySelected.setTemplateStructure(ConveyorBelt.instantiateConveyorBelt(TextureLibrary.retrieveTexture("beltRIGHT"), Vector2.templateSpawn, ConveyorBeltDirection.RIGHT));
+				break;
+			case RIGHT:
+				currentlySelected.setTemplateStructure(ConveyorBelt.instantiateConveyorBelt(TextureLibrary.retrieveTexture("beltUP"), Vector2.templateSpawn, ConveyorBeltDirection.UP));
+				break;
+			}
+		}
+	}
 
 	public Vector2 getLocation() {
 		return location;
@@ -242,6 +267,21 @@ public class PlayerConstructionManager {
 		this.currentlySelected = currentlySelected;
 
 		System.out.println("Curr selected: " + currentlySelected);
+	}
+	
+
+	@Override
+	public void mouseMoved(Vector2 newLocation) {
+		if(currentlySelected != null && Game.getInstance().getWindow() != null) {
+			if(Game.getInstance().getStructureMap().isOccupiedSpace(MathUtilities.roundToGrid(newLocation))){
+				Game.getInstance().getWindow().getPanel().setGhostBuffer(currentlySelected.getTemplateStructure().getTexture().getInvalidPlacementVersion(), MathUtilities.roundToGrid(newLocation));
+			} else {
+				Game.getInstance().getWindow().getPanel().setGhostBuffer(currentlySelected.getTemplateStructure().getTexture().getValidPlacementVersion(), MathUtilities.roundToGrid(newLocation));
+			}
+		} else if (Game.getInstance().getWindow() != null){
+			Game.getInstance().getWindow().getPanel().setGhostBuffer(null, Vector2.zero);
+		}
+		
 	}
 
 }

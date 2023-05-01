@@ -35,6 +35,7 @@ public abstract class Sprite implements Comparable<Sprite>, ISpriteBehaviour, Se
 
 		SpriteManager.add(this);
 	}
+	
 
 	public double getzDepth() {
 		return zDepth;
@@ -149,9 +150,5 @@ public abstract class Sprite implements Comparable<Sprite>, ISpriteBehaviour, Se
 
 	public static String ID() {
 		return "defaultSprite";
-	}
-
-	public Object clone() throws CloneNotSupportedException {
-		return super.clone();
 	}
 }

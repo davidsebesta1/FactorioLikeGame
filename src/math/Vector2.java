@@ -3,7 +3,7 @@ package math;
 import java.io.Serializable;
 import java.util.Objects;
 
-public class Vector2 implements Serializable{
+public class Vector2 implements Serializable, Cloneable{
 	private static final transient long serialVersionUID = 1812445214L;
 	private double x;
 	private double y;
@@ -15,6 +15,7 @@ public class Vector2 implements Serializable{
 	public static final transient Vector2 down = new Vector2(0, -1);
 	
 	public static final transient Vector2 templateSpawn = new Vector2(999999,999999);
+	public static final transient Vector2 oreSpawn = new Vector2(123456,123456);
 
 	// Constructor
 	public Vector2(float x, float y) {
@@ -136,6 +137,18 @@ public class Vector2 implements Serializable{
 		return Double.doubleToLongBits(x) == Double.doubleToLongBits(other.x)
 				&& Double.doubleToLongBits(y) == Double.doubleToLongBits(other.y);
 	}
+	
+	 @Override
+	    public Vector2 clone() {
+	        try {
+	            Vector2 clonedVector = (Vector2) super.clone();
+	            clonedVector.x = this.x;
+	            clonedVector.y = this.y;
+	            return clonedVector;
+	        } catch (CloneNotSupportedException e) {
+	            throw new RuntimeException(e);
+	        }
+	    }
 
 	
 }

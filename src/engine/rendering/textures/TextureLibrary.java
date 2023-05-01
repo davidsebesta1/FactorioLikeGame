@@ -3,7 +3,11 @@ package engine.rendering.textures;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
 
+import engine.sprites.entities.player.UI.StructureButton;
+import engine.sprites.entities.player.UI.StructureTypeButton;
 import main.Log;
 
 public class TextureLibrary {
@@ -45,7 +49,10 @@ public class TextureLibrary {
 	}
 	
 	public static Texture retrieveTexture(String textureName) {
-		if(library.containsKey(textureName)) return library.get(textureName);
+		for (Map.Entry<String, Texture> entry : library.entrySet()) {
+			if(entry.getKey().equals(textureName)) return entry.getValue();
+		}
+		
 		return library.get("unknownTexture");
 	}
 	

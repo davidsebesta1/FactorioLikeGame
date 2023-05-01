@@ -31,7 +31,7 @@ public class ConveyorBeltManager {
 
 	}
 
-	private static void updateConnection(ConveyorBelt belt) {
+	public static void updateConnection(ConveyorBelt belt) {
 		StructureSprite[][] map = StructureMap.getInstance().getMap();
 		Vector2 loc = StructureMap.getInstance().getLocationByStructure(belt);
 

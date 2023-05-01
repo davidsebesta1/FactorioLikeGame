@@ -49,8 +49,8 @@ public class Game implements Runnable {
 		instance = this;
 
 		// INITALIZE FIRST
-		InputManager.initialize();
 		Log.initilize();
+		InputManager.initialize();
 		tl = new TextureLibrary(); // textures
 		tl.loadAllTextures("textures/tile", TextureType.OPAQUE); // folder name as param + texture type
 		tl.loadAllTextures("textures/structures", TextureType.OPAQUE);
@@ -59,6 +59,8 @@ public class Game implements Runnable {
 		tl.loadAllTextures("textures/icons", TextureType.OPAQUE);
 		tl.loadAllTextures("textures/UIElements", TextureType.TRANSPARENT);
 		tl.loadAllTextures("textures", TextureType.OPAQUE);
+		
+		Log.info("Loaded all textures");
 
 		// AND SECOND
 		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
@@ -73,12 +75,16 @@ public class Game implements Runnable {
 		window = GameWindow.initiateInstance(resolution);
 		
 		window.getPanel().init();
+		
+		Log.info("Initialized window");
 
 		// FINALLY GAME LOOP
 		Thread thread = new Thread(this);
 		thread.start();
 		thread.setName("GameLoopThread");
 		thread.setPriority(Thread.MAX_PRIORITY);
+		
+		Log.info("Started game thread");
 	}
 
 	@Override

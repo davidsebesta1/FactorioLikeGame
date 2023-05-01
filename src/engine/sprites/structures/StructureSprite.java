@@ -21,6 +21,8 @@ public abstract class StructureSprite extends PhysicsSprite {
 
 	protected HashMap<String, Integer> resourceCost;
 	protected String displayName;
+	
+	protected boolean rotatable;
 
 	protected StructureSprite(Texture texture, Vector2 location, double zDepth) {
 		super(texture, location, zDepth);
@@ -28,6 +30,7 @@ public abstract class StructureSprite extends PhysicsSprite {
 
 		this.setCollisionBox(new BoundingBox(this, true, location, this.getSize()));
 		this.resourceCost = new HashMap<>();
+		this.rotatable = false;
 	}
 
 	public Vector2 getTileSizeUnits() {
@@ -179,4 +182,6 @@ public abstract class StructureSprite extends PhysicsSprite {
 
 		return hasEnough;
 	}
+	
+	public abstract StructureSprite createCopy(String[] args);
 }

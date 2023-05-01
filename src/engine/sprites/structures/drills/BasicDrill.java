@@ -88,7 +88,7 @@ public class BasicDrill extends StructureSprite {
 	
 	//Need to add all possible items here
 	public OreItem resolveMinedItemType(OreSprite sprite) {
-		if(sprite instanceof TitaniumOre) return Titanium.instantiateTitanium(TextureLibrary.retrieveTexture("titaniumItem"), Vector2.templateSpawn);
+		if(sprite instanceof TitaniumOre) return Titanium.instantiateTitanium(TextureLibrary.retrieveTexture("titaniumItem"), Vector2.oreSpawn);
 		
 		return null;
 	}
@@ -142,5 +142,10 @@ public class BasicDrill extends StructureSprite {
 		BasicDrill other = (BasicDrill) obj;
 		return Double.doubleToLongBits(elapsedTime) == Double.doubleToLongBits(other.elapsedTime)
 				&& Objects.equals(minedItem, other.minedItem);
+	}
+
+	@Override
+	public StructureSprite createCopy(String[] args) {
+		return instantiateBasicDrill(TextureLibrary.retrieveTexture("basicDrill"), Vector2.templateSpawn);
 	}
 }

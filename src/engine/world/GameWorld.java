@@ -7,6 +7,7 @@ import engine.rendering.textures.TextureLibrary;
 import engine.sprites.Background;
 import engine.sprites.entities.player.Player;
 import engine.sprites.ores.OreMap;
+import engine.sprites.ores.oresprites.TitaniumOre;
 import engine.sprites.structures.StructureMap;
 import engine.sprites.structures.command.CoreModule;
 import engine.sprites.structures.conveyors.ConveyorBelt;
@@ -40,7 +41,7 @@ public class GameWorld {
 		
 		this.chunkManager = new ChunkManager(256, size, player);
 
-		
+		//
 		Random random = new Random(7584);
 		Random random2 = new Random(5144);
 		
@@ -59,24 +60,24 @@ public class GameWorld {
 		
 		structureMap.tryAddStructureAtLocation(CoreModule.instantiateCoreModule(TextureLibrary.retrieveTexture("coreModule"), new Vector2(0, 0)), new Vector2(2, 2));
 		
-		ConveyorBelt belt = ConveyorBelt.instantiateConveyorBelt(TextureLibrary.retrieveTexture("beltRIGHT"), new Vector2(0, 0), ConveyorBeltDirection.RIGHT);
-		ConveyorBelt belt1 = ConveyorBelt.instantiateConveyorBelt(TextureLibrary.retrieveTexture("beltRIGHT"), new Vector2(0, 0), ConveyorBeltDirection.RIGHT);
-		ConveyorBelt belt2 = ConveyorBelt.instantiateConveyorBelt(TextureLibrary.retrieveTexture("beltUP"), new Vector2(0, 0), ConveyorBeltDirection.UP);
-		ConveyorBelt belt3 = ConveyorBelt.instantiateConveyorBelt(TextureLibrary.retrieveTexture("beltUP"), new Vector2(0, 0), ConveyorBeltDirection.UP);
-		ConveyorBelt belt4 = ConveyorBelt.instantiateConveyorBelt(TextureLibrary.retrieveTexture("beltLEFT"), new Vector2(0, 0), ConveyorBeltDirection.LEFT);
+//		ConveyorBelt belt = ConveyorBelt.instantiateConveyorBelt(TextureLibrary.retrieveTexture("beltRIGHT"), new Vector2(0, 0), ConveyorBeltDirection.RIGHT);
+//		ConveyorBelt belt1 = ConveyorBelt.instantiateConveyorBelt(TextureLibrary.retrieveTexture("beltRIGHT"), new Vector2(0, 0), ConveyorBeltDirection.RIGHT);
+//		ConveyorBelt belt2 = ConveyorBelt.instantiateConveyorBelt(TextureLibrary.retrieveTexture("beltUP"), new Vector2(0, 0), ConveyorBeltDirection.UP);
+//		ConveyorBelt belt3 = ConveyorBelt.instantiateConveyorBelt(TextureLibrary.retrieveTexture("beltUP"), new Vector2(0, 0), ConveyorBeltDirection.UP);
+//		ConveyorBelt belt4 = ConveyorBelt.instantiateConveyorBelt(TextureLibrary.retrieveTexture("beltLEFT"), new Vector2(0, 0), ConveyorBeltDirection.LEFT);
 		
-		structureMap.tryAddStructureAtLocation(belt,new Vector2(4, 7));
-		structureMap.tryAddStructureAtLocation(belt1,new Vector2(5, 7));
-		structureMap.tryAddStructureAtLocation(belt2,new Vector2(6, 7));
-		structureMap.tryAddStructureAtLocation(belt3,new Vector2(6, 6));
-		structureMap.tryAddStructureAtLocation(belt4,new Vector2(6, 5));
+//		structureMap.tryAddStructureAtLocation(belt,new Vector2(4, 7));
+//		structureMap.tryAddStructureAtLocation(belt1,new Vector2(5, 7));
+//		structureMap.tryAddStructureAtLocation(belt2,new Vector2(6, 7));
+//		structureMap.tryAddStructureAtLocation(belt3,new Vector2(6, 6));
+//		structureMap.tryAddStructureAtLocation(belt4,new Vector2(6, 5));
 		
 		BasicDrill drill1 = BasicDrill.instantiateBasicDrill(TextureLibrary.retrieveTexture("basicDrill"), new Vector2(0,0));
 		structureMap.tryAddStructureAtLocation(drill1, new Vector2(4, 8));
 		
-//		oreMap.tryAddOreAtLocation(CoalOre.instantiateSprite(TextureLibrary.retrieveTexture("coalOre"), new Vector2(0, 0), 5), new Vector2(4,8));
+		oreMap.tryAddOreAtLocation(TitaniumOre.instantiateTitaniumOre(TextureLibrary.retrieveTexture("titaniumOre"), new Vector2(0, 0), 5), new Vector2(4,8));
 	
-		
+		//
 	}
 
 	public Background getBackground() {

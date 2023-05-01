@@ -20,6 +20,7 @@ public abstract class PhysicsSprite extends Sprite implements IPhysicsBehaviour 
 	protected PhysicsSprite(Texture texture, Vector2 location, double zDepth) {
 		super(texture, location, zDepth);
 		this.collisionBox = null;
+		this.velocity = Vector2.zero;
 
 		SpriteManager.addUpdateSprite(this);
 		PhysicsManager.addPhysicsSprite(this);

@@ -1,6 +1,7 @@
 package math;
 
 import engine.Game;
+import engine.sprites.entities.player.Player;
 
 public class MathUtilities {
 
@@ -51,5 +52,22 @@ public class MathUtilities {
 		double deltaY = (currentHeight - baseHeight) / 2;
 
 		return new Vector2(deltaX, deltaY);
+	}
+	
+	public static Vector2 roundTo32(Vector2 screenCoordinate) {
+		int roundedNumberX = (int) (Math.floor(screenCoordinate.getX() / 32.0) * 32);
+		int roundedNumberY = (int) (Math.ceil(screenCoordinate.getY() / 32.0) * 32);
+		
+		return new Vector2(roundedNumberX, roundedNumberY);
+	}
+	
+	public static Vector2 roundToGrid(Vector2 screenCoordinates) {
+		// Calculate player's position on the grid
+		Player plr = Game.getInstance().getPlayer();
+		int xOffset = (int) (plr.getLocation().getX() % 32);
+		int yOffset = (int) (plr.getLocation().getY() % 32);
+		
+		return (roundTo32(screenCoordinates).sub(new Vector2(xOffset, yOffset)));
+		
 	}
 }

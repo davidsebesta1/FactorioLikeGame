@@ -1,5 +1,8 @@
 package engine.sprites.entities.player;
 
+import java.awt.MouseInfo;
+import java.awt.Point;
+import java.awt.PointerInfo;
 import java.io.File;
 import java.util.Objects;
 
@@ -75,6 +78,12 @@ public class Player extends PhysicsSprite implements IMouseActionEventListener {
 			camera.setLocation(camera.getLocation().add(velocity));
 			
 			Game.getInstance().getCurrentWorld().getBackground().setLocation(camera.getLocation());
+			
+			PointerInfo a = MouseInfo.getPointerInfo();
+			Point b = a.getLocation();
+			int x = (int) b.getX();
+			int y = (int) b.getY();
+			InputManager.fireMouseMotion(new Vector2(x,y));
 		}
 	}
 
@@ -153,6 +162,18 @@ public class Player extends PhysicsSprite implements IMouseActionEventListener {
 
 	public int getItemAmount(String ID) {
 		return inventory.getItemAmount(ID);
+	}
+
+	public boolean isBuildingModeEnabled() {
+		return buildingModeEnabled;
+	}
+
+	public void setBuildingModeEnabled(boolean buildingModeEnabled) {
+		this.buildingModeEnabled = buildingModeEnabled;
+		
+		if(!this.buildingModeEnabled) {
+			constructManager.setCurrentlySelected(null);
+		}
 	}
 
 	@Override

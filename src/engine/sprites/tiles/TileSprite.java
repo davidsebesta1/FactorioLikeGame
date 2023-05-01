@@ -8,6 +8,7 @@ import engine.sprites.Sprite;
 import engine.sprites.entities.player.UI.StructureButton;
 import engine.sprites.structures.StructureMap;
 import engine.sprites.structures.StructureSprite;
+import engine.sprites.structures.conveyors.ConveyorBelt;
 import math.Vector2;
 
 public class TileSprite extends Sprite {
@@ -42,12 +43,17 @@ public class TileSprite extends Sprite {
 	public void onMouseClicked() {
 		StructureButton template = Game.getInstance().getCurrentWorld().getPlayer().getConstructManager().getCurrentlySelected();
 		if(template != null) {
+			
+			StructureSprite spritetemplate = template.getTemplateStructure();
+			
 			StructureSprite sprite = null;
-			try {
-				sprite = (StructureSprite) template.getTemplateStructure().clone();
-			} catch (CloneNotSupportedException e) {
-				e.printStackTrace();
+			if(spritetemplate instanceof ConveyorBelt) {
+				sprite = ((ConveyorBelt) spritetemplate).createCopy(new String[] {((ConveyorBelt) spritetemplate).getDirection().getName()});
+			} else {
+				spritetemplate.createCopy(null);
 			}
+			
+			
 			
 			if(sprite != null && template.getTemplateStructure().hasEnoughItemsForConstruct(Game.getInstance().getCurrentWorld().getPlayer().getInventory())) {
 				Vector2 locOnMap = StructureMap.worldToStructureMapCoordinate(this.location);
@@ -59,7 +65,7 @@ public class TileSprite extends Sprite {
 			}
 		}
 	}
-
+	
 	@Override
 	public String toString() {
 		return "TileSprite [location=" + location + ", size=" + size + ", getzDepth()=" + getzDepth()

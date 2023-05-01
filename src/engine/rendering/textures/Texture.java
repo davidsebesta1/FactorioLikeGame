@@ -1,5 +1,6 @@
 package engine.rendering.textures;
 
+import java.awt.AlphaComposite;
 import java.awt.Graphics2D;
 import java.awt.GraphicsConfiguration;
 import java.awt.GraphicsEnvironment;
@@ -12,8 +13,12 @@ import java.util.Objects;
 
 import javax.imageio.ImageIO;
 
-public class Texture {
+import engine.sprites.Sprite;
+
+public class Texture implements Cloneable{
 	private BufferedImage image;
+	private BufferedImage validPlacementImage;
+	private BufferedImage invalidPlacementImage;
 	private TextureType type;
 
 	private Texture(File file, TextureType type) {
@@ -78,6 +83,49 @@ public class Texture {
 		g.dispose();
 
 		return volatileImage;
+	}
+	
+	public BufferedImage getValidPlacementVersion() {
+		if(validPlacementImage != null) return validPlacementImage;
+		
+		validPlacementImage = new BufferedImage(image.getWidth(), image.getHeight(), BufferedImage.TYPE_INT_ARGB);
+		Graphics2D g2d = validPlacementImage.createGraphics();
+
+		g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.5f));
+		g2d.drawImage(image, 0, 0, null);
+		g2d.dispose();
+		
+		return validPlacementImage;
+	}
+	
+	public BufferedImage getInvalidPlacementVersion() {
+		if(invalidPlacementImage != null) return invalidPlacementImage;
+		
+		invalidPlacementImage = new BufferedImage(image.getWidth(), image.getHeight(), BufferedImage.TYPE_INT_ARGB);
+		Graphics2D g2d = invalidPlacementImage.createGraphics();
+		
+		g2d.drawImage(getValidPlacementVersion(), 0, 0, null);
+		g2d.dispose();
+		
+		int width = invalidPlacementImage.getWidth();
+		int height = invalidPlacementImage.getHeight();
+
+		for (int x = 0; x < width; x++) {
+		    for (int y = 0; y < height; y++) {
+		        int rgb = invalidPlacementImage.getRGB(x, y);
+		        int r = (rgb >> 16) & 0xff; // extract the red component
+		        int g = (rgb >> 8) & 0xff; // extract the green component
+		        int b = rgb & 0xff; // extract the blue component
+
+		        // add 50 to the red component
+		        r = Math.min(r + 50, 255);
+
+		        int newRGB = (r << 16) | (g << 8) | b; // combine the modified components
+		        invalidPlacementImage.setRGB(x, y, newRGB); // set the new pixel color
+		    }
+		}
+		
+		return validPlacementImage;
 	}
 	
 	public static Texture rotateImage(Texture source, double piRadians) {

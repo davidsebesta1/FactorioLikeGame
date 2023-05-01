@@ -40,6 +40,9 @@ public class GamePanel extends JPanel {
 	
 	private transient BufferStrategy bs;
 	private transient Graphics g;
+	
+	private BufferedImage ghostImage;
+	private Vector2 ghostImageLocation;
 
 	public GamePanel(Vector2 size) {
 		this.setSize((int) size.getX(), (int) size.getY());
@@ -168,16 +171,18 @@ public class GamePanel extends JPanel {
 		// END DEBUG STUFF
 
 		// Draw player sprite
-		g2d.drawImage(player.getTexture().getImage(), (int) (player.getLocation().getX()
-				- player.getCamera().getLocation().getX()), (int) (player.getLocation().getY()
-						- player.getCamera().getLocation().getY()), null);
+		g2d.drawImage(player.getTexture().getImage(), (int) (player.getLocation().getX() - player.getCamera().getLocation().getX()), (int) (player.getLocation().getY() - player.getCamera().getLocation().getY()), null);
+		
+		//Draw selected struct ghost
+		if(ghostImage != null) {
+			g2d.drawImage(ghostImage, (int) (ghostImageLocation.getX()), (int) (ghostImageLocation.getY() - 4), null);
+		}
 
 		
 		
 		// Release resources
 		g2d.dispose();
 		graphics.dispose();
-
 	}
 	
 	public void updateImage() {
@@ -199,18 +204,18 @@ public class GamePanel extends JPanel {
 		super.paintComponent(g);
 
 		// G2D and rendering hits
-		Graphics2D g2d = (Graphics2D) g;
-
-		g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_OFF);
-
-		render();
-
-		g2d.drawImage(buffer, 0, 0, null);
-		g2d.setColor(Color.red);
-		g2d.drawString("FPS: " + Game.getInstance().getFramesPerSecond(), 10, 15);
+//		Graphics2D g2d = (Graphics2D) g;
+//
+//		g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_OFF);
+//
+//		render();
+//
+//		g2d.drawImage(buffer, 0, 0, null);
+//		g2d.setColor(Color.red);
+//		g2d.drawString("FPS: " + Game.getInstance().getFramesPerSecond(), 10, 15);
 		
 		//Draw inventory
-		Game.getInstance().getCurrentWorld().getPlayer().getConstructManager().paint(g2d);
+//		Game.getInstance().getCurrentWorld().getPlayer().getConstructManager().paint(g2d);
 
 		//		 Debug render collision box
 		//			for(PhysicsSprite sprite2 : PhysicsManager.getPhysicsSprites()) {
@@ -223,11 +228,11 @@ public class GamePanel extends JPanel {
 		//			}
 
 		// Cleaning up stuff
-		g2d.dispose();
-		g.dispose();
-		Toolkit.getDefaultToolkit().sync();
-
-		fps++;
+//		g2d.dispose();
+//		g.dispose();
+//		Toolkit.getDefaultToolkit().sync();
+//
+//		fps++;
 
 	}
 
@@ -235,4 +240,8 @@ public class GamePanel extends JPanel {
 		return buffer;
 	}
 
+	public void setGhostBuffer(BufferedImage ghostImage, Vector2 location) {
+		this.ghostImage = ghostImage;
+		this.ghostImageLocation = location;
+	}
 }

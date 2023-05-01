@@ -1,11 +1,13 @@
 package engine.sprites.structures.conveyors;
 
 import java.io.File;
+import java.util.HashMap;
 import java.util.Objects;
 
 import engine.Game;
 import engine.physics.PhysicsManager;
 import engine.rendering.textures.Texture;
+import engine.rendering.textures.TextureLibrary;
 import engine.sprites.objects.Item;
 import engine.sprites.structures.StructureSprite;
 import engine.time.DeltaTime;
@@ -24,16 +26,17 @@ public class ConveyorBelt extends StructureSprite {
 
 	private static final double TRANSPORT_SPEED = 20f;
 
-	public ConveyorBelt(Texture texture, Vector2 location, double zDepth, ConveyorBeltDirection dir) {
+	private ConveyorBelt(Texture texture, Vector2 location, double zDepth, ConveyorBeltDirection dir) {
 		super(texture, location, zDepth);
 		this.direction = dir;
 		this.collisionBox = null;
 		this.itemIsMoving = false;
 
 		PhysicsManager.removePhysicsSprite(this);
-		
+
 		this.displayName = "Conveyor Belt";
-		this.resourceCost.put("titanium", 1);
+		this.resourceCost.put("titaniumItem", 0);
+		this.rotatable = true;
 	}
 
 	public static ConveyorBelt instantiateConveyorBelt(File file, Vector2 location, ConveyorBeltDirection dir) {
@@ -76,6 +79,8 @@ public class ConveyorBelt extends StructureSprite {
 			item.setBeltAssigned(this);
 			item.setLocation(location);
 		}
+
+		ConveyorBeltManager.updateConnection(this);
 	}
 
 	public ConveyorBelt getNext() {
@@ -88,9 +93,9 @@ public class ConveyorBelt extends StructureSprite {
 
 	@Override
 	public int hashCode() {
-		final int prime = 31;
+		final int prime = 34;
 		int result = super.hashCode();
-		result = prime * result + Objects.hash(direction, next);
+		result = prime * result + Objects.hash(direction, itemIsMoving);
 		return result;
 	}
 
@@ -111,8 +116,8 @@ public class ConveyorBelt extends StructureSprite {
 		if (item != null && next != null) {
 			if (next.itemIsMoving || (!next.itemIsMoving && next.item == null)) {
 				itemIsMoving = true;
-				item.setLocation(item.getLocation().add(new Vector2(direction.getDeltaX(), direction.getDeltaY())
-						.mul(TRANSPORT_SPEED * DeltaTime.getDeltaTime())));
+				item.setLocation(item.getLocation().add(new Vector2(direction.getDeltaX(), direction.getDeltaY()).mul(TRANSPORT_SPEED
+						* DeltaTime.getDeltaTime())));
 
 				switch (direction) {
 				case UP:
@@ -144,7 +149,7 @@ public class ConveyorBelt extends StructureSprite {
 				Game.getInstance().getCurrentWorld().getChunkManager().updateSpriteChunk(item);
 			}
 		} else if (item != null && next == null) {
-			item.setLocation(location.add(direction.getDelta()));
+			item.setLocation(location.add(direction.getDelta().mul(2)));
 		} else {
 			itemIsMoving = false;
 		}
@@ -164,9 +169,24 @@ public class ConveyorBelt extends StructureSprite {
 	public static String ID() {
 		return "conveyorBelt";
 	}
-	
+
 	public String getID() {
 		return ID();
 	}
 
+	@Override
+	public StructureSprite createCopy(String[] args) {
+		switch (args[0]) {
+		case "UP":
+			return instantiateConveyorBelt(TextureLibrary.retrieveTexture("beltUP"), Vector2.templateSpawn, ConveyorBeltDirection.UP);
+		case "DOWN":
+			return instantiateConveyorBelt(TextureLibrary.retrieveTexture("beltDOWN"), Vector2.templateSpawn, ConveyorBeltDirection.DOWN);
+		case "LEFT":
+			return instantiateConveyorBelt(TextureLibrary.retrieveTexture("beltLEFT"), Vector2.templateSpawn, ConveyorBeltDirection.LEFT);
+		case "RIGHT":
+			return instantiateConveyorBelt(TextureLibrary.retrieveTexture("beltRIGHT"), Vector2.templateSpawn, ConveyorBeltDirection.RIGHT);
+		default:
+			return instantiateConveyorBelt(TextureLibrary.retrieveTexture("beltUP"), Vector2.templateSpawn, ConveyorBeltDirection.UP);
+		}
+	}
 }

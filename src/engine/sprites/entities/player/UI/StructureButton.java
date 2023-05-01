@@ -125,6 +125,10 @@ public class StructureButton implements IMouseActionEventListener {
 		return templateStructure.getResourceCost();
 	}
 
+	public void setTemplateStructure(StructureSprite templateStructure) {
+		this.templateStructure = templateStructure;
+	}
+
 	@Override
 	public void mousePrimaryPressed(Vector2 screenCoordinate) {
 		owner.setCurrentlySelected(this);

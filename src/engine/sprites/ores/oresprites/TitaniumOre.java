@@ -11,7 +11,7 @@ public class TitaniumOre extends OreSprite {
 		super(texture, location, zDepth, oreAmount, miningHardness);
 	}
 
-	public TitaniumOre instantiateTitaniumOre(Texture texture, Vector2 location, int oreAmount) {
+	public static TitaniumOre instantiateTitaniumOre(Texture texture, Vector2 location, int oreAmount) {
 		try {
 			return new TitaniumOre(texture, location, 0.3d, oreAmount, 1d);
 		} catch (Exception e) {

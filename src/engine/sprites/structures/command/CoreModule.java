@@ -6,6 +6,7 @@ import java.util.HashMap;
 import engine.Game;
 import engine.physics.CollisionLayers;
 import engine.rendering.textures.Texture;
+import engine.rendering.textures.TextureLibrary;
 import engine.sprites.PhysicsSprite;
 import engine.sprites.objects.Item;
 import engine.sprites.structures.StructureSprite;
@@ -77,8 +78,9 @@ public class CoreModule extends StructureSprite {
 		    item.destroy();
 		}
 	}
-	
 
-	
-	
+	@Override
+	public StructureSprite createCopy(String[] args) {
+		return instantiateCoreModule(TextureLibrary.retrieveTexture("coreModule"), Vector2.templateSpawn);
+	}
 }

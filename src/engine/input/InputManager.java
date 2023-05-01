@@ -20,6 +20,7 @@ import engine.sprites.Sprite;
 import engine.sprites.entities.player.UI.StructureButton;
 import engine.sprites.entities.player.UI.StructureTypeButton;
 import engine.sprites.tiles.TileSprite;
+import main.Log;
 import math.MathUtilities;
 import math.Vector2;
 
@@ -74,8 +75,14 @@ public class InputManager {
 							directionalInput.setX(1);
 							break;
 						case KeyEvent.VK_ESCAPE:
-							System.exit(0);
+							Game.getInstance().getPlayer().setBuildingModeEnabled(false);
 							break;
+						case KeyEvent.VK_R:
+							Game.getInstance().getPlayer().getConstructManager().tryRotateCurrentlySelected();
+							break;
+//						case KeyEvent.VK_ESCAPE:
+//							System.exit(0);
+//							break;
 						}
 					}
 				} else if (e.getID() == KeyEvent.KEY_RELEASED) {
@@ -152,6 +159,7 @@ public class InputManager {
 
 	public static void initialize() {
 		new InputManager();
+		Log.info("Initialized input manager");
 	}
 	
 	public static void runAllEvents() {
@@ -237,7 +245,7 @@ public class InputManager {
 		
 	}
 
-	private static void fireMouseMotion(Vector2 location) {
+	public static void fireMouseMotion(Vector2 location) {
 		for (IMouseMotionEventListener iMouseListener : mouseMotionListeners) {
 			iMouseListener.mouseMoved(location);
 		}
@@ -250,6 +258,7 @@ public class InputManager {
 			for (int j = 0; j < tileSprites[i].length; j++) {
 				if (isWithinBounds(worldCoordinates, tileSprites[i][j])) {
 					System.out.println("Coords: " + worldCoordinates + " sprite: " + tileSprites[i][j]);
+					Log.info("Coords: " + worldCoordinates + " sprite: " + tileSprites[i][j]);
 					tileSprites[i][j].onMouseClicked();
 					return true;
 				}
@@ -268,12 +277,16 @@ public class InputManager {
 		    if(isWithinBounds(clickCoords, button) && button.isVisible()) {
 		    	button.mousePrimaryPressed(clickCoords);
 		    	System.out.println(button);
+		    	Log.info("Clicked on typebutton " + button);
 		    	return true;
 		    }
 		    for (StructureButton structure : availableStructures) {
 		    	if(isWithinBounds(clickCoords, structure) && structure.isVisible()) {
+		    		Game.getInstance().getPlayer().setBuildingModeEnabled(true);
 			    	structure.mousePrimaryPressed(clickCoords);
 			    	System.out.println(structure);
+			    	Log.info("Clicked on structurebutton " + structure);
+			    	
 			    	return true;
 			    }
 		    }

@@ -1,13 +1,11 @@
 package engine.sprites.structures;
 
 import java.io.Serializable;
-import java.security.InvalidParameterException;
 import java.util.ArrayList;
 
 import engine.Game;
 import engine.sprites.structures.conveyors.ConveyorBelt;
 import engine.sprites.structures.conveyors.ConveyorBeltManager;
-import engine.sprites.tiles.TileSprite;
 import math.Vector2;
 
 public class StructureMap implements Serializable {
@@ -105,6 +103,12 @@ public class StructureMap implements Serializable {
 
 		return true;
 	}
+	
+	public boolean isOccupiedSpace(Vector2 locationOnOccupiedMap) {
+		if (!isInBounds((int) locationOnOccupiedMap.getX(), (int) locationOnOccupiedMap.getY())) return false;
+		return occupiedMap[(int) locationOnOccupiedMap.getX()][(int) locationOnOccupiedMap.getY()];
+	}
+	
 
 	public Vector2 getMapLocationBySprite(StructureSprite sprite) {
 		for (int i = 0; i < map.length; i++) {
