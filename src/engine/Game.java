@@ -57,6 +57,7 @@ public class Game implements Runnable {
 		tl.loadAllTextures("textures/ores", TextureType.BITMASK);
 		tl.loadAllTextures("textures/items", TextureType.BITMASK);
 		tl.loadAllTextures("textures/icons", TextureType.OPAQUE);
+		tl.loadAllTextures("textures/typeIcons", TextureType.BITMASK);
 		tl.loadAllTextures("textures/UIElements", TextureType.TRANSPARENT);
 		tl.loadAllTextures("textures", TextureType.OPAQUE);
 		
