@@ -28,7 +28,8 @@ public abstract class PhysicsSprite extends Sprite implements IPhysicsBehaviour 
 	
 	public boolean checkCollisionLayer(PhysicsSprite other) {
 		if(this.collisionLayer == other.collisionLayer) return false;
-
+		if(this.collisionLayer == null || other.collisionLayer == null) return false;
+		
 		for(CollisionLayers layr : other.collisionLayer.getCollide()) {
 			if(layr == this.collisionLayer) {
 				return true;
@@ -102,6 +103,7 @@ public abstract class PhysicsSprite extends Sprite implements IPhysicsBehaviour 
 		super.destroy();
 		
 		PhysicsManager.removePhysicsSprite(this);
+		SpriteManager.removeUpdateSprite(this);
 	}
 
 	public static String ID() {

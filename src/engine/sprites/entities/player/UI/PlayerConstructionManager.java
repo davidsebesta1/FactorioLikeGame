@@ -15,11 +15,11 @@ import engine.input.InputManager;
 import engine.rendering.textures.Texture;
 import engine.rendering.textures.TextureLibrary;
 import engine.sprites.entities.player.Inventory;
-import engine.sprites.structures.StructureMap;
 import engine.sprites.structures.StructureSprite;
 import engine.sprites.structures.command.CoreModule;
 import engine.sprites.structures.conveyors.ConveyorBelt;
 import engine.sprites.structures.conveyors.ConveyorBeltDirection;
+import engine.sprites.structures.fabricators.MechanicalPlatePress;
 import math.MathUtilities;
 import math.Vector2;
 
@@ -60,6 +60,7 @@ public class PlayerConstructionManager implements IMouseMotionEventListener{
 	private void registerStructures() {
 		registerStructure("CommandStructures", "coreModule", TextureLibrary.retrieveTexture("testStructIcon"), CoreModule.instantiateCoreModule(TextureLibrary.retrieveTexture("coreModule"), Vector2.templateSpawn));
 		registerStructure("TransportStructures", "conveyorBelt", TextureLibrary.retrieveTexture("testStructIcon"), ConveyorBelt.instantiateConveyorBelt(TextureLibrary.retrieveTexture("beltRIGHT"), Vector2.templateSpawn, ConveyorBeltDirection.RIGHT));
+		registerStructure("FactoryStructures", "mechanicalPlatePress", TextureLibrary.retrieveTexture("testStructIcon"), MechanicalPlatePress.instantiateManualPlatePress(TextureLibrary.retrieveTexture("mechanicalPlatePress"), Vector2.templateSpawn));
 	}
 
 	private void initializeStructTypeButtons() {
@@ -202,7 +203,7 @@ public class PlayerConstructionManager implements IMouseMotionEventListener{
 					structure.setLocation(rightRectangleSlotLocations.get(index));
 					currentlyShowStructButtons.add(structure);
 					index++;
-					System.out.println(structure);
+//					System.out.println(structure);
 				}
 
 				return true;

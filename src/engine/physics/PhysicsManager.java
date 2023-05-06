@@ -40,14 +40,16 @@ public class PhysicsManager {
 	}
 
 	public static void resolveCollisions() {
-		for (PhysicsSprite sprite : physicsSprites) {
-			for (PhysicsSprite sprite2 : physicsSprites) {
-				if (!sprite2.equals(sprite) && sprite.getCollisionBox() != null && sprite2.getCollisionBox() != null && (sprite.getCollisionBox().doCollideWith(sprite2.getCollisionBox()))) {
-					sprite.enteredCollision(sprite2);
-					sprite2.enteredCollision(sprite);
-				}
-			}
-		}
+	    for (int i = 0; i < physicsSprites.size(); i++) {
+	        PhysicsSprite sprite = physicsSprites.get(i);
+	        for (int j = 0; j < physicsSprites.size(); j++) {
+	            PhysicsSprite sprite2 = physicsSprites.get(j);
+	            if (sprite.getCollisionBox() != null && sprite2.getCollisionBox() != null && sprite.getCollisionBox().doCollideWith(sprite2.getCollisionBox())) {
+	                sprite.enteredCollision(sprite2);
+	                sprite2.enteredCollision(sprite);
+	            }
+	        }
+	    }
 	}
 
 	public static ArrayList<PhysicsSprite> getPhysicsSprites() {

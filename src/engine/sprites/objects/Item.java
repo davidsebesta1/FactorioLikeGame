@@ -2,7 +2,6 @@ package engine.sprites.objects;
 
 import java.util.Objects;
 
-import engine.Game;
 import engine.physics.BoundingBox;
 import engine.physics.CollisionLayers;
 import engine.rendering.textures.Texture;
@@ -38,8 +37,6 @@ public abstract class Item extends PhysicsSprite {
 		if(beltAssigned != null) {
 			beltAssigned.setItem(null);
 		}
-		
-		Game.getInstance().getCurrentWorld().getChunkManager().forceRemoveSprite(this);
 	}
 
 	@Override
@@ -74,6 +71,7 @@ public abstract class Item extends PhysicsSprite {
 		switch(ID) {
 		case "coal": return TextureLibrary.retrieveTexture("coal");
 		case "titanium": return TextureLibrary.retrieveTexture("titanium");
+		case "titaniumPlate": return TextureLibrary.retrieveTexture("titaniumPlate");
 		default: return TextureLibrary.retrieveTexture("unknownTexture");
 		}
 	}

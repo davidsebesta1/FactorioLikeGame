@@ -6,6 +6,7 @@ import java.util.Map;
 import java.util.Objects;
 
 import engine.Game;
+import engine.rendering.optimalization.Chunk;
 import engine.rendering.textures.Texture;
 import engine.rendering.textures.TextureLibrary;
 import math.Vector2;
@@ -21,6 +22,8 @@ public abstract class Sprite implements Comparable<Sprite>, ISpriteBehaviour, Se
 	protected Vector2 size;
 
 	protected boolean isVisible;
+	
+	protected Chunk currentChunk;
 
 	protected Sprite(Texture texture, Vector2 location, double zDepth) {
 		super();
@@ -35,7 +38,14 @@ public abstract class Sprite implements Comparable<Sprite>, ISpriteBehaviour, Se
 
 		SpriteManager.add(this);
 	}
-	
+
+	public Chunk getCurrentChunk() {
+		return currentChunk;
+	}
+
+	public void setCurrentChunk(Chunk currentChunk) {
+		this.currentChunk = currentChunk;
+	}
 
 	public double getzDepth() {
 		return zDepth;
@@ -101,9 +111,7 @@ public abstract class Sprite implements Comparable<Sprite>, ISpriteBehaviour, Se
 		if (getClass() != obj.getClass())
 			return false;
 		Sprite other = (Sprite) obj;
-		return isVisible == other.isVisible && Objects.equals(location, other.location)
-				&& Objects.equals(size, other.size) && Objects.equals(textureName, other.textureName)
-				&& Double.doubleToLongBits(zDepth) == Double.doubleToLongBits(other.zDepth);
+		return isVisible == other.isVisible && Objects.equals(location, other.location) && Objects.equals(size, other.size) && Objects.equals(textureName, other.textureName);
 	}
 
 	public static String getTextureNameByObject(Texture value) {
@@ -136,7 +144,7 @@ public abstract class Sprite implements Comparable<Sprite>, ISpriteBehaviour, Se
 
 	public void destroy() {
 		try {
-			SpriteManager.getSprites().remove(this);
+			SpriteManager.remove(this);
 			Game.getInstance().getCurrentWorld().getChunkManager().forceRemoveSprite(this);
 		} catch (Exception e) {
 			e.printStackTrace();

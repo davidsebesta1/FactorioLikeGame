@@ -15,7 +15,6 @@ public class SpriteManager {
 	private static ArrayList<Sprite> spriteList = new ArrayList<>();
 	private static HashSet<Sprite> updateSprites = new HashSet<>();
 
-	
 	//Helper lists for sync and concurrent mod. exception avoid
 	private static HashSet<Sprite> spriteAddQueue = new HashSet<>();
 	private static HashSet<Sprite> spriteUpdateAddQueue = new HashSet<>();
@@ -23,8 +22,7 @@ public class SpriteManager {
 	private static HashSet<Sprite> spriteRemoveQueue = new HashSet<>();
 	private static HashSet<Sprite> spriteUpdateRemoveQueue = new HashSet<>();
 
-	private SpriteManager() {
-	}
+	private SpriteManager() {}
 
 	public static synchronized void add(Sprite sprite) {
 		if (sprite != null) {
@@ -45,24 +43,22 @@ public class SpriteManager {
 	}
 
 	public static synchronized void frameSpriteSynchronization() {
-
-		// Remove to remove sprites
-		if(!spriteRemoveQueue.isEmpty()) {
-			spriteList.removeAll(spriteRemoveQueue);
-			spriteRemoveQueue.clear();
-		}
-
 		// Remove to remove update sprites
 		if(!spriteUpdateRemoveQueue.isEmpty()) {
 			updateSprites.removeAll(spriteUpdateRemoveQueue);
 			spriteUpdateRemoveQueue.clear();
 		}
 
-
 		// Add updatable sprites
 		if(!spriteUpdateAddQueue.isEmpty()) {
 			updateSprites.addAll(spriteUpdateAddQueue);
 			spriteUpdateAddQueue.clear();
+		}
+		
+		// Remove to remove sprites
+		if(!spriteRemoveQueue.isEmpty()) {
+			spriteList.removeAll(spriteRemoveQueue);
+			spriteRemoveQueue.clear();
 		}
 		
 		// Add sprites

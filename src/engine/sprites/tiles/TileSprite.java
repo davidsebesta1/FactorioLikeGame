@@ -50,7 +50,7 @@ public class TileSprite extends Sprite {
 			if(spritetemplate instanceof ConveyorBelt) {
 				sprite = ((ConveyorBelt) spritetemplate).createCopy(new String[] {((ConveyorBelt) spritetemplate).getDirection().getName()});
 			} else {
-				spritetemplate.createCopy(null);
+				sprite = spritetemplate.createCopy(null);
 			}
 			
 			
@@ -58,7 +58,6 @@ public class TileSprite extends Sprite {
 			if(sprite != null && template.getTemplateStructure().hasEnoughItemsForConstruct(Game.getInstance().getCurrentWorld().getPlayer().getInventory())) {
 				Vector2 locOnMap = StructureMap.worldToStructureMapCoordinate(this.location);
 				boolean validConstruct = Game.getInstance().getCurrentWorld().getStructureMap().tryAddStructureAtLocation(sprite, locOnMap);
-				System.out.println(validConstruct + " aaaaa");
 				if(validConstruct) {
 					Game.getInstance().getCurrentWorld().getPlayer().getInventory().removeStuffFromInventory(template.getTemplateStructure().getResourceCost());
 				}

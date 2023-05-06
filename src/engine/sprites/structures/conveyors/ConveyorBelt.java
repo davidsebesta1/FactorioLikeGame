@@ -1,7 +1,6 @@
 package engine.sprites.structures.conveyors;
 
 import java.io.File;
-import java.util.HashMap;
 import java.util.Objects;
 
 import engine.Game;
@@ -119,6 +118,8 @@ public class ConveyorBelt extends StructureSprite {
 				item.setLocation(item.getLocation().add(new Vector2(direction.getDeltaX(), direction.getDeltaY()).mul(TRANSPORT_SPEED
 						* DeltaTime.getDeltaTime())));
 
+				Game.getInstance().getCurrentWorld().getChunkManager().updateSpriteChunk(item);
+				
 				switch (direction) {
 				case UP:
 					if (item.getLocation().getY() < next.getLocation().getY()) {
@@ -146,7 +147,6 @@ public class ConveyorBelt extends StructureSprite {
 					break;
 				}
 
-				Game.getInstance().getCurrentWorld().getChunkManager().updateSpriteChunk(item);
 			}
 		} else if (item != null && next == null) {
 			item.setLocation(location.add(direction.getDelta().mul(2)));

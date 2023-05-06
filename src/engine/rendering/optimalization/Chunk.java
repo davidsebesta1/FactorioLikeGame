@@ -10,8 +10,8 @@ import java.awt.Transparency;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 
@@ -45,37 +45,80 @@ public class Chunk {
 		buffer = gfxConfig.createCompatibleImage((int) size.getX(), (int) size.getY(), Transparency.BITMASK);
 	}
 	
+//	public synchronized void resolveFrame() {
+//		if(needsResolve()){
+//			
+//			for(Sprite sprite : toRemoveNextFrame){
+//				sprite.setCurrentChunk(null);
+//				System.out.println("removed sprite " + sprite);
+//			}
+//			sprites.removeAll(toRemoveNextFrame);
+//			
+//			for(Sprite sprite : toAddNextFrame){
+//				sprite.setCurrentChunk(this);
+//			}
+//			
+//			addAllSorted(toAddNextFrame);
+//			
+//			toAddNextFrame.clear();
+//			toRemoveNextFrame.clear();
+//			
+//			cacheImage();
+//		}
+//	}
+	
 	public synchronized void resolveFrame() {
-		if(needsResolve()){
-			sprites.removeAll(toRemoveNextFrame);
-			sprites.addAll(toAddNextFrame);
-			
-			toAddNextFrame.clear();
-			toRemoveNextFrame.clear();
-			
-			sort();
 			cacheImage();
+	}
+	
+	private synchronized void addAllSorted(Set<Sprite> spriteList) {
+		for(Sprite sprite : spriteList) {
+		    int index = Collections.binarySearch(sprites, sprite, new Comparator<Sprite>() {
+		        public int compare(Sprite s1, Sprite s2) {
+		            if(s1.getzDepth() > s2.getzDepth()) return 1;
+		            else return -1;
+		        }
+		    });
+		    if (index < 0) {
+		        index = -(index + 1);
+		    }
+		    sprites.add(index, sprite);
 		}
 	}
 	
-	public synchronized void sort() {
-		Collections.sort(sprites);
+	private synchronized boolean addSorted(Sprite sprite) {
+		    int index = Collections.binarySearch(sprites, sprite, new Comparator<Sprite>() {
+		        public int compare(Sprite s1, Sprite s2) {
+		            if(s1.getzDepth() > s2.getzDepth()) return 1;
+		            else return -1;
+		        }
+		    });
+		    if (index < 0) {
+		        index = -(index + 1);
+		    }
+		   sprites.add(index, sprite);
+		   return true;
 	}
 
 	public synchronized boolean tryAddSprite(Sprite sprite) {
-		return toAddNextFrame.add(sprite);
+//		return toAddNextFrame.add(sprite);
+		
+		return addSorted(sprite);
 	}
 
 	public synchronized boolean tryRemoveSprite(Sprite sprite) {
-		return toRemoveNextFrame.add(sprite);
+//		return toRemoveNextFrame.add(sprite);
+		return sprites.remove(sprite);
 	}
 
 	public void cacheImage() {
 		Graphics g = buffer.getGraphics();
 		Graphics2D g2d = (Graphics2D) g;
 
-		g2d.clearRect(0, 0, buffer.getWidth(), buffer.getHeight());
+//		g2d.clearRect(0, 0, buffer.getWidth(), buffer.getHeight());
+		g2d.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_SPEED);
 		g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_OFF);
+		g2d.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_OFF);
 
 		for (Sprite sprite : sprites) {
 				if (sprite.getTexture().getImage() != null && sprite.isVisible()) {

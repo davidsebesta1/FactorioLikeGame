@@ -10,8 +10,6 @@ import engine.sprites.ores.OreMap;
 import engine.sprites.ores.oresprites.TitaniumOre;
 import engine.sprites.structures.StructureMap;
 import engine.sprites.structures.command.CoreModule;
-import engine.sprites.structures.conveyors.ConveyorBelt;
-import engine.sprites.structures.conveyors.ConveyorBeltDirection;
 import engine.sprites.structures.drills.BasicDrill;
 import engine.sprites.tiles.TileMap;
 import math.Vector2;
@@ -39,7 +37,7 @@ public class GameWorld {
 
 		this.background = Background.instantiateBackground(TextureLibrary.retrieveTexture("background"), new Vector2(0, 0), 0f);
 		
-		this.chunkManager = new ChunkManager(256, size, player);
+		this.chunkManager = new ChunkManager(size, player);
 
 		//
 		Random random = new Random(7584);

@@ -1,7 +1,6 @@
 package engine.sprites.structures.command;
 
 import java.io.File;
-import java.util.HashMap;
 
 import engine.Game;
 import engine.physics.CollisionLayers;
@@ -20,7 +19,7 @@ public class CoreModule extends StructureSprite {
 		this.collisionLayer = CollisionLayers.STRUCTURE;
 		
 		this.displayName = "Core Module";
-		this.resourceCost.put("coalItem", 2);
+		this.resourceCost.put("titaniumItem", 2);
 	}
 
 	public static CoreModule instantiateCoreModule(File file, Vector2 location) {
@@ -73,8 +72,10 @@ public class CoreModule extends StructureSprite {
 		if (sprite instanceof Item) {
 		    Item item = (Item) sprite;
 		    String itemId = item.getID();
+		    
 		    Game.getInstance().getCurrentWorld().getPlayer().tryAddItemToInventory(itemId, 1);
 		    System.out.println(Game.getInstance().getCurrentWorld().getPlayer().getItemAmount(itemId) + itemId);
+		    
 		    item.destroy();
 		}
 	}

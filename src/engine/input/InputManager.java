@@ -257,7 +257,7 @@ public class InputManager {
 		for (int i = 0; i < tileSprites.length; i++) {
 			for (int j = 0; j < tileSprites[i].length; j++) {
 				if (isWithinBounds(worldCoordinates, tileSprites[i][j])) {
-					System.out.println("Coords: " + worldCoordinates + " sprite: " + tileSprites[i][j]);
+//					System.out.println("Coords: " + worldCoordinates + " sprite: " + tileSprites[i][j]);
 					Log.info("Coords: " + worldCoordinates + " sprite: " + tileSprites[i][j]);
 					tileSprites[i][j].onMouseClicked();
 					return true;
@@ -276,7 +276,7 @@ public class InputManager {
 		    HashSet<StructureButton> availableStructures = entry.getValue();
 		    if(isWithinBounds(clickCoords, button) && button.isVisible()) {
 		    	button.mousePrimaryPressed(clickCoords);
-		    	System.out.println(button);
+//		    	System.out.println(button);
 		    	Log.info("Clicked on typebutton " + button);
 		    	return true;
 		    }
@@ -284,7 +284,7 @@ public class InputManager {
 		    	if(isWithinBounds(clickCoords, structure) && structure.isVisible()) {
 		    		Game.getInstance().getPlayer().setBuildingModeEnabled(true);
 			    	structure.mousePrimaryPressed(clickCoords);
-			    	System.out.println(structure);
+//			    	System.out.println(structure);
 			    	Log.info("Clicked on structurebutton " + structure);
 			    	
 			    	return true;

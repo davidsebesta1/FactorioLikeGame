@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.Objects;
 import java.util.Random;
 
+import engine.physics.CollisionLayers;
 import engine.rendering.textures.Texture;
 import engine.rendering.textures.TextureLibrary;
 import engine.sprites.PhysicsSprite;
@@ -18,7 +19,7 @@ import engine.sprites.structures.conveyors.ConveyorBelt;
 import engine.time.DeltaTime;
 import math.Vector2;
 
-public class ManualPlatePress extends StructureSprite{
+public class MechanicalPlatePress extends StructureSprite{
 	private static final long serialVersionUID = -2983381922038946838L;
 	private double elapsedTime;
 	
@@ -30,18 +31,19 @@ public class ManualPlatePress extends StructureSprite{
 	
 	private final Random random = new Random();
 
-	private ManualPlatePress(Texture texture, Vector2 location, double zDepth) {
+	private MechanicalPlatePress(Texture texture, Vector2 location, double zDepth) {
 		super(texture, location, zDepth);
 		this.storage = new Inventory();
+		this.collisionLayer = CollisionLayers.STRUCTURE;
 		
 		this.resourceCost = new HashMap<>();
-		this.displayName = "Plate Press";
-		this.resourceCost.put("titaniumItem", 30);
+		this.displayName = "Mechanical Plate Press";
+		this.resourceCost.put("titaniumItem", 0);
 	}
 	
-	public static ManualPlatePress instantiateManualPlatePress(Texture texture, Vector2 location) {
+	public static MechanicalPlatePress instantiateManualPlatePress(Texture texture, Vector2 location) {
 		try {
-			return new ManualPlatePress(texture, location, 0.7f);
+			return new MechanicalPlatePress(texture, location, 0.7f);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -53,7 +55,13 @@ public class ManualPlatePress extends StructureSprite{
 	public void enteredCollision(PhysicsSprite sprite) {
 		if (sprite instanceof Item) {
 		    Item item = (Item) sprite;
-		    if(checkForValidItemIn(item.getID()) && tryAddItemToInventory(item.getID(), 1)) item.destroy();
+		    System.out.println(checkForValidItemIn(item.getID()));
+		    boolean add = tryAddItemToInventory(item.getID(), 1);
+		    System.out.println(add);
+		    if(checkForValidItemIn(item.getID()) && add) {
+		    	item.destroy();
+		    	System.out.println(storage);
+		    }
 		}
 	}
 	
@@ -91,15 +99,15 @@ public class ManualPlatePress extends StructureSprite{
 		if(!belts.isEmpty()) {
 			
 			if(storage.getItemAmount("titaniumPlate") > 0) {
-				int dir = random.nextInt(belts.size() - 1);
+				int dir = random.nextInt(belts.size());
 				belts.get(dir).setItem(TitaniumPlate.instantiateTitaniumPlate(TextureLibrary.retrieveTexture("titaniumPlate"), location));
 				storage.tryRemoveItemFromInventory("titaniumPlate", 1);
 			} else if(storage.getItemAmount("aluminiumPlate") > 0) {
-				int dir = random.nextInt(belts.size() - 1);
+				int dir = random.nextInt(belts.size());
 				belts.get(dir).setItem(AluminiumPlate.instantiateAluminiumPlate(TextureLibrary.retrieveTexture("aluminiumPlate"), location));
 				storage.tryRemoveItemFromInventory("aluminiumPlate", 1);
 			} else if(storage.getItemAmount("copperPlate") > 0) {
-				int dir = random.nextInt(belts.size() - 1);
+				int dir = random.nextInt(belts.size());
 				belts.get(dir).setItem(CopperPlate.instantiateCopperPlate(TextureLibrary.retrieveTexture("copperPlate"), location));
 				storage.tryRemoveItemFromInventory("copperPlate", 1);
 			}
@@ -150,20 +158,30 @@ public class ManualPlatePress extends StructureSprite{
 		if (!super.equals(obj)) {
 			return false;
 		}
-		if (!(obj instanceof ManualPlatePress)) {
+		if (!(obj instanceof MechanicalPlatePress)) {
 			return false;
 		}
-		ManualPlatePress other = (ManualPlatePress) obj;
+		MechanicalPlatePress other = (MechanicalPlatePress) obj;
 		return Objects.equals(storage, other.storage);
 	}
 
+	
+
 	@Override
 	public String toString() {
-		return "ManualPlatePress [storage=" + storage + "]";
+		return "MechanicalPlatePress [storage=" + storage + "] " + collisionBox;
 	}
 
 	@Override
 	public StructureSprite createCopy(String[] args) {
-		return instantiateManualPlatePress(TextureLibrary.retrieveTexture("manualPlatePress"), Vector2.templateSpawn);
+		return instantiateManualPlatePress(TextureLibrary.retrieveTexture("mechanicalPlatePress"), Vector2.templateSpawn);
+	}
+	
+	public static String ID() {
+		return "mechanicalPlatePress";
+	}
+
+	public String getID() {
+		return ID();
 	}
 }

@@ -14,9 +14,10 @@ public class Inventory implements Serializable{
 	}
 	
 	public synchronized boolean tryAddItemToInventory(String ID, int amount) {
+		System.out.println("contains? " + IDAndAmount.keySet().contains(ID));
 		if(ID != null && amount > 0 && IDAndAmount.keySet().contains(ID)) {
 			IDAndAmount.replace(ID, IDAndAmount.get(ID), IDAndAmount.get(ID) + amount);
-			return false;
+			return true;
 		}
 		
 		IDAndAmount.put(ID, amount);

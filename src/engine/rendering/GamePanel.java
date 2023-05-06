@@ -14,8 +14,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
-import java.awt.image.BufferedImage;
 import java.awt.image.BufferStrategy;
+import java.awt.image.BufferedImage;
 
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
@@ -23,8 +23,12 @@ import javax.swing.Timer;
 
 import engine.Game;
 import engine.input.InputManager;
+import engine.physics.BoundingBox;
+import engine.physics.PhysicsManager;
+import engine.rendering.optimalization.Chunk;
 import engine.rendering.optimalization.ChunkManager;
 import engine.sprites.Background;
+import engine.sprites.PhysicsSprite;
 import engine.sprites.entities.player.Player;
 import math.Vector2;
 
@@ -122,8 +126,10 @@ public class GamePanel extends JPanel {
 		// Render to off-screen buffer
 		Graphics graphics = buffer.getGraphics();
 		Graphics2D g2d = (Graphics2D) graphics;
-
+		
+		g2d.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_SPEED);
 		g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_OFF);
+		g2d.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_OFF);
 
 		//		g2d.clearRect(0, 0, getWidth(), getHeight());
 
@@ -135,6 +141,7 @@ public class GamePanel extends JPanel {
 		g2d.drawImage(background.getTexture().getImage(), (int) (background.getLocation().getX()
 				- player.getCamera().getLocation().getX()), (int) (background.getLocation().getY()
 						- player.getCamera().getLocation().getY()), null);
+		
 		
 
 		// Zoom scale
@@ -157,16 +164,29 @@ public class GamePanel extends JPanel {
 		// Render active chunks
 		int chunkSize = (int) manager.getChunkSize();
 		Vector2 loc = player.getCamera().getLocation();
-		for (int i = 0; i < manager.getChunkMap().length; i++) {
-			for (int j = 0; j < manager.getChunkMap()[i].length; j++) {
-				if (manager.getActiveChunks().contains(manager.getChunkMap()[i][j])) {
-					g2d.drawImage(manager.getChunkMap()[i][j].getBuffer(), (i * chunkSize
-							- (int) loc.getX()), (j * chunkSize - (int) loc.getY()), null);
-				}
-			}
+		int numChunksX = manager.getChunkMap().length;
+		int numChunksY = manager.getChunkMap()[0].length;
+		for (int i = 0; i < numChunksX; i++) {
+		    for (int j = 0; j < numChunksY; j++) {
+		        Chunk chunk = manager.getChunkMap()[i][j];
+		        if (manager.getActiveChunks().contains(chunk)) {
+		            int x = (int) (i * chunkSize - loc.getX());
+		            int y = (int) (j * chunkSize - loc.getY());
+		            g2d.drawImage(chunk.getBuffer(), x, y, null);
+		        }
+		    }
 		}
+		
+		
 
 		// START DEBUG STUFF DRAW
+//		for(PhysicsSprite sprite : PhysicsManager.getPhysicsSprites()) {
+//			
+//			BoundingBox rect = sprite.getCollisionBox();
+//			
+//			g2d.setColor(Color.red);
+//			if(rect != null) g2d.drawRect((int) rect.getX(),(int) rect.getY(),(int) rect.getWidth(),(int) rect.getHeight());
+//		}
 
 		// END DEBUG STUFF
 
@@ -187,7 +207,8 @@ public class GamePanel extends JPanel {
 	
 	public void updateImage() {
 		render();
-		Game.getInstance().getCurrentWorld().getPlayer().getConstructManager().paint((Graphics2D) buffer.getGraphics());
+		Game.getInstance().getCurrentWorld().getPlayer().getConstructManager().paint((Graphics2D) buffer.getGraphics());;
+		
 		g.drawImage(buffer, 0, 0, canvas.getWidth(), canvas.getHeight(), null);
 		
 		g.setColor(Color.red);

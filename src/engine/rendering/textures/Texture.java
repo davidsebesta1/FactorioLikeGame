@@ -13,9 +13,7 @@ import java.util.Objects;
 
 import javax.imageio.ImageIO;
 
-import engine.sprites.Sprite;
-
-public class Texture implements Cloneable{
+public class Texture {
 	private BufferedImage image;
 	private BufferedImage validPlacementImage;
 	private BufferedImage invalidPlacementImage;
@@ -159,4 +157,6 @@ public class Texture implements Cloneable{
 		Texture other = (Texture) obj;
 		return Objects.equals(image, other.image);
 	}
+	
+	
 }

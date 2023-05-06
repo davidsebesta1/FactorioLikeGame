@@ -46,12 +46,11 @@ public abstract class StructureSprite extends PhysicsSprite {
 	}
 
 	public ArrayList<ConveyorBelt> getSurroundingBelts() {
-		ArrayList<StructureSprite> tempList = Game.getInstance().getStructureMap().getAdjacentStructures(location.div(32));
-
 		ArrayList<ConveyorBelt> toReturn = new ArrayList<>();
-		for (StructureSprite sprite : tempList) {
-			toReturn.add((ConveyorBelt) sprite);
-		}
+		toReturn.add(getBeltToLeft());
+		toReturn.add(getBeltToRight());
+		toReturn.add(getBeltToUp());
+		toReturn.add(getBeltToDown());
 
 		return toReturn;
 	}
