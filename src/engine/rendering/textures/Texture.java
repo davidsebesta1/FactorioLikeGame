@@ -131,7 +131,12 @@ public class Texture {
 	    int width = src.getWidth();
 	    int height = src.getHeight();
 
-	    BufferedImage rotatedImage = new BufferedImage(height, width, src.getType());
+	    BufferedImage rotatedImage;
+	    if(src.getType() == 0) {
+	    	 rotatedImage = new BufferedImage(height, width, BufferedImage.TYPE_INT_ARGB);
+	    } else {
+	    	 rotatedImage = new BufferedImage(height, width, src.getType());
+	    }
 
 	    Graphics2D g2d = rotatedImage.createGraphics();
 	    g2d.translate((height - width) / 2d, (height - width) / 2d);

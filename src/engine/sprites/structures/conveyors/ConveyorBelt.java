@@ -22,6 +22,7 @@ public class ConveyorBelt extends StructureSprite {
 	private ConveyorBelt next;
 
 	private boolean itemIsMoving;
+	private boolean isOccupied;
 
 	private static final double TRANSPORT_SPEED = 20f;
 
@@ -30,6 +31,7 @@ public class ConveyorBelt extends StructureSprite {
 		this.direction = dir;
 		this.collisionBox = null;
 		this.itemIsMoving = false;
+		this.isOccupied = false;
 
 		PhysicsManager.removePhysicsSprite(this);
 
@@ -80,6 +82,7 @@ public class ConveyorBelt extends StructureSprite {
 		}
 
 		ConveyorBeltManager.updateConnection(this);
+		Game.getInstance().getCurrentWorld().getChunkManager().updateSpriteChunk(item);
 	}
 
 	public ConveyorBelt getNext() {
@@ -107,7 +110,7 @@ public class ConveyorBelt extends StructureSprite {
 		if (getClass() != obj.getClass())
 			return false;
 		ConveyorBelt other = (ConveyorBelt) obj;
-		return direction == other.direction && Objects.equals(item, other.item) && Objects.equals(next, other.next);
+		return direction == other.direction && Objects.equals(item, other.item);
 	}
 
 	@Override
@@ -178,15 +181,15 @@ public class ConveyorBelt extends StructureSprite {
 	public StructureSprite createCopy(String[] args) {
 		switch (args[0]) {
 		case "UP":
-			return instantiateConveyorBelt(TextureLibrary.retrieveTexture("beltUP"), Vector2.templateSpawn, ConveyorBeltDirection.UP);
+			return instantiateConveyorBelt(TextureLibrary.retrieveTexture("beltStr3"), Vector2.templateSpawn, ConveyorBeltDirection.UP);
 		case "DOWN":
-			return instantiateConveyorBelt(TextureLibrary.retrieveTexture("beltDOWN"), Vector2.templateSpawn, ConveyorBeltDirection.DOWN);
+			return instantiateConveyorBelt(TextureLibrary.retrieveTexture("beltStr1"), Vector2.templateSpawn, ConveyorBeltDirection.DOWN);
 		case "LEFT":
-			return instantiateConveyorBelt(TextureLibrary.retrieveTexture("beltLEFT"), Vector2.templateSpawn, ConveyorBeltDirection.LEFT);
+			return instantiateConveyorBelt(TextureLibrary.retrieveTexture("beltStr2"), Vector2.templateSpawn, ConveyorBeltDirection.LEFT);
 		case "RIGHT":
-			return instantiateConveyorBelt(TextureLibrary.retrieveTexture("beltRIGHT"), Vector2.templateSpawn, ConveyorBeltDirection.RIGHT);
+			return instantiateConveyorBelt(TextureLibrary.retrieveTexture("beltStr0"), Vector2.templateSpawn, ConveyorBeltDirection.RIGHT);
 		default:
-			return instantiateConveyorBelt(TextureLibrary.retrieveTexture("beltUP"), Vector2.templateSpawn, ConveyorBeltDirection.UP);
+			return instantiateConveyorBelt(TextureLibrary.retrieveTexture("beltStr0"), Vector2.templateSpawn, ConveyorBeltDirection.UP);
 		}
 	}
 }

@@ -21,93 +21,95 @@ import math.Vector2;
 public class Chunk {
 
 	private ArrayList<Sprite> sprites;
-	
-	private HashSet<Sprite> toAddNextFrame;
-	private HashSet<Sprite> toRemoveNextFrame;
-	
+
 	private Vector2 location;
 	private Vector2 size;
 
 	private BufferedImage buffer;
-	
+
 	private Rectangle rectangle;
+
+	private boolean needResolve;
 
 	public Chunk(Vector2 location, Vector2 size) {
 		this.sprites = new ArrayList<>();
-		this.toAddNextFrame = new HashSet<>();
-		this.toRemoveNextFrame = new HashSet<>();
 		this.location = location;
 		this.size = size;
-		
-		this.rectangle = new Rectangle((int) location.getX(),(int) location.getY(),(int) size.getX(),(int) size.getY());
+		this.needResolve = false;
+
+		this.rectangle = new Rectangle((int) location.getX(), (int) location.getY(), (int) size.getX(), (int) size.getY());
 
 		GraphicsConfiguration gfxConfig = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice().getDefaultConfiguration();
 		buffer = gfxConfig.createCompatibleImage((int) size.getX(), (int) size.getY(), Transparency.BITMASK);
 	}
-	
-//	public synchronized void resolveFrame() {
-//		if(needsResolve()){
-//			
-//			for(Sprite sprite : toRemoveNextFrame){
-//				sprite.setCurrentChunk(null);
-//				System.out.println("removed sprite " + sprite);
-//			}
-//			sprites.removeAll(toRemoveNextFrame);
-//			
-//			for(Sprite sprite : toAddNextFrame){
-//				sprite.setCurrentChunk(this);
-//			}
-//			
-//			addAllSorted(toAddNextFrame);
-//			
-//			toAddNextFrame.clear();
-//			toRemoveNextFrame.clear();
-//			
-//			cacheImage();
-//		}
-//	}
-	
+
+	//	public synchronized void resolveFrame() {
+	//		if(needsResolve()){
+	//			
+	//			for(Sprite sprite : toRemoveNextFrame){
+	//				sprite.setCurrentChunk(null);
+	//				System.out.println("removed sprite " + sprite);
+	//			}
+	//			sprites.removeAll(toRemoveNextFrame);
+	//			
+	//			for(Sprite sprite : toAddNextFrame){
+	//				sprite.setCurrentChunk(this);
+	//			}
+	//			
+	//			addAllSorted(toAddNextFrame);
+	//			
+	//			toAddNextFrame.clear();
+	//			toRemoveNextFrame.clear();
+	//			
+	//			cacheImage();
+	//		}
+	//	}
+
 	public synchronized void resolveFrame() {
-			cacheImage();
+		cacheImage();
+		this.needResolve = false;
 	}
-	
+
 	private synchronized void addAllSorted(Set<Sprite> spriteList) {
-		for(Sprite sprite : spriteList) {
-		    int index = Collections.binarySearch(sprites, sprite, new Comparator<Sprite>() {
-		        public int compare(Sprite s1, Sprite s2) {
-		            if(s1.getzDepth() > s2.getzDepth()) return 1;
-		            else return -1;
-		        }
-		    });
-		    if (index < 0) {
-		        index = -(index + 1);
-		    }
-		    sprites.add(index, sprite);
+		for (Sprite sprite : spriteList) {
+			int index = Collections.binarySearch(sprites, sprite, new Comparator<Sprite>() {
+				public int compare(Sprite s1, Sprite s2) {
+					if (s1.getzDepth() > s2.getzDepth())
+						return 1;
+					else
+						return -1;
+				}
+			});
+			if (index < 0) {
+				index = -(index + 1);
+			}
+			sprites.add(index, sprite);
 		}
 	}
-	
+
 	private synchronized boolean addSorted(Sprite sprite) {
-		    int index = Collections.binarySearch(sprites, sprite, new Comparator<Sprite>() {
-		        public int compare(Sprite s1, Sprite s2) {
-		            if(s1.getzDepth() > s2.getzDepth()) return 1;
-		            else return -1;
-		        }
-		    });
-		    if (index < 0) {
-		        index = -(index + 1);
-		    }
-		   sprites.add(index, sprite);
-		   return true;
+		int index = Collections.binarySearch(sprites, sprite, new Comparator<Sprite>() {
+			public int compare(Sprite s1, Sprite s2) {
+				if (s1.getzDepth() > s2.getzDepth())
+					return 1;
+				else
+					return -1;
+			}
+		});
+		if (index < 0) {
+			index = -(index + 1);
+		}
+		sprites.add(index, sprite);
+		return true;
 	}
 
 	public synchronized boolean tryAddSprite(Sprite sprite) {
-//		return toAddNextFrame.add(sprite);
-		
+		needResolve = true;
 		return addSorted(sprite);
 	}
 
 	public synchronized boolean tryRemoveSprite(Sprite sprite) {
-//		return toRemoveNextFrame.add(sprite);
+		needResolve = true;
 		return sprites.remove(sprite);
 	}
 
@@ -115,36 +117,37 @@ public class Chunk {
 		Graphics g = buffer.getGraphics();
 		Graphics2D g2d = (Graphics2D) g;
 
-//		g2d.clearRect(0, 0, buffer.getWidth(), buffer.getHeight());
+		//		g2d.clearRect(0, 0, buffer.getWidth(), buffer.getHeight());
 		g2d.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_SPEED);
 		g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_OFF);
 		g2d.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_OFF);
 
 		for (Sprite sprite : sprites) {
-				if (sprite.getTexture().getImage() != null && sprite.isVisible()) {
-					g2d.drawImage(sprite.getTexture().getImage(), (int) (sprite.getLocation().getX() - location.getX()),
-							(int) (sprite.getLocation().getY() - location.getY()), null);
-					
-//					if(!isFullyDrawnSprite(sprite)) {
-//						Game.getInstance().getCurrentWorld().getChunkManager().fixBetweenChunkSprite(sprite);
-//					}
-				}
+			if (sprite.getTexture().getImage() != null && sprite.isVisible()) {
+				g2d.drawImage(sprite.getTexture().getImage(), (int) (sprite.getLocation().getX()
+						- location.getX()), (int) (sprite.getLocation().getY() - location.getY()), null);
+
+				//					if(!isFullyDrawnSprite(sprite)) {
+				//						Game.getInstance().getCurrentWorld().getChunkManager().fixBetweenChunkSprite(sprite);
+				//					}
+			}
 		}
-		
+
 		g2d.dispose();
 		g.dispose();
 	}
-	
+
 	public boolean isFullyDrawnSprite(Sprite sprite) {
 		// Compare the dimensions of the source image with the dimensions of the drawn image
-	    BufferedImage sourceImage = sprite.getTexture().getImage();
-	    int sourceWidth = sourceImage.getWidth();
-	    int sourceHeight = sourceImage.getHeight();
+		BufferedImage sourceImage = sprite.getTexture().getImage();
+		int sourceWidth = sourceImage.getWidth();
+		int sourceHeight = sourceImage.getHeight();
 
-	    int drawnWidth = (int) (sprite.getLocation().getX() - location.getX() + sourceWidth);
-	    int drawnHeight = (int) (sprite.getLocation().getY() - location.getY() + sourceHeight);
+		int drawnWidth = (int) (sprite.getLocation().getX() - location.getX() + sourceWidth);
+		int drawnHeight = (int) (sprite.getLocation().getY() - location.getY() + sourceHeight);
 
-	    return !(drawnWidth <= 0 || drawnWidth > buffer.getWidth() || drawnHeight <= 0 || drawnHeight > buffer.getHeight());
+		return !(drawnWidth <= 0 || drawnWidth > buffer.getWidth() || drawnHeight <= 0
+				|| drawnHeight > buffer.getHeight());
 	}
 
 	public BufferedImage getBuffer() {
@@ -189,9 +192,9 @@ public class Chunk {
 	public Rectangle getRectangle() {
 		return rectangle;
 	}
-	
+
 	public boolean needsResolve() {
-		return !toAddNextFrame.isEmpty() || !toRemoveNextFrame.isEmpty();
+		return needResolve;
 	}
 
 	@Override
@@ -201,19 +204,18 @@ public class Chunk {
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(buffer, location, size);
+		return Objects.hash(location, size);
 	}
 
 	@Override
 	public boolean equals(Object obj) {
-		if (this == obj)
+		if (this == obj) {
 			return true;
-		if (obj == null)
+		}
+		if (!(obj instanceof Chunk)) {
 			return false;
-		if (getClass() != obj.getClass())
-			return false;
+		}
 		Chunk other = (Chunk) obj;
-		return Objects.equals(buffer, other.buffer) && Objects.equals(location, other.location)
-				&& Objects.equals(size, other.size) && Objects.equals(sprites, other.sprites);
+		return Objects.equals(location, other.location) && Objects.equals(size, other.size);
 	}
 }

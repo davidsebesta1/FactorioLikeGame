@@ -2,6 +2,7 @@ package engine.sprites.objects;
 
 import java.util.Objects;
 
+import engine.Game;
 import engine.physics.BoundingBox;
 import engine.physics.CollisionLayers;
 import engine.rendering.textures.Texture;
@@ -28,6 +29,14 @@ public abstract class Item extends PhysicsSprite {
 
 	public void setBeltAssigned(ConveyorBelt beltAssigned) {
 		this.beltAssigned = beltAssigned;
+	}
+	
+	public void clearBeltReference() {
+		if(this.beltAssigned != null) {
+			this.beltAssigned.setItem(null);
+		}
+		
+		this.beltAssigned = null;
 	}
 	
 	@Override

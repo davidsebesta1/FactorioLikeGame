@@ -72,6 +72,7 @@ public class StructureTypeButton implements IMouseActionEventListener {
 	public void mousePrimaryPressed(Vector2 screenCoordinate) {
 		System.out.println("You clicked " + this);
 		owner.showCorrespondingStructButton(this);
+		owner.setCurrentlySelectedType(this);
 
 	}
 

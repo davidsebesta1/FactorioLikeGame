@@ -23,28 +23,26 @@ import javax.swing.Timer;
 
 import engine.Game;
 import engine.input.InputManager;
-import engine.physics.BoundingBox;
-import engine.physics.PhysicsManager;
 import engine.rendering.optimalization.Chunk;
 import engine.rendering.optimalization.ChunkManager;
+import engine.rendering.textures.TextureLibrary;
 import engine.sprites.Background;
-import engine.sprites.PhysicsSprite;
 import engine.sprites.entities.player.Player;
+import engine.sprites.structures.conveyors.ConveyorBeltDirection;
 import math.Vector2;
-
 
 public class GamePanel extends JPanel {
 	private static final long serialVersionUID = -5792040577297371507L;
 
 	private transient BufferedImage buffer;
-	
+
 	private Canvas canvas;
 
 	private transient int fps = 0;
-	
+
 	private transient BufferStrategy bs;
 	private transient Graphics g;
-	
+
 	private BufferedImage ghostImage;
 	private Vector2 ghostImageLocation;
 
@@ -52,9 +50,9 @@ public class GamePanel extends JPanel {
 		this.setSize((int) size.getX(), (int) size.getY());
 		this.setBackground(Color.black);
 		this.setFocusable(true);
-		
+
 		this.canvas = new Canvas();
-		this.canvas.setSize(new Dimension(1920,(int) size.getY()));
+		this.canvas.setSize(new Dimension((int) size.getX(), (int) size.getY()));
 		this.canvas.setLocation(0, 0);
 		this.canvas.addMouseListener(new MouseListener() {
 
@@ -65,22 +63,22 @@ public class GamePanel extends JPanel {
 			@Override
 			public void mousePressed(MouseEvent e) {
 				Vector2 location = new Vector2(e.getLocationOnScreen().getX(), e.getLocationOnScreen().getY());
-				
-				if(SwingUtilities.isLeftMouseButton(e)){
+
+				if (SwingUtilities.isLeftMouseButton(e)) {
 					InputManager.setRunLMBPressed(true);
 					InputManager.setPressedPosition(location);
 				} else if (SwingUtilities.isRightMouseButton(e)) {
 					InputManager.setRunRMBPressed(true);
 					InputManager.setPressedPosition(location);
 				}
-				
+
 			}
 
 			@Override
 			public void mouseReleased(MouseEvent e) {
 				Vector2 location = new Vector2(e.getLocationOnScreen().getX(), e.getLocationOnScreen().getY());
-				
-				if(SwingUtilities.isLeftMouseButton(e)){
+
+				if (SwingUtilities.isLeftMouseButton(e)) {
 					InputManager.setRunLMBReleased(true);
 					InputManager.setReleasedPosition(location);
 				} else if (SwingUtilities.isRightMouseButton(e)) {
@@ -98,7 +96,7 @@ public class GamePanel extends JPanel {
 			public void mouseExited(MouseEvent e) {
 				/* Unused */
 			}
-			
+
 		});
 		this.add(canvas);
 
@@ -115,7 +113,7 @@ public class GamePanel extends JPanel {
 		});
 		fpsTimer.start();
 	}
-	
+
 	public void init() {
 		this.canvas.createBufferStrategy(2);
 		this.bs = canvas.getBufferStrategy();
@@ -126,7 +124,7 @@ public class GamePanel extends JPanel {
 		// Render to off-screen buffer
 		Graphics graphics = buffer.getGraphics();
 		Graphics2D g2d = (Graphics2D) graphics;
-		
+
 		g2d.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_SPEED);
 		g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_OFF);
 		g2d.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_OFF);
@@ -141,8 +139,6 @@ public class GamePanel extends JPanel {
 		g2d.drawImage(background.getTexture().getImage(), (int) (background.getLocation().getX()
 				- player.getCamera().getLocation().getX()), (int) (background.getLocation().getY()
 						- player.getCamera().getLocation().getY()), null);
-		
-		
 
 		// Zoom scale
 		double zoomScale = player.getCamera().getCameraZoomScale();
@@ -167,54 +163,53 @@ public class GamePanel extends JPanel {
 		int numChunksX = manager.getChunkMap().length;
 		int numChunksY = manager.getChunkMap()[0].length;
 		for (int i = 0; i < numChunksX; i++) {
-		    for (int j = 0; j < numChunksY; j++) {
-		        Chunk chunk = manager.getChunkMap()[i][j];
-		        if (manager.getActiveChunks().contains(chunk)) {
-		            int x = (int) (i * chunkSize - loc.getX());
-		            int y = (int) (j * chunkSize - loc.getY());
-		            g2d.drawImage(chunk.getBuffer(), x, y, null);
-		        }
-		    }
+			for (int j = 0; j < numChunksY; j++) {
+				Chunk chunk = manager.getChunkMap()[i][j];
+				if (manager.getActiveChunks().contains(chunk)) {
+					int x = (int) (i * chunkSize - loc.getX());
+					int y = (int) (j * chunkSize - loc.getY());
+					g2d.drawImage(chunk.getBuffer(), x, y, null);
+				}
+			}
 		}
-		
-		
 
 		// START DEBUG STUFF DRAW
-//		for(PhysicsSprite sprite : PhysicsManager.getPhysicsSprites()) {
-//			
-//			BoundingBox rect = sprite.getCollisionBox();
-//			
-//			g2d.setColor(Color.red);
-//			if(rect != null) g2d.drawRect((int) rect.getX(),(int) rect.getY(),(int) rect.getWidth(),(int) rect.getHeight());
-//		}
+		//		for(PhysicsSprite sprite : PhysicsManager.getPhysicsSprites()) {
+		//			
+		//			BoundingBox rect = sprite.getCollisionBox();
+		//			
+		//			g2d.setColor(Color.red);
+		//			if(rect != null) g2d.drawRect((int) rect.getX(),(int) rect.getY(),(int) rect.getWidth(),(int) rect.getHeight());
+		//		}
 
 		// END DEBUG STUFF
 
 		// Draw player sprite
-		g2d.drawImage(player.getTexture().getImage(), (int) (player.getLocation().getX() - player.getCamera().getLocation().getX()), (int) (player.getLocation().getY() - player.getCamera().getLocation().getY()), null);
-		
+		g2d.drawImage(player.getTexture().getImage(), (int) (player.getLocation().getX()
+				- player.getCamera().getLocation().getX()), (int) (player.getLocation().getY()
+						- player.getCamera().getLocation().getY()), null);
+
 		//Draw selected struct ghost
-		if(ghostImage != null) {
+		if (ghostImage != null) {
 			g2d.drawImage(ghostImage, (int) (ghostImageLocation.getX()), (int) (ghostImageLocation.getY() - 4), null);
 		}
 
-		
-		
 		// Release resources
 		g2d.dispose();
 		graphics.dispose();
 	}
-	
+
 	public void updateImage() {
 		render();
-		Game.getInstance().getCurrentWorld().getPlayer().getConstructManager().paint((Graphics2D) buffer.getGraphics());;
+		Game.getInstance().getCurrentWorld().getPlayer().getConstructManager().paint((Graphics2D) buffer.getGraphics());
 		
+
 		g.drawImage(buffer, 0, 0, canvas.getWidth(), canvas.getHeight(), null);
-		
+
 		g.setColor(Color.red);
 		g.drawString("FPS: " + Game.getInstance().getFramesPerSecond(), 10, 15);
-        bs.show();
-        
+		bs.show();
+
 		Toolkit.getDefaultToolkit().sync();
 
 		fps++;
@@ -225,18 +220,18 @@ public class GamePanel extends JPanel {
 		super.paintComponent(g);
 
 		// G2D and rendering hits
-//		Graphics2D g2d = (Graphics2D) g;
-//
-//		g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_OFF);
-//
-//		render();
-//
-//		g2d.drawImage(buffer, 0, 0, null);
-//		g2d.setColor(Color.red);
-//		g2d.drawString("FPS: " + Game.getInstance().getFramesPerSecond(), 10, 15);
-		
+		//		Graphics2D g2d = (Graphics2D) g;
+		//
+		//		g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_OFF);
+		//
+		//		render();
+		//
+		//		g2d.drawImage(buffer, 0, 0, null);
+		//		g2d.setColor(Color.red);
+		//		g2d.drawString("FPS: " + Game.getInstance().getFramesPerSecond(), 10, 15);
+
 		//Draw inventory
-//		Game.getInstance().getCurrentWorld().getPlayer().getConstructManager().paint(g2d);
+		//		Game.getInstance().getCurrentWorld().getPlayer().getConstructManager().paint(g2d);
 
 		//		 Debug render collision box
 		//			for(PhysicsSprite sprite2 : PhysicsManager.getPhysicsSprites()) {
@@ -249,11 +244,11 @@ public class GamePanel extends JPanel {
 		//			}
 
 		// Cleaning up stuff
-//		g2d.dispose();
-//		g.dispose();
-//		Toolkit.getDefaultToolkit().sync();
-//
-//		fps++;
+		//		g2d.dispose();
+		//		g.dispose();
+		//		Toolkit.getDefaultToolkit().sync();
+		//
+		//		fps++;
 
 	}
 
@@ -264,5 +259,31 @@ public class GamePanel extends JPanel {
 	public void setGhostBuffer(BufferedImage ghostImage, Vector2 location) {
 		this.ghostImage = ghostImage;
 		this.ghostImageLocation = location;
+	}
+
+	public void setGhostBuffer(BufferedImage ghostImage, Vector2 location, ConveyorBeltDirection dir) {
+		this.ghostImage = ghostImage;
+		this.ghostImageLocation = location;
+		Graphics2D bufferGraphics = (Graphics2D) ghostImage.getGraphics();
+
+		switch (dir) {
+		case DOWN:
+			bufferGraphics.drawImage(TextureLibrary.retrieveTexture("arrowIcon3").getImage(), 0, 0, null);
+			break;
+		case LEFT:
+			bufferGraphics.drawImage(TextureLibrary.retrieveTexture("arrowIcon1").getImage(), 0, 0, null);
+			break;
+		case RIGHT:
+			bufferGraphics.drawImage(TextureLibrary.retrieveTexture("arrowIcon2").getImage(), 0, 0, null);
+			break;
+		case UP:
+			bufferGraphics.drawImage(TextureLibrary.retrieveTexture("arrowIcon0").getImage(), 0, 0, null);
+			break;
+		default:
+			bufferGraphics.drawImage(TextureLibrary.retrieveTexture("arrowIcon0").getImage(), 0, 0, null);
+			break;
+		}
+		
+		bufferGraphics.dispose();
 	}
 }
