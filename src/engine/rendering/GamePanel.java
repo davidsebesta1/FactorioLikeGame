@@ -41,7 +41,7 @@ public class GamePanel extends JPanel {
 	private transient int fps = 0;
 
 	private transient BufferStrategy bs;
-	private transient Graphics g;
+	private transient Graphics2D g;
 
 	private BufferedImage ghostImage;
 	private Vector2 ghostImageLocation;
@@ -117,19 +117,17 @@ public class GamePanel extends JPanel {
 	public void init() {
 		this.canvas.createBufferStrategy(2);
 		this.bs = canvas.getBufferStrategy();
-		this.g = bs.getDrawGraphics();
+		this.g = (Graphics2D) bs.getDrawGraphics();
+		
+		g.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_SPEED);
+		g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_OFF);
+		g.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_OFF);
 	}
 
 	private void render() {
 		// Render to off-screen buffer
 		Graphics graphics = buffer.getGraphics();
 		Graphics2D g2d = (Graphics2D) graphics;
-
-		g2d.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_SPEED);
-		g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_OFF);
-		g2d.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_OFF);
-
-		//		g2d.clearRect(0, 0, getWidth(), getHeight());
 
 		// Render graphics here
 		Background background = Game.getInstance().getCurrentWorld().getBackground();
@@ -145,17 +143,16 @@ public class GamePanel extends JPanel {
 
 		// Get the width and height of the panel
 		int width = (int) Game.getInstance().getWindow().getSize().getX();
-
 		int height = (int) Game.getInstance().getWindow().getSize().getY();
 
 		// Translate the graphics context to the center of the screen
-		g2d.translate(width / 2, height / 2);
+		g2d.translate(width * 0.5, height * 0.5);
 
 		// Scale the graphics context
 		g2d.scale(zoomScale, zoomScale);
 
 		// Translate the graphics context back
-		g2d.translate(-width / 2, -height / 2);
+		g2d.translate(-width * 0.5, -height * 0.5);
 
 		// Render active chunks
 		int chunkSize = (int) manager.getChunkSize();
@@ -202,7 +199,6 @@ public class GamePanel extends JPanel {
 	public void updateImage() {
 		render();
 		Game.getInstance().getCurrentWorld().getPlayer().getConstructManager().paint((Graphics2D) buffer.getGraphics());
-		
 
 		g.drawImage(buffer, 0, 0, canvas.getWidth(), canvas.getHeight(), null);
 
@@ -268,19 +264,16 @@ public class GamePanel extends JPanel {
 
 		switch (dir) {
 		case DOWN:
-			bufferGraphics.drawImage(TextureLibrary.retrieveTexture("arrowIcon3").getImage(), 0, 0, null);
-			break;
-		case LEFT:
 			bufferGraphics.drawImage(TextureLibrary.retrieveTexture("arrowIcon1").getImage(), 0, 0, null);
 			break;
-		case RIGHT:
+		case LEFT:
 			bufferGraphics.drawImage(TextureLibrary.retrieveTexture("arrowIcon2").getImage(), 0, 0, null);
 			break;
-		case UP:
+		case RIGHT:
 			bufferGraphics.drawImage(TextureLibrary.retrieveTexture("arrowIcon0").getImage(), 0, 0, null);
 			break;
-		default:
-			bufferGraphics.drawImage(TextureLibrary.retrieveTexture("arrowIcon0").getImage(), 0, 0, null);
+		case UP:
+			bufferGraphics.drawImage(TextureLibrary.retrieveTexture("arrowIcon3").getImage(), 0, 0, null);
 			break;
 		}
 		

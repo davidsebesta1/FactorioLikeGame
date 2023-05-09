@@ -11,7 +11,7 @@ public class CopperOre extends OreSprite {
 		super(texture, location, zDepth, oreAmount, miningHardness);
 	}
 
-	public CopperOre instantiateCopperOre(Texture texture, Vector2 location, int oreAmount) {
+	public static CopperOre instantiateCopperOre(Texture texture, Vector2 location, int oreAmount) {
 		try {
 			return new CopperOre(texture, location, 0.3d, oreAmount, 0.9d);
 		} catch (Exception e) {

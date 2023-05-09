@@ -1,5 +1,6 @@
 package engine.sprites.structures.drills;
 
+import java.util.HashMap;
 import java.util.Objects;
 
 import engine.Game;
@@ -30,6 +31,10 @@ public class BasicDrill extends StructureSprite {
 		super(texture, location, zDepth);
 		this.collisionLayer = CollisionLayers.STRUCTURE;
 		this.elapsedTime = 0;
+		
+		this.resourceCost = new HashMap<>();
+		this.displayName = "Basic Drill";
+		this.resourceCost.put("titaniumItem", 0);
 	}
 
 	public static double getDefaultMiningTime() {
@@ -125,7 +130,7 @@ public class BasicDrill extends StructureSprite {
 
 	@Override
 	public int hashCode() {
-		final int prime = 31;
+		final int prime = 37;
 		int result = super.hashCode();
 		result = prime * result + Objects.hash(elapsedTime, minedItem);
 		return result;
@@ -140,8 +145,7 @@ public class BasicDrill extends StructureSprite {
 		if (getClass() != obj.getClass())
 			return false;
 		BasicDrill other = (BasicDrill) obj;
-		return Double.doubleToLongBits(elapsedTime) == Double.doubleToLongBits(other.elapsedTime)
-				&& Objects.equals(minedItem, other.minedItem);
+		return Objects.equals(minedItem, other.minedItem);
 	}
 
 	@Override

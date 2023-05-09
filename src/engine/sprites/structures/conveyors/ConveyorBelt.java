@@ -22,7 +22,6 @@ public class ConveyorBelt extends StructureSprite {
 	private ConveyorBelt next;
 
 	private boolean itemIsMoving;
-	private boolean isOccupied;
 
 	private static final double TRANSPORT_SPEED = 20f;
 
@@ -31,7 +30,6 @@ public class ConveyorBelt extends StructureSprite {
 		this.direction = dir;
 		this.collisionBox = null;
 		this.itemIsMoving = false;
-		this.isOccupied = false;
 
 		PhysicsManager.removePhysicsSprite(this);
 
@@ -112,7 +110,7 @@ public class ConveyorBelt extends StructureSprite {
 		ConveyorBelt other = (ConveyorBelt) obj;
 		return direction == other.direction && Objects.equals(item, other.item);
 	}
-
+	
 	@Override
 	public void update() {
 		if (item != null && next != null) {

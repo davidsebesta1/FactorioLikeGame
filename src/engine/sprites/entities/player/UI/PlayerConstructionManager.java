@@ -21,6 +21,7 @@ import engine.sprites.structures.command.CoreModule;
 import engine.sprites.structures.conveyors.ConveyorBelt;
 import engine.sprites.structures.conveyors.ConveyorBeltDirection;
 import engine.sprites.structures.conveyors.Splitter;
+import engine.sprites.structures.drills.BasicDrill;
 import engine.sprites.structures.fabricators.MechanicalPlatePress;
 import math.MathUtilities;
 import math.Vector2;
@@ -40,6 +41,8 @@ public class PlayerConstructionManager implements IMouseMotionEventListener{
 
 	private StructureButton currentlySelected = null;
 	private StructureTypeButton currentlySelectedType = null;
+	
+	private Texture background;
 
 	public PlayerConstructionManager(Vector2 location) {
 		super();
@@ -48,6 +51,8 @@ public class PlayerConstructionManager implements IMouseMotionEventListener{
 		this.rightRectangleSlotLocations = new ArrayList<>();
 		this.currentlyShowStructButtons = new HashSet<>();
 		this.structureIdentifierTemplate = new HashMap<>();
+		
+		this.background = TextureLibrary.retrieveTexture("inventoryBackground");
 		
 		InputManager.addMouseMotionListener(this);
 
@@ -62,7 +67,7 @@ public class PlayerConstructionManager implements IMouseMotionEventListener{
 
 	private void registerStructures() {
 		registerStructure("CommandStructures", "coreModule", TextureLibrary.retrieveTexture("coreModuleIcon"), CoreModule.instantiateCoreModule(TextureLibrary.retrieveTexture("coreModule"), Vector2.templateSpawn));
-		registerStructure("MiningStructures", "coreModule", TextureLibrary.retrieveTexture("coreModuleIcon"), CoreModule.instantiateCoreModule(TextureLibrary.retrieveTexture("coreModule"), Vector2.templateSpawn));
+		registerStructure("MiningStructures", "basicDrill", TextureLibrary.retrieveTexture("basicDrillIcon"), BasicDrill.instantiateBasicDrill(TextureLibrary.retrieveTexture("basicDrill"), Vector2.templateSpawn));
 		registerStructure("TransportStructures", "conveyorBelt", TextureLibrary.retrieveTexture("beltStr0"), ConveyorBelt.instantiateConveyorBelt(TextureLibrary.retrieveTexture("beltStr0"), Vector2.templateSpawn, ConveyorBeltDirection.RIGHT));
 		registerStructure("TransportStructures", "splitter", TextureLibrary.retrieveTexture("splitter"), Splitter.instantiateSplitter(TextureLibrary.retrieveTexture("splitter"), Vector2.templateSpawn));
 		registerStructure("FactoryStructures", "mechanicalPlatePress", TextureLibrary.retrieveTexture("mechanicalPlatePress"), MechanicalPlatePress.instantiateManualPlatePress(TextureLibrary.retrieveTexture("mechanicalPlatePress"), Vector2.templateSpawn));
@@ -138,7 +143,7 @@ public class PlayerConstructionManager implements IMouseMotionEventListener{
 
 		int pointX2 = (int) loc2.getX() + 80;
 		int pointY2 = bottomRectY2 + 7;
-		int pointSpacing2 = 56;
+		int pointSpacing2 = 40;
 
 		for (int i = 0; i < 3; i++) {
 			for (int j = 0; j < 2; j++) {
@@ -155,7 +160,7 @@ public class PlayerConstructionManager implements IMouseMotionEventListener{
 		Vector2 loc = new Vector2(0, Game.getInstance().getResolution().getY() - 265);
 
 		//Inventory background
-		g2d.drawImage(TextureLibrary.retrieveTexture("inventoryBackground").getImage(), 0, (int) loc.getY(), null);
+		g2d.drawImage(background.getImage(), 0, (int) loc.getY(), null);
 
 		//Type buttons and their structures
 		for (Map.Entry<StructureTypeButton, HashSet<StructureButton>> entry : categoryAndAvailableStructures.entrySet()) {

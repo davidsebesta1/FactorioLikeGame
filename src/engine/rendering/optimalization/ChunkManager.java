@@ -4,11 +4,11 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.IntStream;
 
 import engine.sprites.Background;
 import engine.sprites.Sprite;
 import engine.sprites.entities.player.Player;
-import engine.sprites.objects.Item;
 import math.Vector2;
 
 public class ChunkManager {
@@ -69,24 +69,40 @@ public class ChunkManager {
 	}
 
 
-	public void updateSpriteChunk(Sprite sprite) {
-		if (sprite == null || sprite instanceof Background || sprite instanceof Player) return;
-		for (int i = 0; i < chunkMap.length; i++) {
-			for (int j = 0; j < chunkMap[i].length; j++) {
-				if (chunkMap[i][j].tryRemoveSprite(sprite)) {
-					assignChunk(sprite);
-					addChunkToUpdateQueue(chunkMap[i][j]);
-				}
-			}
-		}
-		
-//		
-//		if(sprite.getCurrentChunk() != null) {
-//			sprite.getCurrentChunk().tryRemoveSprite(sprite);
-//			addChunkToUpdateQueue(sprite.getCurrentChunk());
+//	public void updateSpriteChunk(Sprite sprite) {
+//		if (sprite == null || sprite instanceof Background || sprite instanceof Player) return;
+//		for (int i = 0; i < chunkMap.length; i++) {
+//			for (int j = 0; j < chunkMap[i].length; j++) {
+//				if (chunkMap[i][j].tryRemoveSprite(sprite)) {
+//					assignChunk(sprite);
+//					addChunkToUpdateQueue(chunkMap[i][j]);
+//				}
+//			}
 //		}
-//		assignChunk(sprite);
-
+//	}
+	
+	public void updateSpriteChunk(Sprite sprite) {
+	    if (sprite == null || sprite instanceof Background || sprite instanceof Player) return;
+	    
+	    // Calculate the range of chunks that the sprite might be present in
+	    int chunkSize = (int) getChunkSize();
+	    int startX = Math.max(0, (int) ((sprite.getLocation().getX() - sprite.getSize().getX()) / chunkSize));
+	    int startY = Math.max(0, (int) ((sprite.getLocation().getY() - sprite.getSize().getY()) / chunkSize));
+	    int endX = Math.min(chunkMap.length - 1, (int) ((sprite.getLocation().getX() + sprite.getSize().getX()) / chunkSize));
+	    int endY = Math.min(chunkMap[0].length - 1, (int) ((sprite.getLocation().getY() + sprite.getSize().getY()) / chunkSize));
+	    
+	    // Update the chunks in parallel
+	    IntStream.rangeClosed(startX, endX)
+	        .parallel()
+	        .forEach(i -> IntStream.rangeClosed(startY, endY)
+	            .parallel()
+	            .forEach(j -> {
+	                if (chunkMap[i][j].tryRemoveSprite(sprite)) {
+	                    assignChunk(sprite);
+	                    addChunkToUpdateQueue(chunkMap[i][j]);
+	                }
+	            })
+	        );
 	}
 
 	public void addSpriteToChunks(Sprite sprite) {
@@ -115,9 +131,9 @@ public class ChunkManager {
 			sprite.setCurrentChunk(c);
 			addChunkToUpdateQueue(c);
 			
-			if(sprite instanceof Item) {
-				fixBetweenChunkSprite(sprite);
-			}
+//			if(sprite instanceof Item) {
+//				fixBetweenChunkSprite(sprite);
+//			}
 
 		}
 	}

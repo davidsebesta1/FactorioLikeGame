@@ -41,6 +41,9 @@ public class Chunk {
 
 		GraphicsConfiguration gfxConfig = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice().getDefaultConfiguration();
 		buffer = gfxConfig.createCompatibleImage((int) size.getX(), (int) size.getY(), Transparency.BITMASK);
+		
+		Graphics g = buffer.getGraphics();
+		Graphics2D g2d = (Graphics2D) g;
 	}
 
 	//	public synchronized void resolveFrame() {
@@ -72,6 +75,26 @@ public class Chunk {
 
 	private synchronized void addAllSorted(Set<Sprite> spriteList) {
 		for (Sprite sprite : spriteList) {
+			if(sprites.contains(sprite)) return;
+			
+			int index = Collections.binarySearch(sprites, sprite, new Comparator<Sprite>() {
+				public int compare(Sprite s1, Sprite s2) {
+					if (s1.getzDepth() > s2.getzDepth())
+						return 1;
+					else
+						return -1;
+				}
+			});
+			if (index < 0) {
+				index = -(index + 1);
+			}
+			
+			sprites.add(index, sprite);
+		}
+	}
+
+	private synchronized boolean addSorted(Sprite sprite) {
+		if(!sprites.contains(sprite)) {
 			int index = Collections.binarySearch(sprites, sprite, new Comparator<Sprite>() {
 				public int compare(Sprite s1, Sprite s2) {
 					if (s1.getzDepth() > s2.getzDepth())
@@ -84,23 +107,9 @@ public class Chunk {
 				index = -(index + 1);
 			}
 			sprites.add(index, sprite);
+			return true;
 		}
-	}
-
-	private synchronized boolean addSorted(Sprite sprite) {
-		int index = Collections.binarySearch(sprites, sprite, new Comparator<Sprite>() {
-			public int compare(Sprite s1, Sprite s2) {
-				if (s1.getzDepth() > s2.getzDepth())
-					return 1;
-				else
-					return -1;
-			}
-		});
-		if (index < 0) {
-			index = -(index + 1);
-		}
-		sprites.add(index, sprite);
-		return true;
+		return false;
 	}
 
 	public synchronized boolean tryAddSprite(Sprite sprite) {
@@ -116,20 +125,14 @@ public class Chunk {
 	public void cacheImage() {
 		Graphics g = buffer.getGraphics();
 		Graphics2D g2d = (Graphics2D) g;
-
-		//		g2d.clearRect(0, 0, buffer.getWidth(), buffer.getHeight());
+		
 		g2d.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_SPEED);
 		g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_OFF);
 		g2d.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_OFF);
 
 		for (Sprite sprite : sprites) {
 			if (sprite.getTexture().getImage() != null && sprite.isVisible()) {
-				g2d.drawImage(sprite.getTexture().getImage(), (int) (sprite.getLocation().getX()
-						- location.getX()), (int) (sprite.getLocation().getY() - location.getY()), null);
-
-				//					if(!isFullyDrawnSprite(sprite)) {
-				//						Game.getInstance().getCurrentWorld().getChunkManager().fixBetweenChunkSprite(sprite);
-				//					}
+				g2d.drawImage(sprite.getTexture().getImage(), (int) (sprite.getLocation().getX()- location.getX()), (int) (sprite.getLocation().getY() - location.getY()), null);
 			}
 		}
 

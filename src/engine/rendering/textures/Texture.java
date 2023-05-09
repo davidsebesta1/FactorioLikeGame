@@ -51,6 +51,18 @@ public class Texture {
 		g2d.drawImage(imageTemp, 0, 0, null);
 		g2d.dispose();
 	}
+	
+	private Texture(BufferedImage imageTemp, TextureType type) {
+		// Create a new image with the desired type
+		GraphicsConfiguration gfxConfig = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice().getDefaultConfiguration();
+		this.image = gfxConfig.createCompatibleImage(imageTemp.getWidth(), imageTemp.getHeight(), type.getId());
+		this.image.setAccelerationPriority(1);
+
+		// Draw the original image onto the new image
+		Graphics2D g2d = image.createGraphics();
+		g2d.drawImage(imageTemp, 0, 0, null);
+		g2d.dispose();
+	}
 
 	public static Texture createTexture(File file) {
 		if (file.exists()) {
@@ -143,7 +155,7 @@ public class Texture {
 	    g2d.rotate(piRadians, height / 2d, width / 2d);
 	    g2d.drawRenderedImage(src, null);
 
-	    return new Texture(rotatedImage);
+	    return new Texture(rotatedImage, source.type);
 	}
 
 	@Override

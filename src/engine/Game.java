@@ -66,7 +66,7 @@ public class Game implements Runnable {
 		// AND SECOND
 		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 		resolution = new Vector2((int) screenSize.getWidth(), (int) screenSize.getHeight());
-		double size = 1024d;
+		double size = 4096d;
 		currentWorld = new GameWorld(new Vector2(size, size));
 
 		// WINDOW AS LAST
