@@ -17,7 +17,8 @@ import engine.sprites.ores.OreMap;
 import engine.sprites.structures.StructureMap;
 import engine.sprites.tiles.TileMap;
 import engine.time.DeltaTime;
-import engine.world.GameWorld;
+import engine.world.World;
+import engine.world.mainmenu.MainMenuWorld;
 import main.Log;
 import math.Vector2;
 import notmycode.ScreenManager;
@@ -27,7 +28,7 @@ public class Game implements Runnable {
 	private static Game instance;
 
 	private ScreenManager screen;
-	private GameWorld currentWorld;
+	private World currentWorld;
 	private GameWindow window;
 	private Vector2 resolution;
 
@@ -67,7 +68,7 @@ public class Game implements Runnable {
 		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 		resolution = new Vector2((int) screenSize.getWidth(), (int) screenSize.getHeight());
 		double size = 4096d;
-		currentWorld = new GameWorld(new Vector2(size, size));
+		currentWorld = new MainMenuWorld(new Vector2(size, size));
 
 		// WINDOW AS LAST
 		screen = new ScreenManager();
@@ -161,11 +162,11 @@ public class Game implements Runnable {
 		return resolution;
 	}
 
-	public GameWorld getCurrentWorld() {
+	public World getCurrentWorld() {
 		return currentWorld;
 	}
 
-	public void setCurrentWorld(GameWorld currentWorld) {
+	public void setCurrentWorld(World currentWorld) {
 		this.currentWorld = currentWorld;
 	}
 

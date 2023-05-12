@@ -7,7 +7,6 @@ import java.util.Objects;
 import engine.input.IMouseActionEventListener;
 import engine.input.InputManager;
 import engine.rendering.textures.Texture;
-import engine.sprites.objects.Item;
 import engine.sprites.structures.StructureSprite;
 import math.Vector2;
 

@@ -17,6 +17,7 @@ import engine.sprites.PhysicsSprite;
 import engine.sprites.SpriteManager;
 import engine.sprites.entities.player.UI.PlayerConstructionManager;
 import engine.time.DeltaTime;
+import engine.world.mainmenu.MainMenuButtonManager;
 import math.Vector2;
 
 public class Player extends PhysicsSprite implements IMouseActionEventListener {
@@ -27,7 +28,11 @@ public class Player extends PhysicsSprite implements IMouseActionEventListener {
 	private Inventory inventory;
 
 	private PlayerConstructionManager constructManager;
+	private MainMenuButtonManager menuManager;
 	private boolean buildingModeEnabled;
+	
+	private boolean showBuildMenu;
+	private boolean showMainMenu;
 
 	private Player(Texture texture, Vector2 location, Vector2 velocity, float zDepth) {
 		super(texture, location, zDepth);
@@ -36,12 +41,16 @@ public class Player extends PhysicsSprite implements IMouseActionEventListener {
 		this.camera = new Camera(new Vector2(0, 0));
 		this.inventory = new Inventory();
 		this.constructManager = new PlayerConstructionManager(new Vector2(0,0));
+		this.menuManager = new MainMenuButtonManager();
 		
 		this.setVelocity(velocity);
 		this.setCollisionBox(new BoundingBox(this, false, location, this.getSize()));
 
 		this.buildingModeEnabled = false;
 		this.inputEnabled = true;
+		
+		this.showBuildMenu = true;
+		this.showMainMenu = true;
 		
 		InputManager.addMouseActionListener(this);
 		SpriteManager.addUpdateSprite(this);
@@ -101,6 +110,22 @@ public class Player extends PhysicsSprite implements IMouseActionEventListener {
 
 	public boolean isInputEnabled() {
 		return inputEnabled;
+	}
+
+	public boolean canShowBuildMenu() {
+		return showBuildMenu;
+	}
+
+	public boolean canShowMainMenu() {
+		return showMainMenu;
+	}
+
+	public void setShowMainMenu(boolean showMainMenu) {
+		this.showMainMenu = showMainMenu;
+	}
+
+	public void setShowBuildMenu(boolean showBuildMenu) {
+		this.showBuildMenu = showBuildMenu;
 	}
 
 	@Override
@@ -187,6 +212,10 @@ public class Player extends PhysicsSprite implements IMouseActionEventListener {
 
 	public PlayerConstructionManager getConstructManager() {
 		return constructManager;
+	}
+
+	public MainMenuButtonManager getMenuManager() {
+		return menuManager;
 	}
 
 	@Override

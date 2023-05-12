@@ -20,6 +20,7 @@ import engine.sprites.Sprite;
 import engine.sprites.entities.player.UI.StructureButton;
 import engine.sprites.entities.player.UI.StructureTypeButton;
 import engine.sprites.tiles.TileSprite;
+import engine.world.mainmenu.Button;
 import main.Log;
 import math.MathUtilities;
 import math.Vector2;
@@ -29,21 +30,21 @@ public class InputManager {
 	private static ArrayList<IMouseWheelEventListener> mouseWheelListeners;
 	private static ArrayList<IMouseActionEventListener> mouseActionListeners;
 	private static ArrayList<IMouseMotionEventListener> mouseMotionListeners;
-	
+
 	private static int wheelChange = 0;
-	
+
 	private static boolean runLMBPressed = false;
 	private static boolean runRMBPressed = false;
 	private static boolean runMMBPressed = false;
-	private static Vector2 pressedPosition = new Vector2(0,0);
-	
+	private static Vector2 pressedPosition = new Vector2(0, 0);
+
 	private static boolean runLMBReleased = false;
 	private static boolean runRMBReleased = false;
 	private static boolean runMMBReleased = false;
-	private static Vector2 releasedPosition = new Vector2(0,0);
-	
+	private static Vector2 releasedPosition = new Vector2(0, 0);
+
 	private static Vector2 motionVector = Vector2.zero;
-	
+
 	//TODO run click events once per frame
 
 	private static boolean inputPaused;
@@ -80,9 +81,9 @@ public class InputManager {
 						case KeyEvent.VK_R:
 							Game.getInstance().getPlayer().getConstructManager().tryRotateCurrentlySelected();
 							break;
-//						case KeyEvent.VK_ESCAPE:
-//							System.exit(0);
-//							break;
+						//						case KeyEvent.VK_ESCAPE:
+						//							System.exit(0);
+						//							break;
 						}
 					}
 				} else if (e.getID() == KeyEvent.KEY_RELEASED) {
@@ -161,44 +162,44 @@ public class InputManager {
 		new InputManager();
 		Log.info("Initialized input manager");
 	}
-	
+
 	public static void runAllEvents() {
-		if(wheelChange != 0) {
+		if (wheelChange != 0) {
 			fireMouseWheelMoved(wheelChange);
 			wheelChange = 0;
 		}
-		
-		if(runLMBPressed) {
+
+		if (runLMBPressed) {
 			fireMousePrimaryPressed(pressedPosition);
 			runLMBPressed = false;
 		}
-		
-		if(runLMBReleased) {
+
+		if (runLMBReleased) {
 			fireMousePrimaryReleased(releasedPosition);
 			runLMBReleased = false;
 		}
-		
-		if(runRMBPressed) {
+
+		if (runRMBPressed) {
 			fireMouseSecondaryPressed(pressedPosition);
 			runRMBPressed = false;
 		}
-		
-		if(runRMBReleased) {
+
+		if (runRMBReleased) {
 			fireMouseSecondaryReleased(releasedPosition);
 			runRMBReleased = false;
 		}
-		
-		if(runMMBPressed) {
+
+		if (runMMBPressed) {
 			//todo, useless anyways
 			runMMBPressed = false;
 		}
-		
-		if(runMMBReleased) {
+
+		if (runMMBReleased) {
 			//todo, uselsss anyways
 			runMMBReleased = false;
 		}
-		
-		if(motionVector != Vector2.zero) {
+
+		if (motionVector != Vector2.zero) {
 			fireMouseMotion(motionVector);
 			motionVector = Vector2.zero;
 		}
@@ -226,23 +227,25 @@ public class InputManager {
 	}
 
 	private static void fireMousePrimaryPressed(Vector2 location) {
-		if(!checkForInventoryUIClick(location)) {
-			checkForTileClick(MathUtilities.screenToWorldCoordinates(location));
+		if (!checkForMainMenuUIClick(location)) {
+			if (!checkForInventoryUIClick(location)) {
+				checkForTileClick(MathUtilities.screenToWorldCoordinates(location));
+			}
 		}
-		
+
 	}
 
 	private static void fireMousePrimaryReleased(Vector2 location) {
-		
+
 	}
-	
+
 	private static void fireMouseSecondaryPressed(Vector2 location) {
 		Game.getInstance().getCurrentWorld().getPlayer().getConstructManager().setCurrentlySelected(null);
-		
+
 	}
 
 	private static void fireMouseSecondaryReleased(Vector2 location) {
-		
+
 	}
 
 	public static void fireMouseMotion(Vector2 location) {
@@ -257,41 +260,54 @@ public class InputManager {
 		for (int i = 0; i < tileSprites.length; i++) {
 			for (int j = 0; j < tileSprites[i].length; j++) {
 				if (isWithinBounds(worldCoordinates, tileSprites[i][j])) {
-//					System.out.println("Coords: " + worldCoordinates + " sprite: " + tileSprites[i][j]);
 					Log.info("Coords: " + worldCoordinates + " sprite: " + tileSprites[i][j]);
 					tileSprites[i][j].onMouseClicked();
 					return true;
 				}
 			}
 		}
-		
+
 		return false;
 	}
-	
+
 	private static boolean checkForInventoryUIClick(Vector2 clickCoords) {
 		HashMap<StructureTypeButton, HashSet<StructureButton>> all = Game.getInstance().getCurrentWorld().getPlayer().getConstructManager().getCategoryAndAvailableStructures();
-		
+
 		for (Map.Entry<StructureTypeButton, HashSet<StructureButton>> entry : all.entrySet()) {
-		    StructureTypeButton button = entry.getKey();
-		    HashSet<StructureButton> availableStructures = entry.getValue();
-		    if(isWithinBounds(clickCoords, button) && button.isVisible()) {
-		    	button.mousePrimaryPressed(clickCoords);
-//		    	System.out.println(button);
-		    	Log.info("Clicked on typebutton " + button);
-		    	return true;
-		    }
-		    for (StructureButton structure : availableStructures) {
-		    	if(isWithinBounds(clickCoords, structure) && structure.isVisible()) {
-		    		Game.getInstance().getPlayer().setBuildingModeEnabled(true);
-			    	structure.mousePrimaryPressed(clickCoords);
-//			    	System.out.println(structure);
-			    	Log.info("Clicked on structurebutton " + structure);
-			    	
-			    	return true;
-			    }
-		    }
+			StructureTypeButton button = entry.getKey();
+			HashSet<StructureButton> availableStructures = entry.getValue();
+			if (isWithinBounds(clickCoords, button) && button.isVisible()) {
+				button.mousePrimaryPressed(clickCoords);
+				Log.info("Clicked on typebutton " + button);
+				return true;
+			}
+			for (StructureButton structure : availableStructures) {
+				if (isWithinBounds(clickCoords, structure) && structure.isVisible()) {
+					Game.getInstance().getPlayer().setBuildingModeEnabled(true);
+					structure.mousePrimaryPressed(clickCoords);
+					Log.info("Clicked on structurebutton " + structure);
+
+					return true;
+				}
+			}
 		}
-		
+
+		return false;
+	}
+
+	private static boolean checkForMainMenuUIClick(Vector2 coordinates) {
+		ArrayList<Button> buttons = Game.getInstance().getPlayer().getMenuManager().getButtons();
+
+		for (Button button : buttons) {
+			if (isWithinBounds(coordinates, button) && button.isVisible()) {
+				button.mousePrimaryPressed(coordinates);
+
+				System.out.println(button);
+				Log.info("Clicked on menu button " + button);
+				return true;
+			}
+		}
+
 		return false;
 	}
 
@@ -305,7 +321,7 @@ public class InputManager {
 
 		return false;
 	}
-	
+
 	private static boolean isWithinBounds(Vector2 worldCoordinates, StructureTypeButton sprite) {
 		if (sprite != null) {
 			return worldCoordinates.getX() >= sprite.getLocation().getX()
@@ -316,8 +332,19 @@ public class InputManager {
 
 		return false;
 	}
-	
+
 	private static boolean isWithinBounds(Vector2 worldCoordinates, StructureButton sprite) {
+		if (sprite != null) {
+			return worldCoordinates.getX() >= sprite.getLocation().getX()
+					&& worldCoordinates.getX() < sprite.getLocation().getX() + sprite.getSize().getX()
+					&& worldCoordinates.getY() >= sprite.getLocation().getY()
+					&& worldCoordinates.getY() < sprite.getLocation().getY() + sprite.getSize().getY();
+		}
+
+		return false;
+	}
+
+	private static boolean isWithinBounds(Vector2 worldCoordinates, Button sprite) {
 		if (sprite != null) {
 			return worldCoordinates.getX() >= sprite.getLocation().getX()
 					&& worldCoordinates.getX() < sprite.getLocation().getX() + sprite.getSize().getX()
@@ -379,7 +406,5 @@ public class InputManager {
 	public static void setReleasedPosition(Vector2 releasedPosition) {
 		InputManager.releasedPosition = releasedPosition;
 	}
-	
-	
 
 }

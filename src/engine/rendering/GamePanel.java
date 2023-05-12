@@ -198,7 +198,16 @@ public class GamePanel extends JPanel {
 
 	public void updateImage() {
 		render();
-		Game.getInstance().getCurrentWorld().getPlayer().getConstructManager().paint((Graphics2D) buffer.getGraphics());
+		Player player = Game.getInstance().getPlayer();
+		if(player.canShowBuildMenu()) {
+			player.getConstructManager().paint((Graphics2D) buffer.getGraphics());
+		}
+		
+		if(player.canShowMainMenu()) {
+			player.getMenuManager().draw((Graphics2D) buffer.getGraphics());
+		}
+		
+		
 
 		g.drawImage(buffer, 0, 0, canvas.getWidth(), canvas.getHeight(), null);
 
@@ -214,38 +223,6 @@ public class GamePanel extends JPanel {
 	@Override
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);
-
-		// G2D and rendering hits
-		//		Graphics2D g2d = (Graphics2D) g;
-		//
-		//		g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_OFF);
-		//
-		//		render();
-		//
-		//		g2d.drawImage(buffer, 0, 0, null);
-		//		g2d.setColor(Color.red);
-		//		g2d.drawString("FPS: " + Game.getInstance().getFramesPerSecond(), 10, 15);
-
-		//Draw inventory
-		//		Game.getInstance().getCurrentWorld().getPlayer().getConstructManager().paint(g2d);
-
-		//		 Debug render collision box
-		//			for(PhysicsSprite sprite2 : PhysicsManager.getPhysicsSprites()) {
-		//				if(sprite2.getCollisionBox() != null) {
-		//					BoundingBox box = sprite2.getCollisionBox();
-		//					g2d.setColor(Color.red);
-		//					Vector2 location = MathUtilities.worldToScreenCoordinates(new Vector2((int) box.getX(),(int) box.getY()));
-		//					g2d.drawRect((int) location.getX(),(int) location.getY(),(int) box.getSize().getWidth(),(int) box.getSize().getHeight());
-		//				}
-		//			}
-
-		// Cleaning up stuff
-		//		g2d.dispose();
-		//		g.dispose();
-		//		Toolkit.getDefaultToolkit().sync();
-		//
-		//		fps++;
-
 	}
 
 	public BufferedImage getBuffer() {
