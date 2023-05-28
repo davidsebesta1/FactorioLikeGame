@@ -9,12 +9,16 @@ import java.util.Queue;
 import engine.physics.CollisionLayers;
 import engine.rendering.textures.Texture;
 import engine.rendering.textures.TextureLibrary;
-import engine.sprites.PhysicsSprite;
 import engine.sprites.objects.Item;
 import engine.sprites.structures.StructureSprite;
 import engine.time.DeltaTime;
 import math.Vector2;
 
+/**
+ * Splitter is a class that splits incoming items to outcoming belts equally.
+ * @author David Šebesta
+ *
+ */
 public class Splitter extends StructureSprite {
 	private static final long serialVersionUID = -10749747737659406L;
 
@@ -50,6 +54,9 @@ public class Splitter extends StructureSprite {
 		return instantiateSplitter(TextureLibrary.retrieveTexture("splitter"), Vector2.templateSpawn);
 	}
 
+	/**
+	 * Function method
+	 */
 	@Override
 	public void update() {
 		time += DeltaTime.getDeltaTime();

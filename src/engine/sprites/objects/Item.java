@@ -2,7 +2,6 @@ package engine.sprites.objects;
 
 import java.util.Objects;
 
-import engine.Game;
 import engine.physics.BoundingBox;
 import engine.physics.CollisionLayers;
 import engine.rendering.textures.Texture;
@@ -11,12 +10,23 @@ import engine.sprites.PhysicsSprite;
 import engine.sprites.structures.conveyors.ConveyorBelt;
 import math.Vector2;
 
+/**
+ * Item is a class that is able to be used on a conveyorbelt
+ * @author David Šebesta
+ * @see ConveyorBelt
+ */
 public abstract class Item extends PhysicsSprite {
 	private static final long serialVersionUID = 379059532463440235L;
 	protected static final transient String ID = "defaultitem";
 	
 	protected ConveyorBelt beltAssigned;
 
+	/**
+	 * Class constuctor
+	 * @param texture
+	 * @param location
+	 * @param zDepth
+	 */
 	protected Item(Texture texture, Vector2 location, double zDepth) {
 		super(texture, location, zDepth);
 		this.collisionLayer = CollisionLayers.ITEM;
@@ -39,6 +49,9 @@ public abstract class Item extends PhysicsSprite {
 		this.beltAssigned = null;
 	}
 	
+	/**
+	 * Cleaning up references
+	 */
 	@Override
 	public void destroy() {
 		super.destroy();

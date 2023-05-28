@@ -14,6 +14,12 @@ import engine.sprites.structures.conveyors.ConveyorBelt;
 import engine.sprites.structures.conveyors.ConveyorBeltDirection;
 import math.Vector2;
 
+/**
+ * Structure sprites is a abstract class that holds information about its instantiated structure object
+ * @author David Šebesta
+ * @see PhysicsSprite
+ *
+ */
 public abstract class StructureSprite extends PhysicsSprite {
 	private static final long serialVersionUID = 5574047065458702506L;
 
@@ -24,6 +30,12 @@ public abstract class StructureSprite extends PhysicsSprite {
 	
 	protected boolean rotatable;
 
+	/**
+	 * Protected class constructor
+	 * @param texture
+	 * @param location
+	 * @param zDepth
+	 */
 	protected StructureSprite(Texture texture, Vector2 location, double zDepth) {
 		super(texture, location, zDepth);
 		this.tileSizeUnits = new Vector2(texture.getImage().getWidth() / 32, texture.getImage().getHeight() / 32);
@@ -45,6 +57,10 @@ public abstract class StructureSprite extends PhysicsSprite {
 		return displayName;
 	}
 
+	/**
+	 * Method to return surrounding belts
+	 * @return Surrounding belts
+	 */
 	public ArrayList<ConveyorBelt> getSurroundingBelts() {
 		ArrayList<ConveyorBelt> toReturn = new ArrayList<>();
 		toReturn.add(getBeltToLeft());
@@ -55,6 +71,10 @@ public abstract class StructureSprite extends PhysicsSprite {
 		return toReturn;
 	}
 
+	/**
+	 * Returns a conveyor belt to the left (negative X)
+	 * @return ConveyorBelt object
+	 */
 	public ConveyorBelt getBeltToLeft() {
 		Vector2 leftLocation = this.location.sub(new Vector2(32, 0));
 
@@ -66,6 +86,10 @@ public abstract class StructureSprite extends PhysicsSprite {
 		return null;
 	}
 
+	/**
+	 * Returns a conveyor belt to the right (positive X)
+	 * @return ConveyorBelt object
+	 */
 	public ConveyorBelt getBeltToRight() {
 		Vector2 rightLocation = this.location.add(new Vector2(32, 0));
 
@@ -77,6 +101,10 @@ public abstract class StructureSprite extends PhysicsSprite {
 		return null;
 	}
 
+	/**
+	 * Returns a converyor belt up (negative Y)
+	 * @return ConveyorBelt object
+	 */
 	public ConveyorBelt getBeltToUp() {
 		Vector2 upLocation = this.location.sub(new Vector2(0, 32));
 
@@ -88,6 +116,10 @@ public abstract class StructureSprite extends PhysicsSprite {
 		return null;
 	}
 
+	/**
+	 * Returns a converyor belt down (positive Y)
+	 * @return ConveyorBelt object
+	 */
 	public ConveyorBelt getBeltToDown() {
 		Vector2 downLocation = this.location.add(new Vector2(0, 32));
 
@@ -99,6 +131,10 @@ public abstract class StructureSprite extends PhysicsSprite {
 		return null;
 	}
 
+	/**
+	 * Returns incoming belts to directly leads to the structure and items on it will collide with structure
+	 * @return Incoming belts
+	 */
 	public ArrayList<ConveyorBelt> getIncomingBelts() {
 		ArrayList<ConveyorBelt> toReturn = new ArrayList<>();
 
@@ -119,6 +155,10 @@ public abstract class StructureSprite extends PhysicsSprite {
 		return toReturn;
 	}
 
+	/**
+	* Returns conveyor belts that directly leads away from conveyor belt
+	* @return Outcomig belts
+	*/
 	public ArrayList<ConveyorBelt> getOutcomingBelts() {
 		ArrayList<ConveyorBelt> toReturn = new ArrayList<>();
 
@@ -167,6 +207,11 @@ public abstract class StructureSprite extends PhysicsSprite {
 		//Left for override
 	}
 
+	/**
+	 * Checks if specified inventory has stuff to build this structure
+	 * @param inventory
+	 * @return True if inventory has stuff to build this structure
+	 */
 	public boolean hasEnoughItemsForConstruct(Inventory inv) {
 		boolean hasEnough = false;
 		for (Map.Entry<String, Integer> entry : resourceCost.entrySet()) {

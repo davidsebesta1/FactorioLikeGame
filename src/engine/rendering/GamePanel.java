@@ -31,6 +31,11 @@ import engine.sprites.entities.player.Player;
 import engine.sprites.structures.conveyors.ConveyorBeltDirection;
 import math.Vector2;
 
+/**
+ * GamePanel provides drawing to the screen via double buffering.
+ * @author David Šebesta
+ *
+ */
 public class GamePanel extends JPanel {
 	private static final long serialVersionUID = -5792040577297371507L;
 
@@ -46,6 +51,10 @@ public class GamePanel extends JPanel {
 	private BufferedImage ghostImage;
 	private Vector2 ghostImageLocation;
 
+	/**
+	 * A class constructor
+	 * @param size
+	 */
 	public GamePanel(Vector2 size) {
 		this.setSize((int) size.getX(), (int) size.getY());
 		this.setBackground(Color.black);
@@ -114,6 +123,9 @@ public class GamePanel extends JPanel {
 		fpsTimer.start();
 	}
 
+	/**
+	 * Initialize double buffering
+	 */
 	public void init() {
 		this.canvas.createBufferStrategy(2);
 		this.bs = canvas.getBufferStrategy();
@@ -124,6 +136,9 @@ public class GamePanel extends JPanel {
 		g.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_OFF);
 	}
 
+	/**
+	 * Renders a image to a offscreen buffer
+	 */
 	private void render() {
 		// Render to off-screen buffer
 		Graphics graphics = buffer.getGraphics();
@@ -196,6 +211,9 @@ public class GamePanel extends JPanel {
 		graphics.dispose();
 	}
 
+	/**
+	 * Firstly calls render() and then draws UI, at the end, buffer is flipped and new image is shown.
+	 */
 	public void updateImage() {
 		render();
 		Player player = Game.getInstance().getPlayer();
@@ -229,11 +247,22 @@ public class GamePanel extends JPanel {
 		return buffer;
 	}
 
+	/**
+	 * Cursor image for construction
+	 * @param ghostImage
+	 * @param location
+	 */
 	public void setGhostBuffer(BufferedImage ghostImage, Vector2 location) {
 		this.ghostImage = ghostImage;
 		this.ghostImageLocation = location;
 	}
 
+	/**
+	 * Cursor image for construction for conveyorbelt
+	 * @param ghostImage
+	 * @param location
+	 * @param dir
+	 */
 	public void setGhostBuffer(BufferedImage ghostImage, Vector2 location, ConveyorBeltDirection dir) {
 		this.ghostImage = ghostImage;
 		this.ghostImageLocation = location;

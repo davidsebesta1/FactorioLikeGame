@@ -3,6 +3,11 @@ package engine.sprites.objects.minable;
 import engine.rendering.textures.Texture;
 import math.Vector2;
 
+/**
+ * Nickel class
+ * @author David Šebesta
+ * @see OreItem
+ */
 public class Nickel extends OreItem {
 	private static final long serialVersionUID = 6181779958739971397L;
 

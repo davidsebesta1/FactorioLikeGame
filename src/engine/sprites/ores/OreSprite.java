@@ -6,6 +6,11 @@ import engine.rendering.textures.Texture;
 import engine.sprites.Sprite;
 import math.Vector2;
 
+/**
+ * OreSprite is a abstract class providing ore as a sprites, it holds a amount of mineable items from it aswell as its minig hardness.
+ * @author David Šebesta
+ *
+ */
 public abstract class OreSprite extends Sprite {
 	private static final long serialVersionUID = -805356985399189622L;
 
@@ -14,6 +19,14 @@ public abstract class OreSprite extends Sprite {
 	//Multiplier for mining time
 	protected final double miningHardness;
 
+	/**
+	 * A class constructor
+	 * @param texture
+	 * @param location
+	 * @param zDepth
+	 * @param oreAmount
+	 * @param miningHardness
+	 */
 	protected OreSprite(Texture texture, Vector2 location, double zDepth, int oreAmount, double miningHardness) {
 		super(texture, location, zDepth);
 		this.oreAmount = oreAmount;

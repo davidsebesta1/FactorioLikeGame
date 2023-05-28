@@ -8,6 +8,12 @@ import engine.input.InputManager;
 import engine.rendering.textures.Texture;
 import math.Vector2;
 
+/**
+ * Structure Type Button is a button that holds category of a structures inside it.
+ * @author David Šebesta
+ * @see PlayerConstructionManager
+ *
+ */
 public class StructureTypeButton implements IMouseActionEventListener {
 	private String type;
 

@@ -4,6 +4,12 @@ import engine.rendering.textures.Texture;
 import engine.sprites.ores.OreSprite;
 import math.Vector2;
 
+/**
+ * Gold ore
+ * @author David Šebesta
+ * @see OreSprite
+ *
+ */
 public class GoldOre extends OreSprite {
 	private static final long serialVersionUID = 6998022177436243482L;
 	
@@ -12,9 +18,9 @@ public class GoldOre extends OreSprite {
 		// TODO Auto-generated constructor stub
 	}
 
-	public GoldOre instantiateGoldOre(Texture texture, Vector2 location, int oreAmount) {
+	public static GoldOre instantiateGoldOre(Texture texture, Vector2 location, int oreAmount) {
 		try {
-			return new GoldOre(texture, location, 0.72d, oreAmount, 0.85d);
+			return new GoldOre(texture, location, 0.3d, oreAmount, 0.85d);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

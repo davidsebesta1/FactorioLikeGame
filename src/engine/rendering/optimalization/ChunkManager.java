@@ -2,7 +2,6 @@ package engine.rendering.optimalization;
 
 import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.IntStream;
 
@@ -11,7 +10,16 @@ import engine.sprites.Sprite;
 import engine.sprites.entities.player.Player;
 import math.Vector2;
 
+/**
+ * Chunk manager is class responsible for handling chunk updates and their functionalities around player.
+ * @author David Šebesta
+ * @see Chunk
+ */
 public class ChunkManager {
+	
+	/**
+	 * Chunk size in units (pixels pretty much)
+	 */
 	public static final int CHUNK_SIZE = 256;
 	private Chunk[][] chunkMap;
 
@@ -21,6 +29,11 @@ public class ChunkManager {
 
 	private Player player;
 
+	/**
+	 * Class constructor
+	 * @param mapSize
+	 * @param player
+	 */
 	public ChunkManager(Vector2 mapSize, Player player) {
 		this.chunkMap = new Chunk[(int) (mapSize.getX() / CHUNK_SIZE)][(int) (mapSize.getY() / CHUNK_SIZE)];
 		this.player = player;
@@ -34,6 +47,10 @@ public class ChunkManager {
 		}
 	}
 
+	/**
+	 * Resolves where sprites are located (in which chunk bounds) and then updates all chunks to they are drawn
+	 * @param list to add
+	 */
 	public void initialAssigning(ArrayList<Sprite> list) {
 		for (Sprite sprite : list) {
 			if (sprite instanceof Background || sprite instanceof Player) continue;
@@ -47,10 +64,17 @@ public class ChunkManager {
 		}
 	}
 
+	/**
+	 * Adds chunk to the update queue right before drawing frame to the screen
+	 * @param chunk
+	 */
 	public void addChunkToUpdateQueue(Chunk chunk) {
 		updateQueue.put(chunk, true);
 	}
 
+	/**
+	 * Tries to update all chunks in update queue parallel
+	 */
 	public void runUpdateQueue() {
 //		for (Chunk chunk : updateQueue.keySet()) {
 //			chunk.cacheImage();
@@ -60,6 +84,9 @@ public class ChunkManager {
 		updateQueue.clear();
 	}
 
+	/**
+	 * Resolves all chunk stuff (adding / removing sprites)
+	 */
 	public void resolveAll() {
 		for (int i = 0; i < chunkMap.length; i++) {
 			for (int j = 0; j < chunkMap[i].length; j++) {
@@ -67,20 +94,11 @@ public class ChunkManager {
 			}
 		}
 	}
-
-
-//	public void updateSpriteChunk(Sprite sprite) {
-//		if (sprite == null || sprite instanceof Background || sprite instanceof Player) return;
-//		for (int i = 0; i < chunkMap.length; i++) {
-//			for (int j = 0; j < chunkMap[i].length; j++) {
-//				if (chunkMap[i][j].tryRemoveSprite(sprite)) {
-//					assignChunk(sprite);
-//					addChunkToUpdateQueue(chunkMap[i][j]);
-//				}
-//			}
-//		}
-//	}
 	
+	/**
+	 * Updates assigned chunk of a sprite based on its location. Background and player cannot be assigned.
+	 * @param sprite
+	 */
 	public void updateSpriteChunk(Sprite sprite) {
 	    if (sprite == null || sprite instanceof Background || sprite instanceof Player) return;
 	    
@@ -105,24 +123,22 @@ public class ChunkManager {
 	        );
 	}
 
+	/**
+	 * Adds sprite to chunk based on its location. Background and player cannot be assigned.
+	 * @param sprite
+	 */
 	public void addSpriteToChunks(Sprite sprite) {
 		if (sprite instanceof Background || sprite instanceof Player)
 			return;
 		assignChunk(sprite);
 	}
 
+	/**
+	 * Assigns chunk first
+	 * @param sprite
+	 */
 	public void assignChunk(Sprite sprite) {
 		if(sprite == null) return;
-//		for (int i = 0; i < chunkMap.length; i++) {
-//			for (int j = 0; j < chunkMap[i].length; j++) {
-//				if (sprite instanceof Background || sprite instanceof Player) continue;
-//				if (chunkMap[i][j].isWithinChunk(sprite)) {
-//					chunkMap[i][j].tryAddSprite(sprite);
-//					addChunkToUpdateQueue(chunkMap[i][j]);
-//					return;
-//				}
-//			}
-//		}
 		
 		if (sprite instanceof Background || sprite instanceof Player) return;
 		if(isInBounds((int) (sprite.getLocation().getX()/CHUNK_SIZE), (int) (sprite.getLocation().getY()/CHUNK_SIZE))) {
@@ -130,14 +146,14 @@ public class ChunkManager {
 			c.tryAddSprite(sprite);
 			sprite.setCurrentChunk(c);
 			addChunkToUpdateQueue(c);
-			
-//			if(sprite instanceof Item) {
-//				fixBetweenChunkSprite(sprite);
-//			}
-
 		}
 	}
 
+	/**
+	 * Returns chunk in which is sprite in paramaters
+	 * @param sprite
+	 * @return chunk, if sprite is not assigned to a chunk, returns null
+	 */
 	public Chunk getChunkBySprite(Sprite sprite) {
 		if (sprite != null) {
 			return sprite.getCurrentChunk();
@@ -146,25 +162,13 @@ public class ChunkManager {
 		return null;
 	}
 
+	/**
+	 * Attempts to fix drawing a sprite that is on the edge of chunk
+	 * @param sprite
+	 */
 	public void fixBetweenChunkSprite(Sprite sprite) {
 		if(sprite != null) {
 			Chunk chunk = sprite.getCurrentChunk();
-
-//			HashMap<Chunk, Rectangle> chunksAndRect = new HashMap<>();
-//			for (Chunk c : surroundingChunks(chunk)) {
-//				chunksAndRect.put(c, c.getRectangle());
-//			}
-//
-//			//chunk if sprite bounds rect and chunk bounds rect collide, if they do, add him forcefully to the chunk rendering
-//			for (Map.Entry<Chunk, Rectangle> entry : chunksAndRect.entrySet()) {
-//				Chunk ch = entry.getKey();
-//				Rectangle re = entry.getValue();
-//
-//				if (re.intersects(rect)) {
-//					ch.tryAddSprite(sprite);
-//					addChunkToUpdateQueue(ch);
-//				}
-//			}
 
 			Vector2 secondPoint = sprite.getLocation().add(sprite.getSize());
 			if(isInBounds((int) (secondPoint.getX()/CHUNK_SIZE), (int) (secondPoint.getY()/CHUNK_SIZE))) {
@@ -177,18 +181,12 @@ public class ChunkManager {
 		}
 	}
 
+	/**
+	 * Returns surrounding chunks of a chunk specified
+	 * @param chunk
+	 * @return surrounding chunks
+	 */
 	public ArrayList<Chunk> surroundingChunks(Chunk chunk) {
-//		ArrayList<Chunk> toReturn = new ArrayList<>();
-//		Vector2 currentChunkCoordinate = getChunkMapCoordinate(chunk);
-//		for (int i = (int) currentChunkCoordinate.getX(); i < (int) (currentChunkCoordinate.getX() + 2); i++) {
-//			for (int j = (int) currentChunkCoordinate.getY(); j < (int) (currentChunkCoordinate.getY() + 2); j++) {
-//				if (isInBounds(j, i) && chunkMap[i][j] != chunk)
-//					toReturn.add(chunkMap[i][j]);
-//			}
-//		}
-//
-//		return toReturn;
-		
 		 ArrayList<Chunk> toReturn = new ArrayList<>();
 		    int x = (int) getChunkMapCoordinate(chunk).getX() / 256;
 		    int y = (int) getChunkMapCoordinate(chunk).getY() / 256;
@@ -199,14 +197,28 @@ public class ChunkManager {
 		    return toReturn;
 	}
 
+	/**
+	 * Returns 2d array coordinate of a chunk from world coordinates of a chunk
+	 * @param chunk
+	 * @return
+	 */
 	public Vector2 getChunkMapCoordinate(Chunk chunk) {
 		return chunk.getLocation().div(CHUNK_SIZE);
 	}
 
+	/**
+	 * Force add a sprite to a chunk, no matter if it is inside it or not
+	 * @param chunk
+	 * @param spite
+	 */
 	public void forceAddSpriteToChunk(Chunk chunk, Sprite spite) {
 		chunk.tryAddSprite(spite);
 	}
 
+	/**
+	 * Force remove sprite from a chunk
+	 * @param sprite
+	 */
 	public synchronized void forceRemoveSprite(Sprite sprite) {
 		for (int i = 0; i < chunkMap.length; i++) {
 			for (int j = 0; j < chunkMap[i].length; j++) {
@@ -217,7 +229,11 @@ public class ChunkManager {
 		}
 	}
 
-	public void assignChunk(Set<Sprite> list) {
+	/**
+	 * Assign chunk to a sprites within provided hashset
+	 * @param list
+	 */
+	public void assignChunk(HashSet<Sprite> list) {
 		for (Sprite sprite : list) {
 			if (sprite instanceof Background || sprite instanceof Player)
 				continue;
@@ -225,14 +241,10 @@ public class ChunkManager {
 		}
 	}
 
+	/**
+	 * Updates which chunks are near to the player position and are rendered to a screen
+	 */
 	public void updateActiveChunks() {
-//		activeChunks.clear();
-//
-//		for (int i = 0; i < chunkMap.length; i++) {
-//			for (int j = 0; j < chunkMap[i].length; j++) {
-//				if (chunkMap[i][j].getCenterLocation().sub(player.getLocation()).magnitude() <= 1300) activeChunks.add(chunkMap[i][j]);
-//			}
-//		}
 		
 		// Calculate the chunk coordinates within the active range of the player
 		int playerChunkX = (int) Math.floor(player.getLocation().getX() / CHUNK_SIZE);

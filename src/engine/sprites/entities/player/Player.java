@@ -20,6 +20,11 @@ import engine.time.DeltaTime;
 import engine.world.mainmenu.MainMenuButtonManager;
 import math.Vector2;
 
+/**
+ * Player is a inherited class from PhysicsSprites that determines position and drawing a screen.
+ * @author David Šebesta
+ * @see PhysicsSprite
+ */
 public class Player extends PhysicsSprite implements IMouseActionEventListener {
 	private static final long serialVersionUID = -6407007599351991639L;
 	private Camera camera;
@@ -34,6 +39,13 @@ public class Player extends PhysicsSprite implements IMouseActionEventListener {
 	private boolean showBuildMenu;
 	private boolean showMainMenu;
 
+	/**
+	 * A private class constructor
+	 * @param texture
+	 * @param location
+	 * @param velocity
+	 * @param zDepth
+	 */
 	private Player(Texture texture, Vector2 location, Vector2 velocity, float zDepth) {
 		super(texture, location, zDepth);
 
@@ -56,6 +68,11 @@ public class Player extends PhysicsSprite implements IMouseActionEventListener {
 		SpriteManager.addUpdateSprite(this);
 	}
 
+	/**
+	 * Instantiation method with file for texture
+	 * @param file
+	 * @return Player object
+	 */
 	public static Player instantiatePlayer(File file) {
 		try {
 			Texture texture = Texture.createTexture(file);
@@ -67,6 +84,11 @@ public class Player extends PhysicsSprite implements IMouseActionEventListener {
 
 	}
 
+	/**
+	 * Instantiation method with texture
+	 * @param texture
+	 * @return Player object
+	 */
 	public static Player instantiatePlayer(Texture texture) {
 		try {
 			return new Player(texture, Game.getInstance().getResolution().div(2), Vector2.zero, 0.8f);
@@ -77,6 +99,9 @@ public class Player extends PhysicsSprite implements IMouseActionEventListener {
 
 	}
 
+	/**
+	 * Update method for handling user input and mouse motions.
+	 */
 	@Override
 	public void update() {
 		if (inputEnabled) {
@@ -161,6 +186,9 @@ public class Player extends PhysicsSprite implements IMouseActionEventListener {
 
 	}
 
+	/**
+	 * Overrided collision method
+	 */
 	@Override
 	public void enteredCollision(PhysicsSprite sprite) {
 		while (sprite.getCollisionBox().doCollideWith(this.collisionBox)) {

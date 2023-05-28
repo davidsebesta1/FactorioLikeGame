@@ -13,12 +13,40 @@ import java.util.Objects;
 
 import javax.imageio.ImageIO;
 
+/**
+ * Texture is a class holding several images of a image. Its also able to generated rotated versions of a image. Each texture is hold within TextureLibrary. Each texture has its own TextureType.
+ * @see TextureLibrary
+ * @see TextureType
+ * @author David Šebesta
+ */
 public class Texture {
+	
+	/**
+	 * Actual image
+	 */
 	private BufferedImage image;
+	
+	/*
+	 * Transparent image for placing structures
+	 */
 	private BufferedImage validPlacementImage;
+	
+	/**
+	 * Red transparent image for placing structures
+	 */
 	private BufferedImage invalidPlacementImage;
+	
+	/**
+	 * Its TextureType
+	 * @see TextureType
+	 */
 	private TextureType type;
 
+	/**
+	 * Class constructor, cannot be called directly
+	 * @param file
+	 * @param type
+	 */
 	private Texture(File file, TextureType type) {
 		try {
 			// Load the image
@@ -39,7 +67,10 @@ public class Texture {
 			e.printStackTrace();
 		}
 	}
-	
+	/**
+	 * Class constructor, cannot be called directly
+	 * @param image
+	 */
 	private Texture(BufferedImage imageTemp) {
 		// Create a new image with the desired type
 		GraphicsConfiguration gfxConfig = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice().getDefaultConfiguration();
@@ -52,6 +83,11 @@ public class Texture {
 		g2d.dispose();
 	}
 	
+	/**
+	 * Class constructor, cannot be called directly-
+	 * @param imageTemp
+	 * @param type
+	 */
 	private Texture(BufferedImage imageTemp, TextureType type) {
 		// Create a new image with the desired type
 		GraphicsConfiguration gfxConfig = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice().getDefaultConfiguration();
@@ -64,6 +100,11 @@ public class Texture {
 		g2d.dispose();
 	}
 
+	/**
+	 * Static method to create a texture from specified file, specified file is OPAQUE by default.
+	 * @param file
+	 * @return Texture
+	 */
 	public static Texture createTexture(File file) {
 		if (file.exists()) {
 			return new Texture(file, TextureType.OPAQUE);
@@ -72,6 +113,12 @@ public class Texture {
 	}
 	
 
+	/**
+	 * Static method to create a texture from specified file and specified texture file
+	 * @param file
+	 * @param type
+	 * @return Texture
+	 */
 	public static Texture createTexture(File file, TextureType type) {
 		if (file.exists()) {
 			return new Texture(file, type);
@@ -83,6 +130,10 @@ public class Texture {
 		return image;
 	}
 
+	/**
+	 * Created graphics accerelated image
+	 * @return VolatileImage
+	 */
 	public VolatileImage getAccerelatedImage() {
 		GraphicsConfiguration gc = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice()
 				.getDefaultConfiguration();
@@ -95,6 +146,10 @@ public class Texture {
 		return volatileImage;
 	}
 	
+	/**
+	 * Returns and caches transparent version of a image
+	 * @return transparent image
+	 */
 	public BufferedImage getValidPlacementVersion() {
 		if(validPlacementImage != null) return validPlacementImage;
 		
@@ -108,6 +163,10 @@ public class Texture {
 		return validPlacementImage;
 	}
 	
+	/**
+	 * Returns and caches red transparent version of a image
+	 * @return red transparent image
+	 */
 	public BufferedImage getInvalidPlacementVersion() {
 		if(invalidPlacementImage != null) return invalidPlacementImage;
 		
@@ -138,6 +197,12 @@ public class Texture {
 		return validPlacementImage;
 	}
 	
+	/**
+	 * Returns a rotated image. Image is rotated by double in piRadions. Eg: pi/2 is 90 degrees.
+	 * @param source
+	 * @param piRadians
+	 * @return rotated texture
+	 */
 	public static Texture rotateImage(Texture source, double piRadians) {
 		BufferedImage src = source.getImage();
 	    int width = src.getWidth();

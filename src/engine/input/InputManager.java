@@ -25,6 +25,12 @@ import main.Log;
 import math.MathUtilities;
 import math.Vector2;
 
+
+/**
+ * InputManager is a static class that provides input handling and logging. A single instance of this class is created on program launch.
+ * @author David Šebesta
+ * @version 1.0.0
+ */
 public class InputManager {
 	private static Vector2 directionalInput;
 	private static ArrayList<IMouseWheelEventListener> mouseWheelListeners;
@@ -45,10 +51,11 @@ public class InputManager {
 
 	private static Vector2 motionVector = Vector2.zero;
 
-	//TODO run click events once per frame
-
 	private static boolean inputPaused;
 
+	/**
+	 * A class constructor which created instances of key event dispatchers and other disptachers to track down user input.
+	 */
 	private InputManager() {
 		inputPaused = false;
 		directionalInput = new Vector2(0, 0);
@@ -80,6 +87,10 @@ public class InputManager {
 							break;
 						case KeyEvent.VK_R:
 							Game.getInstance().getPlayer().getConstructManager().tryRotateCurrentlySelected();
+							break;
+							
+						case KeyEvent.VK_F5:
+							Game.getInstance().getCurrentWorld().SaveWorld();
 							break;
 						//						case KeyEvent.VK_ESCAPE:
 						//							System.exit(0);
@@ -205,27 +216,49 @@ public class InputManager {
 		}
 	}
 
+	/**
+	 * Static function to add new mouse wheel listener
+	 * @param IMouseWheelEventListener listener
+	 * @see IMouseWheelEventListener
+	 */
 	public static void addMouseWheelListener(IMouseWheelEventListener listener) {
 		if (listener != null)
 			mouseWheelListeners.add(listener);
 	}
 
+	/**
+	 * Static function to add new mouse action (click) listener
+	 * @param IMouseActionEventListener listener
+	 * @see IMouseActionEventListener
+	 */
 	public static void addMouseActionListener(IMouseActionEventListener listener) {
 		if (listener != null)
 			mouseActionListeners.add(listener);
 	}
-
+	
+	/**
+	 * Static function to add new mouse motion listener
+	 * @param IMouseMotionEventListener listener
+	 * @see IMouseMotionEventListener
+	 */
 	public static void addMouseMotionListener(IMouseMotionEventListener listener) {
 		if (listener != null)
 			mouseMotionListeners.add(listener);
 	}
-
+	/**
+	 * Private functions that fires a event on all listeners which listen to it
+	 * @param amount of notching of wheel moved
+	 */
 	private static void fireMouseWheelMoved(int notches) {
 		for (IMouseWheelEventListener iMouseListener : mouseWheelListeners) {
 			iMouseListener.wheelMoved(notches);
 		}
 	}
 
+	/**
+	 * Private function that fires a event on all listeners which listen to it
+	 * @param Vector2 location on screen
+	 */
 	private static void fireMousePrimaryPressed(Vector2 location) {
 		if (!checkForMainMenuUIClick(location)) {
 			if (!checkForInventoryUIClick(location)) {
@@ -236,24 +269,38 @@ public class InputManager {
 	}
 
 	private static void fireMousePrimaryReleased(Vector2 location) {
-
+		//TODO since I dont use it
 	}
 
+	/**
+	 * Reset for construction manager
+	 * @param location where player clicked
+	 * @see PlayerConstructionManager
+	 */
 	private static void fireMouseSecondaryPressed(Vector2 location) {
 		Game.getInstance().getCurrentWorld().getPlayer().getConstructManager().setCurrentlySelected(null);
 
 	}
 
 	private static void fireMouseSecondaryReleased(Vector2 location) {
-
+		//TODO since I dont use it
 	}
 
+	/**
+	 * Private function that fires a event on all listeners which listen to it
+	 * @param Vector2 location on screen
+	 */
 	public static void fireMouseMotion(Vector2 location) {
 		for (IMouseMotionEventListener iMouseListener : mouseMotionListeners) {
 			iMouseListener.mouseMoved(location);
 		}
 	}
 
+	/**
+	 * Checking if any TileSprite on a grid has been clicked on. If yes, fire mouse clicked on it.
+	 * @param worldCoordinates of a possible tile click
+	 * @return boolean if any tile has been clicked on
+	 */
 	private static boolean checkForTileClick(Vector2 worldCoordinates) {
 		TileSprite[][] tileSprites = Game.getInstance().getCurrentWorld().getTileMap().getMap();
 
@@ -270,6 +317,11 @@ public class InputManager {
 		return false;
 	}
 
+	/**
+	 * Checks for all inventory buttons if they have been clicked on and fires mouse pressed event if true.
+	 * @param screen coordinates of a click
+	 * @return
+	 */
 	private static boolean checkForInventoryUIClick(Vector2 clickCoords) {
 		HashMap<StructureTypeButton, HashSet<StructureButton>> all = Game.getInstance().getCurrentWorld().getPlayer().getConstructManager().getCategoryAndAvailableStructures();
 
@@ -295,6 +347,11 @@ public class InputManager {
 		return false;
 	}
 
+	/**
+	 * Checks for main menu UI clicks and fire mouse events.
+	 * @param screen coordinates of a click
+	 * @return If any button clicked
+	 */
 	private static boolean checkForMainMenuUIClick(Vector2 coordinates) {
 		ArrayList<Button> buttons = Game.getInstance().getPlayer().getMenuManager().getButtons();
 
@@ -311,6 +368,12 @@ public class InputManager {
 		return false;
 	}
 
+	/**
+	 * Checks if sprite is within world coordinates inside paramaters
+	 * @param worldCoordinates
+	 * @param sprite
+	 * @return if the sprite is within worldCoordinates
+	 */
 	private static boolean isWithinBounds(Vector2 worldCoordinates, Sprite sprite) {
 		if (sprite != null) {
 			return worldCoordinates.getX() >= sprite.getLocation().getX()
@@ -321,7 +384,12 @@ public class InputManager {
 
 		return false;
 	}
-
+	/**
+	 * Checks if StructureTypeButton is within world coordinates inside paramaters
+	 * @param worldCoordinates
+	 * @param StructureTypeButton
+	 * @return if the StructureTypeButton is within worldCoordinates
+	 */
 	private static boolean isWithinBounds(Vector2 worldCoordinates, StructureTypeButton sprite) {
 		if (sprite != null) {
 			return worldCoordinates.getX() >= sprite.getLocation().getX()
@@ -332,7 +400,12 @@ public class InputManager {
 
 		return false;
 	}
-
+	/**
+	 * Checks if StructureButton is within world coordinates inside paramaters
+	 * @param worldCoordinates
+	 * @param StructureButton
+	 * @return if the StructureButton is within worldCoordinates
+	 */
 	private static boolean isWithinBounds(Vector2 worldCoordinates, StructureButton sprite) {
 		if (sprite != null) {
 			return worldCoordinates.getX() >= sprite.getLocation().getX()
@@ -344,6 +417,12 @@ public class InputManager {
 		return false;
 	}
 
+	/**
+	 * Checks if Button is within world coordinates inside paramaters
+	 * @param worldCoordinates
+	 * @param Button
+	 * @return if the Button is within worldCoordinates
+	 */
 	private static boolean isWithinBounds(Vector2 worldCoordinates, Button sprite) {
 		if (sprite != null) {
 			return worldCoordinates.getX() >= sprite.getLocation().getX()

@@ -11,6 +11,11 @@ import engine.sprites.objects.Item;
 import engine.sprites.structures.StructureSprite;
 import math.Vector2;
 
+/**
+ * Core Module is a main module in this game, providing access to collecting resources.
+ * @author David
+ *
+ */
 public class CoreModule extends StructureSprite {
 	private static final long serialVersionUID = 5792682450616901356L;
 
@@ -22,6 +27,12 @@ public class CoreModule extends StructureSprite {
 		this.resourceCost.put("titaniumItem", 2);
 	}
 
+	/**
+	 * Instantiate method with file for texture
+	 * @param file
+	 * @param location
+	 * @return CoreModule object
+	 */
 	public static CoreModule instantiateCoreModule(File file, Vector2 location) {
 		try {
 			Texture texture = Texture.createTexture(file);
@@ -33,6 +44,12 @@ public class CoreModule extends StructureSprite {
 		
 	}
 	
+	/**
+	 * Instantiate method with texture object
+	 * @param texture
+	 * @param location
+	 * @return CoreModule object
+	 */
 	public static CoreModule instantiateCoreModule(Texture texture, Vector2 location) {
 		try {
 			return new CoreModule(texture, location, 0.7f);
@@ -67,6 +84,9 @@ public class CoreModule extends StructureSprite {
 		return ID();
 	}
 	
+	/**
+	 * Overriden method to handle collisions with items.
+	 */
 	@Override
 	public void enteredCollision(PhysicsSprite sprite) {
 		if (sprite instanceof Item) {
@@ -80,6 +100,9 @@ public class CoreModule extends StructureSprite {
 		}
 	}
 
+	/**
+	 * Created a copy of this object
+	 */
 	@Override
 	public StructureSprite createCopy(String[] args) {
 		return instantiateCoreModule(TextureLibrary.retrieveTexture("coreModule"), Vector2.templateSpawn);

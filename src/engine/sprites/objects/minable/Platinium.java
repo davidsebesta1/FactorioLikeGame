@@ -3,6 +3,11 @@ package engine.sprites.objects.minable;
 import engine.rendering.textures.Texture;
 import math.Vector2;
 
+/**
+ * Platinium class
+ * @author David Šebesta
+ * @see OreItem
+ */
 public class Platinium extends OreItem {
 	private static final long serialVersionUID = -2199255378219085074L;
 

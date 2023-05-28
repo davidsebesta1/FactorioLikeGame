@@ -4,6 +4,11 @@ import engine.rendering.textures.Texture;
 import engine.sprites.objects.Item;
 import math.Vector2;
 
+/**
+ * Copper plate
+ * @author David Šebesta
+ * @see Item
+ */
 public class CopperPlate extends Item {
 	private static final long serialVersionUID = 6053517717212748133L;
 

@@ -167,7 +167,13 @@ public class Game implements Runnable {
 	}
 
 	public void setCurrentWorld(World currentWorld) {
+		SpriteManager.clearAll();
+		PhysicsManager.clearAll();
+		
 		this.currentWorld = currentWorld;
+		
+		
+		getCurrentWorld().getChunkManager().resolveAll();
 	}
 
 	public boolean isRunning() {

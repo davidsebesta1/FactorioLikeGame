@@ -8,10 +8,22 @@ import engine.physics.CollisionLayers;
 import engine.rendering.textures.Texture;
 import engine.rendering.textures.TextureLibrary;
 import engine.sprites.objects.Item;
+import engine.sprites.objects.minable.Aluminium;
+import engine.sprites.objects.minable.Copper;
+import engine.sprites.objects.minable.Gold;
+import engine.sprites.objects.minable.Lithium;
+import engine.sprites.objects.minable.Nickel;
 import engine.sprites.objects.minable.OreItem;
+import engine.sprites.objects.minable.Platinium;
 import engine.sprites.objects.minable.Titanium;
 import engine.sprites.ores.OreMap;
 import engine.sprites.ores.OreSprite;
+import engine.sprites.ores.oresprites.AluminiumOre;
+import engine.sprites.ores.oresprites.CopperOre;
+import engine.sprites.ores.oresprites.GoldOre;
+import engine.sprites.ores.oresprites.LithiumOre;
+import engine.sprites.ores.oresprites.NickelOre;
+import engine.sprites.ores.oresprites.PlatiniumOre;
 import engine.sprites.ores.oresprites.TitaniumOre;
 import engine.sprites.structures.StructureMap;
 import engine.sprites.structures.StructureSprite;
@@ -19,6 +31,12 @@ import engine.sprites.structures.conveyors.ConveyorBelt;
 import engine.time.DeltaTime;
 import math.Vector2;
 
+/**
+ * Basic drill is a structure that is able to drill stuff from ore sprites.
+ * @author David Šebesta
+ * @see OreSprite
+ * 
+ */
 public class BasicDrill extends StructureSprite {
 	private static final long serialVersionUID = 6419053635390734429L;
 
@@ -43,7 +61,7 @@ public class BasicDrill extends StructureSprite {
 
 	public static BasicDrill instantiateBasicDrill(Texture texture, Vector2 location) {
 		try {
-			return new BasicDrill(texture, location, 0.7f);
+			return new BasicDrill(texture, location, 0.7d);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -60,23 +78,27 @@ public class BasicDrill extends StructureSprite {
 		}
 	}
 
+	/**
+	 * Attempts to mine a resource
+	 */
 	protected void tryMineResource() {
-//		OreMap oreMap = Game.getInstance().getCurrentWorld().getOreMap();
-//		StructureMap structMap = Game.getInstance().getCurrentWorld().getStructureMap();
-
 		OreSprite ore = tryGetMinableResource();
 
 		if (ore != null && ore.getOreAmount() > 0) {
 			minedItem = resolveMinedItemType(ore);
-			minedItem.setVisible(false);
 		}
 		
 		if(minedItem != null) {
+			minedItem.setVisible(false);
 			checkForBeltAndAddResource(ore);
 		}
 
 	}
 
+	/**
+	 * Checks for available belt
+	 * @param ore
+	 */
 	protected void checkForBeltAndAddResource(OreSprite ore) {
 		ConveyorBelt belt = null;
 		for (StructureSprite csrct : Game.getInstance().getCurrentWorld().getStructureMap().getAdjacentStructures(StructureMap.worldToStructureMapCoordinate(location))) {
@@ -91,13 +113,29 @@ public class BasicDrill extends StructureSprite {
 		}
 	}
 	
-	//Need to add all possible items here
+	/**
+	 * Resolve mined item based on ore sprite object
+	 * @param sprite
+	 * @return OreItem object
+	 */
 	public OreItem resolveMinedItemType(OreSprite sprite) {
 		if(sprite instanceof TitaniumOre) return Titanium.instantiateTitanium(TextureLibrary.retrieveTexture("titaniumItem"), Vector2.oreSpawn);
+		if(sprite instanceof CopperOre) return Copper.instantiateCopper(TextureLibrary.retrieveTexture("copperItem"), Vector2.oreSpawn);
+		if(sprite instanceof AluminiumOre) return Aluminium.instantiateAluminium(TextureLibrary.retrieveTexture("aluminiumItem"), Vector2.oreSpawn);
+		if(sprite instanceof GoldOre) return Gold.instantiateGold(TextureLibrary.retrieveTexture("goldItem"), Vector2.oreSpawn);
+		if(sprite instanceof LithiumOre) return Lithium.instantiateLithium(TextureLibrary.retrieveTexture("lithiumItem"), Vector2.oreSpawn);
+		if(sprite instanceof NickelOre) return Nickel.instantiateNickel(TextureLibrary.retrieveTexture("nickelItem"), Vector2.oreSpawn);
+		if(sprite instanceof PlatiniumOre) return Platinium.instantiatePlatinium(TextureLibrary.retrieveTexture("platiniumItem"), Vector2.oreSpawn);
 		
 		return null;
 	}
 
+	/**
+	 * Adds a mined resource to a belt
+	 * @param belt
+	 * @param item
+	 * @param ore
+	 */
 	protected void addMinedResourceToBelt(ConveyorBelt belt, Item item, OreSprite ore) {
 		if(belt != null && item != null) {
 			minedItem.setVisible(true);
@@ -107,6 +145,10 @@ public class BasicDrill extends StructureSprite {
 		}
 	}
 
+	/**
+	 * Attempts to return a mineable ore
+	 * @return Mineable Ore if any exists
+	 */
 	protected OreSprite tryGetMinableResource() {
 		OreMap oreMap = Game.getInstance().getCurrentWorld().getOreMap();
 

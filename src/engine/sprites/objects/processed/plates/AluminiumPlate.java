@@ -4,6 +4,11 @@ import engine.rendering.textures.Texture;
 import engine.sprites.objects.Item;
 import math.Vector2;
 
+/**
+ * Aluminium plate
+ * @author David Šebesta
+ * @see Item
+ */
 public class AluminiumPlate extends Item {
 	private static final long serialVersionUID = -9165651479722004259L;
 

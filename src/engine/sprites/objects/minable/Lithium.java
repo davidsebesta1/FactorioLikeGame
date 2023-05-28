@@ -3,6 +3,11 @@ package engine.sprites.objects.minable;
 import engine.rendering.textures.Texture;
 import math.Vector2;
 
+/**
+ * Lithium class
+ * @author David Šebesta
+ * @see OreItem
+ */
 public class Lithium extends OreItem {
 	private static final long serialVersionUID = -7953227629711410755L;
 

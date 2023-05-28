@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import engine.Game;
 import engine.world.mainmenu.loadworldmenu.LoadGameButton;
 import engine.world.mainmenu.newworldmenu.NewGameButton;
+import engine.world.mainmenu.newworldmenu.NewStandardGameButton;
 import engine.world.mainmenu.quitmenu.CancelQuitButton;
 import engine.world.mainmenu.quitmenu.FinalizeQuitButton;
 import engine.world.mainmenu.quitmenu.QuitGameButton;
@@ -60,6 +61,12 @@ public class MainMenuButtonManager {
 				/ 2 - 75, Game.getInstance().getResolution().getY() / 2 + 50), new Vector2(150, 75), "Quit");
 		registerButton(btnQ2);
 		quitButtons.add(btnQ2);
+		
+		//New game button
+		NewStandardGameButton btnNW1 = new NewStandardGameButton(this, new Vector2(Game.getInstance().getResolution().getX()
+				/ 2 - 75, Game.getInstance().getResolution().getY() / 2 + 50), new Vector2(150, 75), "Standard Game");
+		registerButton(btnNW1);
+		newSaveButtons.add(btnNW1);
 		
 		
 		showMenu(0);

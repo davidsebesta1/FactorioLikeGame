@@ -4,6 +4,12 @@ import engine.rendering.textures.Texture;
 import engine.sprites.ores.OreSprite;
 import math.Vector2;
 
+/**
+ * Aluminium ore
+ * @author David Šebesta
+ * @see OreSprite
+ *
+ */
 public class AluminiumOre extends OreSprite {
 	private static final long serialVersionUID = 8779965118263427564L;
 	
@@ -13,7 +19,7 @@ public class AluminiumOre extends OreSprite {
 
 	
 	
-	public AluminiumOre instantiateAluminiumOre(Texture texture, Vector2 location, int oreAmount) {
+	public static AluminiumOre instantiateAluminiumOre(Texture texture, Vector2 location, int oreAmount) {
 		try {
 			return new AluminiumOre(texture, location, 0.3d, oreAmount, 0.95d);
 		} catch (Exception e) {

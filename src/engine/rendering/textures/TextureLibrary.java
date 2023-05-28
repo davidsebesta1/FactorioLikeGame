@@ -1,26 +1,38 @@
 package engine.rendering.textures;
 
 import java.io.File;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
 
-import engine.sprites.entities.player.UI.StructureButton;
-import engine.sprites.entities.player.UI.StructureTypeButton;
 import main.Log;
 
+/**
+ * A class holding all textures within hashmap with their assigned ids.
+ * @author David Šebesta
+ * @see Texture
+ * @see TextureType
+ *
+ */
 public class TextureLibrary {
 	
 	private static HashMap<String, Texture> library;
 	
 	private static TextureLibrary instance;
 
+	/**
+	 * Class constructor
+	 */
 	public TextureLibrary() {
 		library = new HashMap<>();
 		instance = this;
 	}
 	
+	/**
+	 * Adds a texture with specified key
+	 * @param textureName
+	 * @param texture
+	 * @return True if texture has been sucessfully added, otherwise false
+	 */
 	public static boolean addTexture(String textureName, Texture texture) {
 		if(library.containsKey(textureName)) return false;
 		
@@ -30,6 +42,12 @@ public class TextureLibrary {
 		return true;
 	}
 	
+	/**
+	 * Adds texture with 4 rotated variation. Rotation of 0, 90, 180 and 270 degrees.
+	 * @param textureName
+	 * @param texture
+	 * @return True if Texture has been sucessfully added
+	 */
 	public static boolean addTextureWithVariation(String textureName , Texture texture) {
 		if(library.containsKey(textureName)) library.remove(textureName);
 		
@@ -42,12 +60,16 @@ public class TextureLibrary {
 		return true;
 		
 	}
-	
 
 	public static TextureLibrary getInstance() {
 		return instance;
 	}
 	
+	/**
+	 * Retrieves texture by its unique string, returns special unknownTexture if specified key couldnt be found.
+	 * @param textureName
+	 * @return
+	 */
 	public static Texture retrieveTexture(String textureName) {
 		for (Map.Entry<String, Texture> entry : library.entrySet()) {
 			if(entry.getKey().equals(textureName)) return entry.getValue();
@@ -60,6 +82,12 @@ public class TextureLibrary {
 		return library;
 	}
 
+	/**
+	 * Loads all PNG or JPG textures within specified file with specified textureType. If the texture as "!" at the end of its name, variation will be created.
+	 * @param folderPath
+	 * @param type
+	 * @see TextureType
+	 */
 	public void loadAllTextures(String folderPath, TextureType type) {
 		File folder = new File(folderPath);
         File[] files = folder.listFiles();

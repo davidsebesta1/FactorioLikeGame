@@ -4,6 +4,12 @@ import engine.rendering.textures.Texture;
 import engine.sprites.ores.OreSprite;
 import math.Vector2;
 
+/**
+ * Nickel ore
+ * @author David Šebesta
+ * @see OreSprite
+ *
+ */
 public class NickelOre extends OreSprite {
 	private static final long serialVersionUID = -8582286441638894140L;
 	
@@ -11,7 +17,7 @@ public class NickelOre extends OreSprite {
 		super(texture, location, zDepth, oreAmount, miningHardness);
 	}
 
-	public NickelOre instantiateNickelOre(Texture texture, Vector2 location, int oreAmount) {
+	public static NickelOre instantiateNickelOre(Texture texture, Vector2 location, int oreAmount) {
 		try {
 			return new NickelOre(texture, location, 0.3d, oreAmount, 1.2d);
 		} catch (Exception e) {

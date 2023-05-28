@@ -30,6 +30,11 @@ public class SpriteManager {
 		}
 	}
 	
+	public static synchronized void clearAll() {
+		spriteList.clear();
+		updateSprites.clear();
+	}
+	
 	private static synchronized void addSorted(Sprite sprite) {
 	    int index = Collections.binarySearch(spriteList, sprite, new Comparator<Sprite>() {
 	        public int compare(Sprite s1, Sprite s2) {

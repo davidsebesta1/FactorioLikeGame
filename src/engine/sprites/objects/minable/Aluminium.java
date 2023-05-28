@@ -3,13 +3,18 @@ package engine.sprites.objects.minable;
 import engine.rendering.textures.Texture;
 import math.Vector2;
 
+/**
+ * Aluminium class
+ * @author David Šebesta
+ * @see OreItem
+ */
 public class Aluminium extends OreItem {
 	private static final long serialVersionUID = 6864946137458708673L;
 
 	protected Aluminium(Texture texture, Vector2 location, double zDepth) {
 		super(texture, location, zDepth);
 	}
-	
+
 	public static Aluminium instantiateAluminium(Texture texture, Vector2 location) {
 		try {
 			return new Aluminium(texture, location, 0.72d);
@@ -19,11 +24,11 @@ public class Aluminium extends OreItem {
 		return null;
 
 	}
-	
+
 	public static String ID() {
 		return "aluminiumItem";
 	}
-	
+
 	@Override
 	public String getID() {
 		return ID();
@@ -47,7 +52,5 @@ public class Aluminium extends OreItem {
 		}
 		return true;
 	}
-	
-	
 
 }

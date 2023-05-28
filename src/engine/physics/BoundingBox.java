@@ -7,18 +7,36 @@ import engine.sprites.PhysicsSprite;
 import engine.sprites.Sprite;
 import math.Vector2;
 
+/**
+ * A Extension of Rectangle class providing extra functinality with PhysicsSprites
+ * @see PhysicsSprite
+ * @author David Šebesta
+ */
 public class BoundingBox extends Rectangle {
 	private static final long serialVersionUID = 7056174845995895247L;
 
 	private PhysicsSprite owningSprite;
 	private boolean isStatic;
 
+	/**
+	 * Class Constructor
+	 * @param owningSprite
+	 * @param isStatic
+	 * @param location
+	 * @param size
+	 */
 	public BoundingBox(PhysicsSprite owningSprite, boolean isStatic, Vector2 location, Vector2 size) {
 		super((int) location.getX(), (int) location.getY(), (int) size.getX(), (int) size.getY());
 		this.owningSprite = owningSprite;
 		this.isStatic = isStatic;
 	}
 
+	/**
+	 * Returns if this BoundingBox collides with other bounding box, also checks for valid collision layer
+	 * @see CollisionLayers
+	 * @param box
+	 * @return if the boxes do collide
+	 */
 	public boolean doCollideWith(BoundingBox box) {
 //		if(this.owningSprite instanceof Item) {
 //			System.out.println(box.owningSprite + " and " + owningSprite + " interesct? " + this.intersects(box) + "layer check: " + owningSprite.checkCollisionLayer(box.owningSprite));

@@ -2,13 +2,17 @@ package engine.rendering;
 
 import java.io.Serializable;
 
-import engine.Game;
 import engine.input.IMouseMotionEventListener;
 import engine.input.IMouseWheelEventListener;
 import engine.input.InputManager;
 import math.MathUtilities;
 import math.Vector2;
 
+/**
+ * All sprites are rendering with offset based on camera, this is so the player can "move" around the world.
+ * @author David Šebesta
+ * @see Player
+ */
 public class Camera implements IMouseWheelEventListener, IMouseMotionEventListener, Serializable {
 	private static final long serialVersionUID = -985481655588932644L;
 
@@ -19,6 +23,11 @@ public class Camera implements IMouseWheelEventListener, IMouseMotionEventListen
 
 	private double cameraZoomScale;
 
+	/**
+	 * Class constructor, adds mouse wheel and mouse motion listener to InputManager
+	 * @param location
+	 * @see InputManager
+	 */
 	public Camera(Vector2 location) {
 		this.mouseZoomEnabled = true;
 		this.cameraZoomScale = 1d;

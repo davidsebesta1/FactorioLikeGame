@@ -4,6 +4,12 @@ import engine.rendering.textures.Texture;
 import engine.sprites.ores.OreSprite;
 import math.Vector2;
 
+/**
+ * Carbon phosphorus powder ore
+ * @author David Šebesta
+ * @see OreSprite
+ *
+ */
 public class CPPowderOre extends OreSprite {
 	private static final long serialVersionUID = 5913383213187637566L;
 
@@ -11,7 +17,7 @@ public class CPPowderOre extends OreSprite {
 		super(texture, location, zDepth, oreAmount, miningHardness);
 	}
 
-	public CPPowderOre instantiateCPPowderOre(Texture texture, Vector2 location, int oreAmount) {
+	public static CPPowderOre instantiateCPPowderOre(Texture texture, Vector2 location, int oreAmount) {
 		try {
 			return new CPPowderOre(texture, location, 0.3d, oreAmount, 1.05d);
 		} catch (Exception e) {

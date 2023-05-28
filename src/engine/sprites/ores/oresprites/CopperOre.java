@@ -4,6 +4,12 @@ import engine.rendering.textures.Texture;
 import engine.sprites.ores.OreSprite;
 import math.Vector2;
 
+/**
+ * Copper ore
+ * @author David Šebesta
+ * @see OreSprite
+ *
+ */
 public class CopperOre extends OreSprite {
 	private static final long serialVersionUID = -5097230824359270971L;
 	

@@ -5,6 +5,11 @@ import javax.swing.JFrame;
 import engine.Game;
 import math.Vector2;
 
+/**
+ * A window inside operating system
+ * @author David Šebesta
+ *
+ */
 public class GameWindow {
 	private static GameWindow instance;
 
@@ -13,6 +18,10 @@ public class GameWindow {
 
 	private Vector2 size;
 
+	/**
+	 * A class constructor
+	 * @param size
+	 */
 	private GameWindow(Vector2 size) {
 		this.size = size;
 
@@ -26,16 +35,29 @@ public class GameWindow {
 		this.frame.setVisible(true);
 	}
 
+	/**
+	 * Calls updateImage() for GamePanel
+	 * @see GamePanel
+	 */
 	public void repaint() {
 		panel.updateImage();
 	}
 
+	/**
+	 * Returns a instance
+	 * @return returns static instance
+	 */
 	public static GameWindow getInstance() {
 		if (instance != null)
 			return instance;
 		return null;
 	}
 
+	/**
+	 * Initializes instance
+	 * @param size
+	 * @return
+	 */
 	public static GameWindow initiateInstance(Vector2 size) {
 		if (instance == null)
 			instance = new GameWindow(size);

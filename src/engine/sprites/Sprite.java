@@ -23,7 +23,7 @@ public abstract class Sprite implements Comparable<Sprite>, ISpriteBehaviour, Se
 
 	protected boolean isVisible;
 	
-	protected Chunk currentChunk;
+	protected transient Chunk currentChunk;
 
 	protected Sprite(Texture texture, Vector2 location, double zDepth) {
 		super();

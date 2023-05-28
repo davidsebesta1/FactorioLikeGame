@@ -12,6 +12,12 @@ import engine.sprites.structures.StructureSprite;
 import engine.time.DeltaTime;
 import math.Vector2;
 
+/**
+ * Conveyor belt is a structure that transports items on it.
+ * @author David Šebesta
+ * @see ConveyorBeltDirection
+ * @see ConveyorBeltManager
+ */
 public class ConveyorBelt extends StructureSprite {
 	private static final long serialVersionUID = -7264927604884014679L;
 
@@ -25,6 +31,13 @@ public class ConveyorBelt extends StructureSprite {
 
 	private static final double TRANSPORT_SPEED = 20f;
 
+	/**
+	 * Private constructor
+	 * @param texture
+	 * @param location
+	 * @param zDepth
+	 * @param dir
+	 */
 	private ConveyorBelt(Texture texture, Vector2 location, double zDepth, ConveyorBeltDirection dir) {
 		super(texture, location, zDepth);
 		this.direction = dir;
@@ -38,6 +51,13 @@ public class ConveyorBelt extends StructureSprite {
 		this.rotatable = true;
 	}
 
+	/**
+	 * Static method to instantiate a new Conveyor with specified file
+	 * @param file
+	 * @param location
+	 * @param dir
+	 * @return ConveyorBelt object
+	 */
 	public static ConveyorBelt instantiateConveyorBelt(File file, Vector2 location, ConveyorBeltDirection dir) {
 		try {
 			Texture texture = Texture.createTexture(file);
@@ -48,7 +68,13 @@ public class ConveyorBelt extends StructureSprite {
 		return null;
 
 	}
-
+	/**
+	 * Static method to instantiate a new Conveyor with specified texture
+	 * @param texture
+	 * @param location
+	 * @param dir
+	 * @return ConveyorBelt object
+	 */
 	public static ConveyorBelt instantiateConveyorBelt(Texture texture, Vector2 location, ConveyorBeltDirection dir) {
 		try {
 			return new ConveyorBelt(texture, location, 0.7d, dir);
@@ -71,6 +97,10 @@ public class ConveyorBelt extends StructureSprite {
 		return item;
 	}
 
+	/**
+	 * Sets a item and requests a chunk which is inside it
+	 * @param item
+	 */
 	public void setItem(Item item) {
 		this.item = item;
 
@@ -111,6 +141,9 @@ public class ConveyorBelt extends StructureSprite {
 		return direction == other.direction && Objects.equals(item, other.item);
 	}
 	
+	/**
+	 * Method for updating item movement
+	 */
 	@Override
 	public void update() {
 		if (item != null && next != null) {

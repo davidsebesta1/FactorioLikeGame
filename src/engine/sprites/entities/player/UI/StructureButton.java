@@ -10,6 +10,12 @@ import engine.rendering.textures.Texture;
 import engine.sprites.structures.StructureSprite;
 import math.Vector2;
 
+/**
+ * Structure button is a button that holds structure as a template and then reuses it for placement by construction manager.
+ * @author David Šebesta
+ * @see PlayerConstructionManager
+ *
+ */
 public class StructureButton implements IMouseActionEventListener {
 	private String structureID;
 	
@@ -26,6 +32,15 @@ public class StructureButton implements IMouseActionEventListener {
 
 	private static ArrayList<StructureButton> buttons = new ArrayList<>();
 
+	/**
+	 * A class constructor
+	 * @param structureID
+	 * @param location
+	 * @param size
+	 * @param owner
+	 * @param texture
+	 * @param templateStructure
+	 */
 	public StructureButton(String structureID, Vector2 location, Vector2 size, PlayerConstructionManager owner, Texture texture, StructureSprite templateStructure) {
 		super();
 		this.structureID = structureID;

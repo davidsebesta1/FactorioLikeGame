@@ -6,23 +6,44 @@ import engine.sprites.structures.StructureMap;
 import engine.sprites.structures.StructureSprite;
 import math.Vector2;
 
+/**
+ * A static manager class for updating and managing conveyor belts.
+ * @author David Šebesta
+ *
+ */
 public class ConveyorBeltManager {
 
 	private static ArrayList<ConveyorBelt> belts = new ArrayList<>();
 
+	/**
+	 * Private constructor
+	 */
 	private ConveyorBeltManager() {
 	}
 
+	/**
+	 * Attempts to add a conveyor belt to a list
+	 * @param belt
+	 * @return True if added, otherwise false
+	 */
 	public static boolean addBelt(ConveyorBelt belt) {
 		boolean result = belts.add(belt);
 		updateConnections();
 		return result;
 	}
 
+	/**
+	 * Attempts to remove conveyor belt from a list
+	 * @param belt
+	 * @return True if removed, otherwise false
+	 */
 	public static boolean removeBelt(ConveyorBelt belt) {
 		return belts.remove(belt);
 	}
 
+	/**
+	 * Updates all connections of a conveyor belts
+	 */
 	public static void updateConnections() {
 		for (ConveyorBelt belt : belts) {
 			updateConnection(belt);
@@ -31,6 +52,10 @@ public class ConveyorBeltManager {
 
 	}
 
+	/**
+	 * Updates connection to other belts of a specified conveyor belt
+	 * @param belt
+	 */
 	public static void updateConnection(ConveyorBelt belt) {
 		StructureSprite[][] map = StructureMap.getInstance().getMap();
 		Vector2 loc = StructureMap.getInstance().getLocationByStructure(belt);

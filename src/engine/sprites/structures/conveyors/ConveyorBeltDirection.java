@@ -2,6 +2,11 @@ package engine.sprites.structures.conveyors;
 
 import math.Vector2;
 
+/**
+ * Enums for world directions
+ * @author David Šebesta
+ *
+ */
 public enum ConveyorBeltDirection {
 	DOWN(0, 1, "DOWN"), 
 	RIGHT(1, 0, "RIGHT"), 

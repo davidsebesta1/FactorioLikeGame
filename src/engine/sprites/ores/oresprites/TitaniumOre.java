@@ -4,6 +4,12 @@ import engine.rendering.textures.Texture;
 import engine.sprites.ores.OreSprite;
 import math.Vector2;
 
+/**
+ * Titanium ore
+ * @author David Šebesta
+ * @see OreSprite
+ *
+ */
 public class TitaniumOre extends OreSprite {
 	private static final long serialVersionUID = -1643749667967483986L;
 

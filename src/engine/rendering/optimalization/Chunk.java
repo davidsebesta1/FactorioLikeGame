@@ -11,15 +11,18 @@ import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 
 import engine.sprites.Sprite;
 import math.Vector2;
 
+/**
+ * Chunk is a A x A size object that this managed by ChunkManager, chunk class privides optimalization tot he game by redrawing chunk only if any sprites within has moved, this results in less drawing each frame.
+ * @see ChunkManager
+ * @author David Šebesta
+ */
 public class Chunk {
-
 	private ArrayList<Sprite> sprites;
 
 	private Vector2 location;
@@ -31,6 +34,11 @@ public class Chunk {
 
 	private boolean needResolve;
 
+	/**
+	 * A class constructor
+	 * @param location
+	 * @param size
+	 */
 	public Chunk(Vector2 location, Vector2 size) {
 		this.sprites = new ArrayList<>();
 		this.location = location;
@@ -41,38 +49,20 @@ public class Chunk {
 
 		GraphicsConfiguration gfxConfig = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice().getDefaultConfiguration();
 		buffer = gfxConfig.createCompatibleImage((int) size.getX(), (int) size.getY(), Transparency.BITMASK);
-		
-		Graphics g = buffer.getGraphics();
-		Graphics2D g2d = (Graphics2D) g;
 	}
 
-	//	public synchronized void resolveFrame() {
-	//		if(needsResolve()){
-	//			
-	//			for(Sprite sprite : toRemoveNextFrame){
-	//				sprite.setCurrentChunk(null);
-	//				System.out.println("removed sprite " + sprite);
-	//			}
-	//			sprites.removeAll(toRemoveNextFrame);
-	//			
-	//			for(Sprite sprite : toAddNextFrame){
-	//				sprite.setCurrentChunk(this);
-	//			}
-	//			
-	//			addAllSorted(toAddNextFrame);
-	//			
-	//			toAddNextFrame.clear();
-	//			toRemoveNextFrame.clear();
-	//			
-	//			cacheImage();
-	//		}
-	//	}
-
+	/**
+	 * Resolves chunk stuff for frame
+	 */
 	public synchronized void resolveFrame() {
 		cacheImage();
 		this.needResolve = false;
 	}
 
+	/**
+	 * Adds sprites sorted by Z-depth
+	 * @param spriteList
+	 */
 	private synchronized void addAllSorted(Set<Sprite> spriteList) {
 		for (Sprite sprite : spriteList) {
 			if(sprites.contains(sprite)) return;
@@ -93,6 +83,11 @@ public class Chunk {
 		}
 	}
 
+	/**
+	 * Adds a sprite sorted by z-depth
+	 * @param sprite
+	 * @return successfully added sprite
+	 */
 	private synchronized boolean addSorted(Sprite sprite) {
 		if(!sprites.contains(sprite)) {
 			int index = Collections.binarySearch(sprites, sprite, new Comparator<Sprite>() {
@@ -112,16 +107,29 @@ public class Chunk {
 		return false;
 	}
 
+	/**
+	 * Tries to add chunk to the sprite, also makes sure that chunks needs to be resolved
+	 * @param sprite
+	 * @return false if sprite is in chunk arraylist, otherwise true
+	 */
 	public synchronized boolean tryAddSprite(Sprite sprite) {
 		needResolve = true;
 		return addSorted(sprite);
 	}
 
+	/**
+	 * Tries to remove sprite from chunk rendering
+	 * @param sprite
+	 * @return true if sprite has been sucessfully removed from chunk
+	 */
 	public synchronized boolean tryRemoveSprite(Sprite sprite) {
 		needResolve = true;
 		return sprites.remove(sprite);
 	}
 
+	/**
+	 * Method that cache image to a buffered image for rendering
+	 */
 	public void cacheImage() {
 		Graphics g = buffer.getGraphics();
 		Graphics2D g2d = (Graphics2D) g;
@@ -140,6 +148,11 @@ public class Chunk {
 		g.dispose();
 	}
 
+	/**
+	 * Checks if sprite has been fully drawn (not out of bounds, etc)
+	 * @param sprite
+	 * @return true if sprite has been fully drawn, otherwise false
+	 */
 	public boolean isFullyDrawnSprite(Sprite sprite) {
 		// Compare the dimensions of the source image with the dimensions of the drawn image
 		BufferedImage sourceImage = sprite.getTexture().getImage();
@@ -157,6 +170,11 @@ public class Chunk {
 		return buffer;
 	}
 
+	/**
+	 * Checks if sprites left upper corner (its location) is within this chunk borders
+	 * @param sprite
+	 * @return returns true if sprite is within chunk bounds (its left upper corner)
+	 */
 	public boolean isWithinChunk(Sprite sprite) {
 		// Calculate the bounds of the chunk
 		int chunkX = (int) (location.getX());

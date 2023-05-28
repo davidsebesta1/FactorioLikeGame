@@ -4,6 +4,12 @@ import engine.rendering.textures.Texture;
 import engine.sprites.ores.OreSprite;
 import math.Vector2;
 
+/**
+ * Lithium ore
+ * @author David Šebesta
+ * @see OreSprite
+ *
+ */
 public class LithiumOre extends OreSprite {
 	private static final long serialVersionUID = -1202506759023891949L;
 	
@@ -11,7 +17,7 @@ public class LithiumOre extends OreSprite {
 		super(texture, location, zDepth, oreAmount, miningHardness);
 	}
 
-	public LithiumOre instantiateLithiumOre(Texture texture, Vector2 location, int oreAmount) {
+	public static LithiumOre instantiateLithiumOre(Texture texture, Vector2 location, int oreAmount) {
 		try {
 			return new LithiumOre(texture, location, 0.3d, oreAmount, 1.1d);
 		} catch (Exception e) {

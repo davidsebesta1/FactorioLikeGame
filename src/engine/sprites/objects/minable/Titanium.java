@@ -3,6 +3,11 @@ package engine.sprites.objects.minable;
 import engine.rendering.textures.Texture;
 import math.Vector2;
 
+/**
+ * Titanium class
+ * @author David Šebesta
+ * @see OreItem
+ */
 public class Titanium extends OreItem {
 	private static final long serialVersionUID = -8537086888336033953L;
 

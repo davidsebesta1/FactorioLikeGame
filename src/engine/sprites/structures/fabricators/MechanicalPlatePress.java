@@ -19,6 +19,11 @@ import engine.sprites.structures.conveyors.ConveyorBelt;
 import engine.time.DeltaTime;
 import math.Vector2;
 
+/**
+ * Functional class for making plates from ores
+ * @author David Šebesta
+ *
+ */
 public class MechanicalPlatePress extends StructureSprite{
 	private static final long serialVersionUID = -2983381922038946838L;
 	private double elapsedTime;
@@ -55,16 +60,17 @@ public class MechanicalPlatePress extends StructureSprite{
 	public void enteredCollision(PhysicsSprite sprite) {
 		if (sprite instanceof Item) {
 		    Item item = (Item) sprite;
-		    System.out.println(checkForValidItemIn(item.getID()));
 		    boolean add = tryAddItemToInventory(item.getID(), 1);
 		    System.out.println(add);
 		    if(checkForValidItemIn(item.getID()) && add) {
 		    	item.destroy();
-		    	System.out.println(storage);
 		    }
 		}
 	}
 	
+	/**
+	 * Update method
+	 */
 	@Override
 	public void update() {
 		if(!storage.isEmpty()){
@@ -78,6 +84,9 @@ public class MechanicalPlatePress extends StructureSprite{
 		}
 	}
 	
+	/**
+	 * Processing of a items
+	 */
 	private void processPlate() {
 		if(storage.getItemAmount("titaniumItem") > 0) {
 			addPlateRemoveItem("titaniumItem", "titaniumPlate");
@@ -89,11 +98,19 @@ public class MechanicalPlatePress extends StructureSprite{
 		
 	}
 	
+	/**
+	 * Adds one plate, removes one ore from its own inventory.
+	 * @param itemID
+	 * @param plateID
+	 */
 	private void addPlateRemoveItem(String itemID, String plateID) {
 		storage.tryAddItemToInventory(plateID, 1);
 		storage.tryRemoveItemFromInventory(itemID, 1);
 	}
 	
+	/**
+	 * Attempts to send a plate on outcoming conveyor belts.
+	 */
 	private void trySendPlate() {
 		ArrayList<ConveyorBelt> belts = getOutcomingBelts();
 		if(!belts.isEmpty()) {
@@ -116,6 +133,11 @@ public class MechanicalPlatePress extends StructureSprite{
 	
 	
 	
+	/**
+	 * Checks for valid ID
+	 * @param id
+	 * @return True if ID is valued, false otherwise.
+	 */
 	public boolean checkForValidItemIn(String id) {
 		for(String allowed : allowIn) {
 			if(id.equals(allowed)) return true;
@@ -125,19 +147,41 @@ public class MechanicalPlatePress extends StructureSprite{
 	}
 	
 
+	/**
+	 * Method for inventory stuff with extra check
+	 * @param ID
+	 * @param amount
+	 * @return True if item has been successfully added, otherwise false.
+	 */
 	public boolean tryAddItemToInventory(String ID, int amount) {
 		if(storage.getItemAmount(ID) >= 5) return false;
 		return storage.tryAddItemToInventory(ID, amount);
 	}
 
+	/**
+	 * Method for inventory removing
+	 * @param ID
+	 * @param amount
+	 * @return True if item has been removed, otherwise false.
+	 */
 	public boolean tryRemoveItemFromInventory(String ID, int amount) {
 		return storage.tryRemoveItemFromInventory(ID, amount);
 	}
 
+	/**
+	 * Method for removing whole hashmap from inventory
+	 * @param map
+	 * @return True if item has been removed, otherwise false.
+	 */
 	public boolean removeStuffFromInventory(HashMap<String, Integer> map) {
 		return storage.removeStuffFromInventory(map);
 	}
 
+	/**
+	 * Returns amount of items in inventory
+	 * @param ID
+	 * @return Amount of inventory items
+	 */
 	public int getItemAmount(String ID) {
 		return storage.getItemAmount(ID);
 	}

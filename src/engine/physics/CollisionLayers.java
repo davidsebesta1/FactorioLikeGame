@@ -1,5 +1,9 @@
 package engine.physics;
 
+/**
+ * Enum class providing basic CollisionLayers, if the other Enum is within constructor of the other layer, they do collide and will activate onCollision methods.
+ * @author David Šebest
+ */
 public enum CollisionLayers {
 	MAPEDGE(),
 	STRUCTURE(MAPEDGE),

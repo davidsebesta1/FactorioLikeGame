@@ -4,6 +4,11 @@ import engine.rendering.textures.Texture;
 import engine.sprites.objects.Item;
 import math.Vector2;
 
+/**
+ * Titanium plate
+ * @author David Šebesta
+ * @see Item
+ */
 public class TitaniumPlate extends Item{
 	private static final long serialVersionUID = 6798974267071815412L;
 

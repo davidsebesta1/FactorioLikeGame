@@ -26,6 +26,11 @@ import engine.sprites.structures.fabricators.MechanicalPlatePress;
 import math.MathUtilities;
 import math.Vector2;
 
+/**
+ * Player construction manager is a class responsible for placement of a structured by player.
+ * @author David Šebesta
+ *
+ */
 public class PlayerConstructionManager implements IMouseMotionEventListener{
 
 	private HashMap<StructureTypeButton, HashSet<StructureButton>> categoryAndAvailableStructures;
@@ -44,6 +49,10 @@ public class PlayerConstructionManager implements IMouseMotionEventListener{
 	
 	private Texture background;
 
+	/**
+	 * Class constructor
+	 * @param location
+	 */
 	public PlayerConstructionManager(Vector2 location) {
 		super();
 		this.location = location;
@@ -65,6 +74,9 @@ public class PlayerConstructionManager implements IMouseMotionEventListener{
 
 	}
 
+	/**
+	 * Register structures
+	 */
 	private void registerStructures() {
 		registerStructure("CommandStructures", "coreModule", TextureLibrary.retrieveTexture("coreModuleIcon"), CoreModule.instantiateCoreModule(TextureLibrary.retrieveTexture("coreModule"), Vector2.templateSpawn));
 		registerStructure("MiningStructures", "basicDrill", TextureLibrary.retrieveTexture("basicDrillIcon"), BasicDrill.instantiateBasicDrill(TextureLibrary.retrieveTexture("basicDrill"), Vector2.templateSpawn));
@@ -73,6 +85,9 @@ public class PlayerConstructionManager implements IMouseMotionEventListener{
 		registerStructure("FactoryStructures", "mechanicalPlatePress", TextureLibrary.retrieveTexture("mechanicalPlatePress"), MechanicalPlatePress.instantiateManualPlatePress(TextureLibrary.retrieveTexture("mechanicalPlatePress"), Vector2.templateSpawn));
 	}
 
+	/**
+	 * Initialize buttons on a left side for structure types
+	 */
 	private void initializeStructTypeButtons() {
 		//LEFT RECTANGLE
 		Vector2 loc = new Vector2(0, Game.getInstance().getResolution().getY());
@@ -123,6 +138,11 @@ public class PlayerConstructionManager implements IMouseMotionEventListener{
 
 	}
 
+	/**
+	 * Returns structtypebutton with identifier in params
+	 * @param identifier
+	 * @return StructureTypeButton if any found, otherwise null
+	 */
 	public StructureTypeButton getStructTypeButtonByIdentifier(String identifier) {
 		for (StructureTypeButton btn : categoryAndAvailableStructures.keySet()) {
 			if (btn.getType().equals(identifier))
@@ -132,6 +152,9 @@ public class PlayerConstructionManager implements IMouseMotionEventListener{
 		return null;
 	}
 
+	/**
+	 * Initializes structure buttons on a right side of menu
+	 */
 	private void initializeStructButtons() {
 		//RIGHT RECTANGLE
 		Vector2 loc2 = new Vector2(0, Game.getInstance().getResolution().getY());
@@ -156,6 +179,10 @@ public class PlayerConstructionManager implements IMouseMotionEventListener{
 		}
 	}
 
+	/**
+	 * Method used for painting all buttons and inventory UI
+	 * @param g2d
+	 */
 	public void paint(Graphics2D g2d) {
 		Vector2 loc = new Vector2(0, Game.getInstance().getResolution().getY() - 265);
 
@@ -206,6 +233,11 @@ public class PlayerConstructionManager implements IMouseMotionEventListener{
 		}
 	}
 
+	/**
+	 * Shows assigned structure buttons to a structuretypebuton
+	 * @param button
+	 * @return If success true, otherwise false
+	 */
 	public boolean showCorrespondingStructButton(StructureTypeButton button) {
 		if (button != null) {
 			HashSet<StructureButton> toShow = categoryAndAvailableStructures.get(button);
@@ -234,6 +266,14 @@ public class PlayerConstructionManager implements IMouseMotionEventListener{
 		return false;
 	}
 
+	/**
+	 * Registers a placeable structure
+	 * @param category
+	 * @param name
+	 * @param iconTexture
+	 * @param template
+	 * @return Returns false if no structuretypebutton is found by category. otherwise true
+	 */
 	public boolean registerStructure(String category, String name, Texture iconTexture, StructureSprite template) {
 		StructureTypeButton categoryButton = getStructTypeButtonByIdentifier(category);
 		if (categoryButton != null) {
@@ -244,6 +284,9 @@ public class PlayerConstructionManager implements IMouseMotionEventListener{
 		return false;
 	}
 	
+	/**
+	 * Attempts to rotate selected structure, currently only conveyorbelt
+	 */
 	public void tryRotateCurrentlySelected() {
 		if(currentlySelected.getTemplateStructure() instanceof ConveyorBelt) {
 			ConveyorBelt belt = (ConveyorBelt)currentlySelected.getTemplateStructure();
@@ -298,6 +341,9 @@ public class PlayerConstructionManager implements IMouseMotionEventListener{
 		this.currentlySelectedType = currentlySelectedType;
 	}
 
+	/**
+	 * Mouse moved event, causing transparent image of selected structure to appear
+	 */
 	@Override
 	public void mouseMoved(Vector2 newLocation) {
 		if(currentlySelected != null && Game.getInstance().getWindow() != null) {
