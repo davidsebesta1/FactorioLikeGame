@@ -2,6 +2,12 @@ package notmycode;
 
 import java.util.Random;
 
+/**
+ * Perlin noise
+ * @author alksily
+ * @source https://gist.github.com/alksily/7a85a1898e65c936f861ee93516e397d?permalink_comment_id=4062133
+ *
+ */
 public class PerlinNoise {
 	private double seed;
 	private long default_size;

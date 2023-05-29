@@ -3,8 +3,15 @@ package engine.world.mainmenu.quitmenu;
 import engine.rendering.textures.Texture;
 import engine.world.mainmenu.Button;
 import engine.world.mainmenu.MainMenuButtonManager;
+import main.Log;
 import math.Vector2;
 
+/**
+ * Button that shows quit menu
+ * @author David Šebesta
+ * @see Button
+ *
+ */
 public class QuitGameButton extends Button {
 
 	public QuitGameButton(MainMenuButtonManager manager, Vector2 location, Vector2 size, Texture texture) {
@@ -21,6 +28,7 @@ public class QuitGameButton extends Button {
 	
 	@Override
 	public void mousePrimaryPressed(Vector2 screenCoordinate) {
+		Log.info("Player showed the quit menu");
 		owner.showMenu(MainMenuButtonManager.MENU_QUITGAME);
 	}
 

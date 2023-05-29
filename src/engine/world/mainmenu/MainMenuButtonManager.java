@@ -14,6 +14,11 @@ import engine.world.mainmenu.quitmenu.FinalizeQuitButton;
 import engine.world.mainmenu.quitmenu.QuitGameButton;
 import math.Vector2;
 
+/**
+ * A manager of main menu buttons, provides functionality and rendering of it.
+ * @author David Šebesta
+ *
+ */
 public class MainMenuButtonManager {
 
 	private ArrayList<Button> buttons;
@@ -28,6 +33,9 @@ public class MainMenuButtonManager {
 	public static final int MENU_LOADSAVE = 2;
 	public static final int MENU_QUITGAME = 3;
 
+	/**
+	 * A class constructor
+	 */
 	public MainMenuButtonManager() {
 		buttons = new ArrayList<>();
 		mainButtons = new ArrayList<>();
@@ -72,6 +80,10 @@ public class MainMenuButtonManager {
 		showMenu(0);
 	}
 
+	/**
+	 * Register button, only registered buttons are being drawn
+	 * @param button
+	 */
 	private void registerButton(Button button) {
 		if (buttons.contains(button))
 			return;
@@ -79,6 +91,11 @@ public class MainMenuButtonManager {
 		buttons.add(button);
 	}
 
+	/**
+	 * Draw method for Graphics2D object
+	 * @param g2d
+	 * @see Graphics2D
+	 */
 	public void draw(Graphics2D g2d) {
 		for (Button button : buttons) {
 			if (!button.isVisible()) {
@@ -107,6 +124,10 @@ public class MainMenuButtonManager {
 		}
 	}
 
+	/**
+	 * Switches between drawn menu to specified one
+	 * @param index
+	 */
 	public void showMenu(int index) {
 		if (index < 0 || index > 3)
 			return;
@@ -127,12 +148,18 @@ public class MainMenuButtonManager {
 		}
 	}
 
+	/**
+	 * Hides all of the buttons
+	 */
 	private void hideAllButtons() {
 		for (Button button : buttons) {
 			button.setVisible(false);
 		}
 	}
 
+	/**
+	 * Shows only buttons assigned to new save
+	 */
 	private void showNewSaveMenu() {
 		hideAllButtons();
 		for (Button button : newSaveButtons) {
@@ -140,6 +167,9 @@ public class MainMenuButtonManager {
 		}
 	}
 
+	/**
+	 * Shows all buttons assigned to load save (note that loading saves doesnt work yet)
+	 */
 	private void showLoadSaveMenu() {
 		hideAllButtons();
 		for (Button button : loadSaveButtons) {
@@ -147,6 +177,9 @@ public class MainMenuButtonManager {
 		}
 	}
 
+	/**
+	 * Shows all buttons that are assigned to quitting the game
+	 */
 	private void showQuitMenu() {
 		hideAllButtons();
 		for (Button button : quitButtons) {
@@ -154,6 +187,9 @@ public class MainMenuButtonManager {
 		}
 	}
 
+	/**
+	 * Shows the buttons of the main menu itself
+	 */
 	private void showMainMenu() {
 		hideAllButtons();
 		for (Button button : mainButtons) {
@@ -161,6 +197,10 @@ public class MainMenuButtonManager {
 		}
 	}
 
+	/**
+	 * Returns all buttons
+	 * @return List of all buttons in main menu
+	 */
 	public ArrayList<Button> getButtons() {
 		return buttons;
 	}

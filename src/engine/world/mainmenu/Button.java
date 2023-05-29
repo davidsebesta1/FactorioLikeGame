@@ -6,10 +6,19 @@ import engine.input.IMouseActionEventListener;
 import engine.rendering.textures.Texture;
 import math.Vector2;
 
-public class Button implements IMouseActionEventListener{
+/**
+ * A button class used for input detection
+ * @author David Šebesta
+ *
+ */
+public abstract class Button implements IMouseActionEventListener{
 	
+	/**
+	 * Owning manager
+	 */
 	protected MainMenuButtonManager owner;
 	
+	//variables
 	protected Vector2 location;
 	protected Vector2 size;
 	
@@ -18,6 +27,13 @@ public class Button implements IMouseActionEventListener{
 	
 	protected boolean isVisible = false;
 
+	/**
+	 * Class constructor with specified texture
+	 * @param manager
+	 * @param location
+	 * @param size
+	 * @param texture
+	 */
 	public Button(MainMenuButtonManager manager, Vector2 location, Vector2 size, Texture texture) {
 		super();
 		this.owner = manager;
@@ -27,6 +43,12 @@ public class Button implements IMouseActionEventListener{
 		this.text = "";
 	}
 	
+	/**
+	 * Class constructor
+	 * @param manager
+	 * @param location
+	 * @param size
+	 */
 	public Button(MainMenuButtonManager manager,Vector2 location, Vector2 size) {
 		super();
 		this.owner = manager;
@@ -35,6 +57,13 @@ public class Button implements IMouseActionEventListener{
 		this.text = "";
 	}
 	
+	/**
+	 * Class constructor with specified string
+	 * @param manager
+	 * @param location
+	 * @param size
+	 * @param text
+	 */
 	public Button(MainMenuButtonManager manager,Vector2 location, Vector2 size, String text) {
 		super();
 		this.owner = manager;

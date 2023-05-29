@@ -29,6 +29,7 @@ import engine.rendering.textures.TextureLibrary;
 import engine.sprites.Background;
 import engine.sprites.entities.player.Player;
 import engine.sprites.structures.conveyors.ConveyorBeltDirection;
+import main.Log;
 import math.Vector2;
 
 /**
@@ -134,6 +135,8 @@ public class GamePanel extends JPanel {
 		g.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_SPEED);
 		g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_OFF);
 		g.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_OFF);
+		
+		Log.info("Initialized double buffering");
 	}
 
 	/**

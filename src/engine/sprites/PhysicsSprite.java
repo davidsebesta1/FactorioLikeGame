@@ -8,6 +8,11 @@ import engine.physics.PhysicsManager;
 import engine.rendering.textures.Texture;
 import math.Vector2;
 
+/**
+ * Physics sprite is a abstract class for sprites that can implement collisions handling with specified bounding box and collision layer. It can also have its own velocity which is updates each frame.
+ * @author David Šebesta
+ *
+ */
 public abstract class PhysicsSprite extends Sprite implements IPhysicsBehaviour {
 	private static final long serialVersionUID = -3155369270101122877L;
 
@@ -17,6 +22,12 @@ public abstract class PhysicsSprite extends Sprite implements IPhysicsBehaviour 
 	
 	protected CollisionLayers collisionLayer;
 
+	/**
+	 * Protected constructor
+	 * @param texture
+	 * @param location
+	 * @param zDepth
+	 */
 	protected PhysicsSprite(Texture texture, Vector2 location, double zDepth) {
 		super(texture, location, zDepth);
 		this.collisionBox = null;
@@ -26,6 +37,11 @@ public abstract class PhysicsSprite extends Sprite implements IPhysicsBehaviour 
 		PhysicsManager.addPhysicsSprite(this);
 	}
 	
+	/**
+	 * Checking for collision layer, if two sprites can collide
+	 * @param other
+	 * @return True if they can collide, otherwise false
+	 */
 	public boolean checkCollisionLayer(PhysicsSprite other) {
 		if(this.collisionLayer == other.collisionLayer) return false;
 		if(this.collisionLayer == null || other.collisionLayer == null) return false;
@@ -98,6 +114,9 @@ public abstract class PhysicsSprite extends Sprite implements IPhysicsBehaviour 
 		this.collisionLayer = layer;
 	}
 	
+	/**
+	 * Clear references
+	 */
 	@Override
 	public void destroy() {
 		super.destroy();

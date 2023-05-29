@@ -13,16 +13,37 @@ import engine.sprites.Background;
 import engine.sprites.entities.player.Player;
 import engine.sprites.ores.OreMap;
 import engine.sprites.structures.StructureMap;
+import engine.sprites.structures.StructureSprite;
 import engine.sprites.tiles.TileMap;
+import engine.sprites.tiles.TileSprite;
 import main.Log;
 import math.Vector2;
 
-public class World implements Serializable {
+/**
+ * A abstract world class, can be used to inherit objects to create game world
+ * @author David Šebesta
+ *
+ */
+public abstract class World implements Serializable {
 	private static final long serialVersionUID = 451312218191408195L;
 
+	/**
+	 * A size of a world in pixels
+	 */
 	protected Vector2 size;
+	
+	/**
+	 * Tile map holding all tile information inside it
+	 * @see TileMap
+	 * @see TileSprite
+	 */
 	protected TileMap tiles;
 
+	/**
+	 * Structure map holding information about all structures
+	 * @see StructureMap
+	 * @see StructureSprite
+	 */
 	protected StructureMap structureMap;
 	protected OreMap oreMap;
 
@@ -32,6 +53,10 @@ public class World implements Serializable {
 
 	protected transient ChunkManager chunkManager;
 
+	/**
+	 * Protected class constructor
+	 * @param size
+	 */
 	protected World(Vector2 size) {
 		this.size = size;
 		this.tiles = new TileMap((int) (size.getX() / 32), (int) (size.getY() / 32));
@@ -104,6 +129,9 @@ public class World implements Serializable {
 		return oreMap;
 	}
 
+	/**
+	 * Doesnt work
+	 */
 	public void SaveWorld() {
 		try {
 			FileOutputStream fileOut = new FileOutputStream("/saves/");

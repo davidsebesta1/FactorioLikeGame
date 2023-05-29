@@ -21,6 +21,12 @@ import main.Log;
 import math.Vector2;
 import notmycode.PerlinNoise;
 
+
+/**
+ * A actual game world with terrain, player and such.
+ * @author David
+ *
+ */
 public class GameWorld extends World {
 	private static final long serialVersionUID = -8887930684910426859L;
 	
@@ -48,6 +54,10 @@ public class GameWorld extends World {
 	private File saveFile;
 
 
+	/**
+	 * Class constructor
+	 * @param size
+	 */
 	public GameWorld(Vector2 size) {
 		super(size);
 		this.saveFile = new File("saves/world1");
@@ -57,6 +67,10 @@ public class GameWorld extends World {
 		this.player.setShowMainMenu(false);
 	}
 
+	/**
+	 * Generates a terrain and ores via perlinNoise, each tile has its own randomized variant (rotated) to prevent tiling.
+	 * @see PerlinNoise
+	 */
 	private void generateTerrain() {
 		Random random = new Random(7584);
 		Random random2 = new Random(5144);
@@ -143,6 +157,10 @@ public class GameWorld extends World {
 		}
 	}
 
+	/**
+	 * Fixes single gaps that are present in world generation so the world is smoother
+	 * @param noiseImage
+	 */
 	public void fixGaps(BufferedImage noiseImage) {
 		for (int y = 0; y < noiseImage.getWidth(); y++) {
 			for (int x = 0; x < noiseImage.getHeight(); x++) {
@@ -222,6 +240,9 @@ public class GameWorld extends World {
 		this.saveFile = saveFile;
 	}
 
+	/**
+	 * Not functional
+	 */
 	@Override
 	public void SaveWorld() {
 		try {

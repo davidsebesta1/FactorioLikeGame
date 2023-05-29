@@ -23,6 +23,11 @@ import main.Log;
 import math.Vector2;
 import notmycode.ScreenManager;
 
+/**
+ * A game object itself, a core of the game. This class does everything from loading textures, handling frames to managing game loop.
+ * @author David Šebesta
+ *
+ */
 public class Game implements Runnable {
 
 	private static Game instance;
@@ -45,6 +50,9 @@ public class Game implements Runnable {
 
 	private static final DisplayMode POSSIBLE_MODES[] = { new DisplayMode(1920, 1080, 16, 0)};
 
+	/**
+	 * Class constructor
+	 */
 	private Game() {
 		isRunning = true;
 		instance = this;
@@ -89,6 +97,9 @@ public class Game implements Runnable {
 		Log.info("Started game thread");
 	}
 
+	/**
+	 * Game loop
+	 */
 	@Override
 	public void run() {
 		while (isRunning) {
@@ -143,11 +154,19 @@ public class Game implements Runnable {
 		}
 	}
 
+	/**
+	 * Returns a instance
+	 * @return Instance of Game
+	 */
 	public static Game getInstance() {
 		if (instance != null) return instance;
 		return initializeInstance();
 	}
 
+	/**
+	 * Initializes the instance
+	 * @return Instance of Game
+	 */
 	public static Game initializeInstance() {
 		if (instance == null)
 			return new Game();

@@ -4,6 +4,11 @@ import engine.rendering.textures.TextureLibrary;
 import engine.world.World;
 import math.Vector2;
 
+/**
+ * A main menu world
+ * @author David Šebesta
+ *
+ */
 public class MainMenuWorld extends World {
 	private static final long serialVersionUID = 4894625521169007370L;
 

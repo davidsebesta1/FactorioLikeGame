@@ -13,7 +13,7 @@ import math.Vector2;
 
 /**
  * Core Module is a main module in this game, providing access to collecting resources.
- * @author David
+ * @author David Šebesta
  *
  */
 public class CoreModule extends StructureSprite {

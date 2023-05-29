@@ -3,8 +3,15 @@ package engine.world.mainmenu.quitmenu;
 import engine.rendering.textures.Texture;
 import engine.world.mainmenu.Button;
 import engine.world.mainmenu.MainMenuButtonManager;
+import main.Log;
 import math.Vector2;
 
+/**
+ * Button that cancels the quit sequence and returns to the main menu
+ * @author David Šebesta
+ * @see Button
+ *
+ */
 public class CancelQuitButton extends Button {
 
 	public CancelQuitButton(MainMenuButtonManager manager, Vector2 location, Vector2 size, Texture texture) {
@@ -22,6 +29,7 @@ public class CancelQuitButton extends Button {
 	@Override
 	public void mousePrimaryPressed(Vector2 screenCoordinate) {
 		owner.showMenu(MainMenuButtonManager.MENU_MAIN);
+		Log.info("Player cancelled quit");
 	}
 
 	@Override

@@ -3,8 +3,15 @@ package engine.world.mainmenu.quitmenu;
 import engine.rendering.textures.Texture;
 import engine.world.mainmenu.Button;
 import engine.world.mainmenu.MainMenuButtonManager;
+import main.Log;
 import math.Vector2;
 
+/**
+ * Button that finelizes quitting the game
+ * @author David Šebesta
+ * @see Button
+ *
+ */
 public class FinalizeQuitButton extends Button {
 
 	public FinalizeQuitButton(MainMenuButtonManager manager, Vector2 location, Vector2 size, Texture texture) {
@@ -21,6 +28,7 @@ public class FinalizeQuitButton extends Button {
 	
 	@Override
 	public void mousePrimaryPressed(Vector2 screenCoordinate) {
+		Log.info("Quitting the game...");
 		System.exit(0);
 	}
 

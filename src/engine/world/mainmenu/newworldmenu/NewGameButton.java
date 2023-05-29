@@ -3,8 +3,14 @@ package engine.world.mainmenu.newworldmenu;
 import engine.rendering.textures.Texture;
 import engine.world.mainmenu.Button;
 import engine.world.mainmenu.MainMenuButtonManager;
+import main.Log;
 import math.Vector2;
 
+/**
+ * Button that have usage of showing new game buttons menu
+ * @author David Šebesta
+ * @see Button
+ */
 public class NewGameButton extends Button {
 	
 	public NewGameButton(MainMenuButtonManager manager, Vector2 location, Vector2 size, String text) {
@@ -21,6 +27,7 @@ public class NewGameButton extends Button {
 
 	@Override
 	public void mousePrimaryPressed(Vector2 screenCoordinate) {
+		Log.info("Showed the new game menu");
 		owner.showMenu(MainMenuButtonManager.MENU_NEWSAVE);
 	}
 

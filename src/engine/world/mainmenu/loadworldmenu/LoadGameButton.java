@@ -5,6 +5,12 @@ import engine.world.mainmenu.Button;
 import engine.world.mainmenu.MainMenuButtonManager;
 import math.Vector2;
 
+/**
+ * Button used to show up load menu - not functional as of now -
+ * @author David Šebesta
+ * @see Button
+ *
+ */
 public class LoadGameButton extends Button {
 
 	public LoadGameButton(MainMenuButtonManager manager, Vector2 location, Vector2 size, Texture texture) {

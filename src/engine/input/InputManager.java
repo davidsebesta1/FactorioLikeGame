@@ -83,18 +83,15 @@ public class InputManager {
 							directionalInput.setX(1);
 							break;
 						case KeyEvent.VK_ESCAPE:
-							Game.getInstance().getPlayer().setBuildingModeEnabled(false);
+							Game.getInstance().getPlayer().setShowMainMenu(!Game.getInstance().getPlayer().canShowMainMenu());
 							break;
 						case KeyEvent.VK_R:
 							Game.getInstance().getPlayer().getConstructManager().tryRotateCurrentlySelected();
 							break;
 							
-						case KeyEvent.VK_F5:
-							Game.getInstance().getCurrentWorld().SaveWorld();
-							break;
-						//						case KeyEvent.VK_ESCAPE:
-						//							System.exit(0);
-						//							break;
+//						case KeyEvent.VK_F5:
+//							Game.getInstance().getCurrentWorld().SaveWorld();
+//							break;
 						}
 					}
 				} else if (e.getID() == KeyEvent.KEY_RELEASED) {
@@ -323,6 +320,8 @@ public class InputManager {
 	 * @return
 	 */
 	private static boolean checkForInventoryUIClick(Vector2 clickCoords) {
+		if(!Game.getInstance().getPlayer().canShowBuildMenu()) return false;
+		
 		HashMap<StructureTypeButton, HashSet<StructureButton>> all = Game.getInstance().getCurrentWorld().getPlayer().getConstructManager().getCategoryAndAvailableStructures();
 
 		for (Map.Entry<StructureTypeButton, HashSet<StructureButton>> entry : all.entrySet()) {
@@ -353,6 +352,8 @@ public class InputManager {
 	 * @return If any button clicked
 	 */
 	private static boolean checkForMainMenuUIClick(Vector2 coordinates) {
+		if(!Game.getInstance().getPlayer().canShowMainMenu()) return false;
+		
 		ArrayList<Button> buttons = Game.getInstance().getPlayer().getMenuManager().getButtons();
 
 		for (Button button : buttons) {

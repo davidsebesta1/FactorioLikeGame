@@ -5,8 +5,14 @@ import engine.rendering.textures.Texture;
 import engine.world.GameWorld;
 import engine.world.mainmenu.Button;
 import engine.world.mainmenu.MainMenuButtonManager;
+import main.Log;
 import math.Vector2;
 
+/**
+ * Button that has a functionality of creating and loading new world
+ * @author David Šebesta
+ * @see Button
+ */
 public class NewStandardGameButton extends Button {
 
 	public NewStandardGameButton(MainMenuButtonManager manager, Vector2 location, Vector2 size, Texture texture) {
@@ -23,6 +29,7 @@ public class NewStandardGameButton extends Button {
 	
 	@Override
 	public void mousePrimaryPressed(Vector2 screenCoordinate) {
+		Log.info("Created new world");
 		Game.getInstance().setCurrentWorld(new GameWorld(new Vector2(4096d, 4096d)));
 	}
 
