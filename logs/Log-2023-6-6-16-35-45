@@ -1,0 +1,81 @@
+
+[Info] Log file sucessfully initialized [Time] 16H-35M-45S
+[Info] Initialized input manager [Time] 16H-35M-45S
+[Info] Loaded variation texture asteroidGround1 [Time] 16H-35M-45S
+[Info] Loaded variation texture asteroidGround2 [Time] 16H-35M-45S
+[Info] Loaded variation texture asteroidGround3 [Time] 16H-35M-45S
+[Info] Loaded variation texture groundrock [Time] 16H-35M-45S
+[Info] Loaded texture rockground [Time] 16H-35M-45S
+[Info] Loaded texture basicDrill [Time] 16H-35M-45S
+[Info] Loaded variation texture beltStr [Time] 16H-35M-45S
+[Info] Loaded variation texture beltTurn [Time] 16H-35M-45S
+[Info] Loaded texture coreModule [Time] 16H-35M-45S
+[Info] Loaded texture mechanicalPlatePress [Time] 16H-35M-45S
+[Info] Loaded texture splitter [Time] 16H-35M-45S
+[Info] Loaded variation texture aluminiumOre [Time] 16H-35M-45S
+[Info] Loaded texture coalOre [Time] 16H-35M-45S
+[Info] Loaded variation texture copperOre [Time] 16H-35M-45S
+[Info] Loaded variation texture CPOre [Time] 16H-35M-45S
+[Info] Loaded variation texture goldOre [Time] 16H-35M-45S
+[Info] Loaded variation texture lithiumOre [Time] 16H-35M-45S
+[Info] Loaded variation texture nickelOre [Time] 16H-35M-45S
+[Info] Loaded variation texture platiniumOre [Time] 16H-35M-45S
+[Info] Loaded variation texture titaniumOre [Time] 16H-35M-45S
+[Info] Loaded texture aluminiumItem [Time] 16H-35M-45S
+[Info] Loaded texture aluminiumPlate [Time] 16H-35M-45S
+[Info] Loaded texture coalItem [Time] 16H-35M-45S
+[Info] Loaded texture copperItem [Time] 16H-35M-45S
+[Info] Loaded texture copperPlate [Time] 16H-35M-45S
+[Info] Loaded texture CPItem [Time] 16H-35M-45S
+[Info] Loaded texture goldItem [Time] 16H-35M-45S
+[Info] Loaded texture lithiumItem [Time] 16H-35M-45S
+[Info] Loaded texture nickelItem [Time] 16H-35M-45S
+[Info] Loaded texture platiniumItem [Time] 16H-35M-45S
+[Info] Loaded texture titaniumItem [Time] 16H-35M-45S
+[Info] Loaded texture titaniumPlate [Time] 16H-35M-45S
+[Info] Loaded texture basicDrillIcon [Time] 16H-35M-45S
+[Info] Loaded texture coreModuleIcon [Time] 16H-35M-45S
+[Info] Loaded texture testStructIcon [Time] 16H-35M-45S
+[Info] Loaded texture testTypeIcon [Time] 16H-35M-45S
+[Info] Loaded variation texture arrowIcon [Time] 16H-35M-45S
+[Info] Loaded texture blank [Time] 16H-35M-45S
+[Info] Loaded texture commandType [Time] 16H-35M-45S
+[Info] Loaded texture factoryType [Time] 16H-35M-45S
+[Info] Loaded texture miningType [Time] 16H-35M-45S
+[Info] Loaded texture otherType [Time] 16H-35M-45S
+[Info] Loaded texture powerType [Time] 16H-35M-45S
+[Info] Loaded texture transportType [Time] 16H-35M-45S
+[Info] Loaded texture inventoryBackground [Time] 16H-35M-45S
+[Info] Loaded texture background [Time] 16H-35M-45S
+[Info] Loaded texture unknownTexture [Time] 16H-35M-45S
+[Info] Loaded all textures [Time] 16H-35M-45S
+[Info] Initialized double buffering [Time] 16H-35M-46S
+[Info] Initialized window [Time] 16H-35M-46S
+[Info] Started game thread [Time] 16H-35M-46S
+[Info] Showed the new game menu [Time] 16H-35M-48S
+[Info] Clicked on menu button NewGameButton [] [Time] 16H-35M-48S
+[Info] Created new world [Time] 16H-35M-48S
+[Info] Clicked on menu button Button [location=Vector2{x=885.0, y=590.0}, size=Vector2{x=150.0, y=75.0}, texture=null, isVisible=true] [Time] 16H-35M-48S
+[Info] Clicked on typebutton StructureTypeButton [type=TransportStructures] [Time] 16H-35M-52S
+[Info] Clicked on structurebutton StructureButton [structureID=conveyorBelt] [Time] 16H-35M-52S
+[Info] Clicked on typebutton StructureTypeButton [type=CommandStructures] [Time] 16H-35M-55S
+[Info] Clicked on typebutton StructureTypeButton [type=MiningStructures] [Time] 16H-35M-56S
+[Info] Clicked on typebutton StructureTypeButton [type=CommandStructures] [Time] 16H-35M-56S
+[Info] Clicked on structurebutton StructureButton [structureID=coreModule] [Time] 16H-35M-57S
+[Info] Coords: Vector2{x=1379.8888888888923, y=593.4166666666665} sprite: TileSprite [location=Vector2{x=1376.0, y=576.0}, size=Vector2{x=32.0, y=32.0}, getzDepth()=0.1, getTexture()=engine.rendering.textures.Texture@415f6349, getLocation()=Vector2{x=1376.0, y=576.0}, isVisible()=true, toString()=Sprite [texture=engine.rendering.textures.Texture@415f6349, zDepth=0.1] [Time] 16H-35M-58S
+[Info] Created new structure Core Module at Vector2{x=43.0, y=18.0} [Time] 16H-35M-58S
+[Info] Clicked on typebutton StructureTypeButton [type=MiningStructures] [Time] 16H-35M-59S
+[Info] Clicked on structurebutton StructureButton [structureID=basicDrill] [Time] 16H-35M-59S
+[Info] Coords: Vector2{x=1428.8611111111154, y=759.2500000000002} sprite: TileSprite [location=Vector2{x=1408.0, y=736.0}, size=Vector2{x=32.0, y=32.0}, getzDepth()=0.1, getTexture()=engine.rendering.textures.Texture@7ee7f7a3, getLocation()=Vector2{x=1408.0, y=736.0}, isVisible()=true, toString()=Sprite [texture=engine.rendering.textures.Texture@7ee7f7a3, zDepth=0.1] [Time] 16H-36M-1S
+[Info] Created new structure Basic Drill at Vector2{x=44.0, y=23.0} [Time] 16H-36M-1S
+[Info] Clicked on typebutton StructureTypeButton [type=TransportStructures] [Time] 16H-36M-1S
+[Info] Clicked on structurebutton StructureButton [structureID=conveyorBelt] [Time] 16H-36M-2S
+[Info] Coords: Vector2{x=1433.8611111111154, y=724.2500000000002} sprite: TileSprite [location=Vector2{x=1408.0, y=704.0}, size=Vector2{x=32.0, y=32.0}, getzDepth()=0.1, getTexture()=engine.rendering.textures.Texture@7ee7f7a3, getLocation()=Vector2{x=1408.0, y=704.0}, isVisible()=true, toString()=Sprite [texture=engine.rendering.textures.Texture@7ee7f7a3, zDepth=0.1] [Time] 16H-36M-3S
+[Info] Created new structure Conveyor Belt at Vector2{x=44.0, y=22.0} [Time] 16H-36M-3S
+[Info] Clicked on structurebutton StructureButton [structureID=conveyorBelt] [Time] 16H-36M-14S
+[Info] Coords: Vector2{x=1404.722222222229, y=743.4722222222247} sprite: TileSprite [location=Vector2{x=1376.0, y=736.0}, size=Vector2{x=32.0, y=32.0}, getzDepth()=0.1, getTexture()=engine.rendering.textures.Texture@37401815, getLocation()=Vector2{x=1376.0, y=736.0}, isVisible()=true, toString()=Sprite [texture=engine.rendering.textures.Texture@37401815, zDepth=0.1] [Time] 16H-36M-14S
+[Info] Created new structure Conveyor Belt at Vector2{x=43.0, y=23.0} [Time] 16H-36M-14S
+[Info] Coords: Vector2{x=1398.722222222229, y=729.4722222222247} sprite: TileSprite [location=Vector2{x=1376.0, y=704.0}, size=Vector2{x=32.0, y=32.0}, getzDepth()=0.1, getTexture()=engine.rendering.textures.Texture@61ad1de4, getLocation()=Vector2{x=1376.0, y=704.0}, isVisible()=true, toString()=Sprite [texture=engine.rendering.textures.Texture@61ad1de4, zDepth=0.1] [Time] 16H-36M-15S
+[Info] Created new structure Conveyor Belt at Vector2{x=43.0, y=22.0} [Time] 16H-36M-15S
+[Info] Clicked on typebutton StructureTypeButton [type=CommandStructures] [Time] 16H-36M-21S
+[Info] Clicked on structurebutton StructureButton [structureID=coreModule] [Time] 16H-36M-21S

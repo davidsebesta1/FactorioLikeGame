@@ -33,7 +33,7 @@ public class Log {
 		}
 
 		LocalDateTime now = LocalDateTime.now();
-		String fileName = "Log-" + dtf.format(now);
+		String fileName = "Log-" + dtf.format(now) + ".txt";
 		logFile = new File(logsDirectory, fileName);
 		if (!logFile.exists()) {
 		    try {
