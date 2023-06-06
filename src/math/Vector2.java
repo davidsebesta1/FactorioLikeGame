@@ -3,8 +3,6 @@ package math;
 import java.io.Serializable;
 import java.util.Objects;
 
-import engine.input.InputManager;
-
 /**
  * Vector2 is a vector class that provides Vector2 objects, their arithemtic operations and other functions for Vector mathematics.
  * @author David Šebesta

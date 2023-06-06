@@ -48,7 +48,7 @@ public class Game implements Runnable {
 
 	private boolean isRunning;
 
-	private static final DisplayMode POSSIBLE_MODES[] = { new DisplayMode(1920, 1080, 16, 0)};
+	private static final DisplayMode POSSIBLE_MODES[] = { new DisplayMode(1920, 1080, 16, 0), new DisplayMode(3840, 2160, 16, 0), new DisplayMode(1366, 768, 16, 0), new DisplayMode(1600, 800, 16, 0), new DisplayMode(1920, 1090, 8, 0), new DisplayMode(1536, 864, 8, 0) };
 
 	/**
 	 * Class constructor
@@ -69,7 +69,7 @@ public class Game implements Runnable {
 		tl.loadAllTextures("textures/icons/typeIcons", TextureType.BITMASK);
 		tl.loadAllTextures("textures/UIElements", TextureType.TRANSPARENT);
 		tl.loadAllTextures("textures", TextureType.OPAQUE);
-		
+
 		Log.info("Loaded all textures");
 
 		// AND SECOND
@@ -83,9 +83,9 @@ public class Game implements Runnable {
 		DisplayMode displayMode = screen.findFirstCompatibleMode(POSSIBLE_MODES);
 		screen.setFullScreen(displayMode);
 		window = GameWindow.initiateInstance(resolution);
-		
+
 		window.getPanel().init();
-		
+
 		Log.info("Initialized window");
 
 		// FINALLY GAME LOOP
@@ -93,7 +93,7 @@ public class Game implements Runnable {
 		thread.start();
 		thread.setName("GameLoopThread");
 		thread.setPriority(Thread.MAX_PRIORITY);
-		
+
 		Log.info("Started game thread");
 	}
 
@@ -112,16 +112,15 @@ public class Game implements Runnable {
 			//Add sprites from queue to actual list
 			SpriteManager.frameSpriteSynchronization();
 			PhysicsManager.framePhysicsSpriteSync();
-			
+
 			getCurrentWorld().getChunkManager().resolveAll();
-			
+
 			//Click, mouse moved, etc events
 			InputManager.runAllEvents();
-			
+
 			//Update delta time
 			double deltaTime = 1.0 / TARGET_FPS;
 			DeltaTime.updateDeltaTime(deltaTime);
-			
 
 			//Update updatable sprites
 			while (unprocessedTime >= (1.0 / TARGET_FPS)) {
@@ -150,7 +149,7 @@ public class Game implements Runnable {
 					e.printStackTrace();
 				}
 			}
-			
+
 		}
 	}
 
@@ -159,7 +158,8 @@ public class Game implements Runnable {
 	 * @return Instance of Game
 	 */
 	public static Game getInstance() {
-		if (instance != null) return instance;
+		if (instance != null)
+			return instance;
 		return initializeInstance();
 	}
 
@@ -188,10 +188,9 @@ public class Game implements Runnable {
 	public void setCurrentWorld(World currentWorld) {
 		SpriteManager.clearAll();
 		PhysicsManager.clearAll();
-		
+
 		this.currentWorld = currentWorld;
-		
-		
+
 		getCurrentWorld().getChunkManager().resolveAll();
 	}
 

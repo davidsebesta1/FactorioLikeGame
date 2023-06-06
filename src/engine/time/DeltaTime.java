@@ -11,7 +11,7 @@ public class DeltaTime {
 	/**
 	 * Private consturctor
 	 */
-	private DeltaTime() {};
+	private DeltaTime() {}
 	
 	/**
 	 * Method to set delta time
